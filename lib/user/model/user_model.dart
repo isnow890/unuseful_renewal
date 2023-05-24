@@ -24,9 +24,8 @@ class UserModel extends UserModelBase{
   @JsonKey(
     fromJson : DataUtils.pathToUrl,
   )
-  final String? IMG_URL;
 
-  UserModel( {required this.STF_NO, required this.KOR_NM,this.IMG_URL});
+  UserModel( {required this.STF_NO, required this.KOR_NM});
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
