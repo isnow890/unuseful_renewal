@@ -32,8 +32,8 @@ class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
         LoginModel(HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
   }
 
-  void update({ String? hspTpCd=null,String? stfNo=null, String? password=null}){
-    print('hspTpCd??'+state.HSP_TP_CD!);
+  void update({ String? hspTpCd,String? stfNo, String? password}){
+    //print('hspTpCd??'+state.HSP_TP_CD!);
 
     final tmpStfNo = state.STF_NO;
     final  tmpPassword= state.PASSWORD;
