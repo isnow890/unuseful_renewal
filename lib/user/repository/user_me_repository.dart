@@ -1,10 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/const/data.dart';
 import 'package:dio/dio.dart' hide Headers;
-
+import 'package:retrofit/http.dart';
 import '../../common/dio/dio.dart';
 import '../model/user_model.dart';
+
 part 'user_me_repository.g.dart';
 
 final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
@@ -13,6 +13,7 @@ final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
   return repository;
 });
 
+//
 // http://$ip/user/me
 @RestApi()
 abstract class UserMeRepository {
@@ -22,13 +23,4 @@ abstract class UserMeRepository {
   @Headers({'accessToken': 'true'})
   Future<UserModel> getMe();
 
-  @GET('/basket')
-  @Headers({'accessToken': 'true'})
-  Future<List<BasketItemModel>> getBasket();
-
-  @PATCH('/basket')
-  @Headers({'accessToken': 'true'})
-  Future<List<BasketItemModel>> patchBasket({
-    @Body() required PatchBasketBody body,
-  });
 }

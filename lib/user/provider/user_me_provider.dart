@@ -3,8 +3,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:unuseful/user/model/user_model.dart';
 
 import '../../common/const/data.dart';
+import '../../common/secure_storage/secure_storage.dart';
 import '../repository/auth_repository.dart';
 import '../repository/user_me_repository.dart';
+
+
+
+final userMeProvider =
+StateNotifierProvider<UserMeStateNotifier, UserModelBase?>((ref) {
+  final repository = ref.watch(userMeRepositoryProvider);
+  final storage = ref.watch(secureStorageProvider);
+  final authRepository = ref.watch(authRepositoryProvider);
+  return UserMeStateNotifier(
+      repository: repository, storage: storage, authRepository: authRepository);
+});
+
 
 class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
   final UserMeRepository repository;
@@ -26,7 +39,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       final resp =
       await authRepository.login(HSP_TP_CD: HSP_TP_CD, STF_NO:  STF_NO, PASSWORD: PASSWORD);
 
-      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.ACCESS_TOKEN);
+      await storage.write(key: CONST_ACCESS_KEY, value: resp.ACCESS_KEY);
 
       final userResp = await repository.getMe();
       state = userResp;
@@ -41,7 +54,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
   Future<void> logout() async {
     state = null;
     Future.wait([
-      storage.delete(key: ACCESS_TOKEN_KEY),
+      storage.delete(key: CONST_ACCESS_KEY),
     ]);
   }
 

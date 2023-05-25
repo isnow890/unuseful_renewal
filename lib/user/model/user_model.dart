@@ -18,13 +18,11 @@ class UserModelLoading extends UserModelBase{}
 
 @JsonSerializable()
 class UserModel extends UserModelBase{
-
   final String STF_NO;
   final String KOR_NM;
   @JsonKey(
     fromJson : DataUtils.pathToUrl,
   )
-
   UserModel( {required this.STF_NO, required this.KOR_NM});
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

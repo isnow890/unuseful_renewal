@@ -28,13 +28,12 @@ class CustomInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     print('[REQ] [${options.method}] ${options.uri}');
-    print('시작');
 
     //acessToken
     print(options.headers['accessToken']);
     if (options.headers['accessToken'] == 'true') {
       options.headers.remove('accessToken');
-      final token = await storage.read(key: ACCESS_TOKEN_KEY);
+      final token = await storage.read(key: CONST_ACCESS_KEY);
       options.headers.addAll({
         'authorization': 'Bearer $token',
       });
@@ -78,7 +77,7 @@ class CustomInterceptor extends Interceptor {
       if (isStatus401) {
         ref.read(authProvider.notifier).logout();
 
-        await storage.write(key: ACCESS_TOKEN_KEY, value: null);
+        await storage.write(key: CONST_ACCESS_KEY, value: null);
       }
     } on DioError catch (e) {
       handler.reject(e);

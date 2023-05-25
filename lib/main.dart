@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/common/provider/go_router.dart';
 
 void main() {
   runApp(ProviderScope(child: _App()));
@@ -12,6 +13,16 @@ class _App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Placeholder();
+
+
+final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
+      routerConfig: router,
+      theme : ThemeData(
+        fontFamily: 'NotoSans',
+      ),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

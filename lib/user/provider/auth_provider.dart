@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
+import 'package:unuseful/user/provider/user_me_provider.dart';
 import '../../telephone/view/telephone_screen.dart';
 import '../model/user_model.dart';
 import '../view/login_screen.dart';
@@ -38,10 +39,20 @@ class AuthProvider extends ChangeNotifier {
   String? redirectLogic(_, GoRouterState state) {
     final UserModelBase? user = ref.read(userMeProvider);
 
+    print('logginIn?');
     final logginIn = state.location == '/login';
     //유저 정보가 없는데
     //로그인중이면 그대로 로그인 페이지에 두고
     //만약에 로그인중이 아니라면 로그인 페이지로 이동
+    if (user == null)
+      {
+
+        print('user?');
+      }
+
+
+    return '/login';
+
     if (user == null) {
       return logginIn ? null : '/login';
     }
@@ -65,8 +76,6 @@ class AuthProvider extends ChangeNotifier {
 
     return null;
   }
-
-
 
   void logout() {
     ref.read(userMeProvider.notifier).logout();
