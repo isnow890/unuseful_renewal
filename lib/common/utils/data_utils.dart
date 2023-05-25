@@ -1,10 +1,16 @@
 import 'dart:convert';
 
+import '../../user/model/user_model.dart';
 import '../const/data.dart';
 
-class DataUtils{
-  static String pathToUrl(String value)=> 'http://$ip/$value';
+class DataUtils {
+  //ADVANCE_TYPE enum으로 변환
+  static findAdvanceTypeEnum(String value) =>
+      AdvanceType.values.firstWhere((element) => element.name == value);
 
+  static bool toBool(String value) => value == 'Y' ? true : false;
+
+  static String pathToUrl(String value) => 'http://$ip/$value';
 
 //Base64 인코딩
   static String plainToBase64(String plain) {
@@ -16,6 +22,4 @@ class DataUtils{
   static DateTime stringToDateTime(String value) {
     return DateTime.parse(value);
   }
-
-
 }

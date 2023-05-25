@@ -9,6 +9,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool autofocus;
   final ValueChanged<String>? onChanged;
 
+  final TextEditingController? controller;
   final String? initValue;
 
 
@@ -18,7 +19,7 @@ class CustomTextFormField extends StatelessWidget {
         this.errorText,
         this.obscureText = false,
         this.autofocus = false,
-        required this.onChanged, this.initValue})
+        required this.onChanged, this.initValue, this.controller})
       : super(key: key);
 
   @override
@@ -31,6 +32,7 @@ class CustomTextFormField extends StatelessWidget {
         ));
 
     return TextFormField(
+      controller: controller,
       initialValue: initValue,
       onChanged: onChanged,
       //화면에 들어가자마자 포커스를 자동을 넣어줄지 여부

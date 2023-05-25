@@ -8,18 +8,20 @@ class DefaultLayout extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
 
-  const DefaultLayout(
-      {Key? key,
-      required this.child,
-      this.backgroundColor,
-      this.title,
-      this.bottomNavigationBar,
-      this.floatingActionButton})
+  final Drawer? drawer;
+
+  const DefaultLayout({Key? key,
+    required this.child,
+    this.backgroundColor,
+    this.title,
+    this.bottomNavigationBar,
+    this.floatingActionButton, this.drawer,})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer:drawer,
       backgroundColor: backgroundColor ?? Colors.white,
       appBar: renderAppbar(),
       body: child,
