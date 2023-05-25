@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:unuseful/common/const/data.dart';
 import 'package:unuseful/user/model/login_model.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
@@ -9,7 +8,6 @@ import '../../common/component/custom_text_form_field.dart';
 import '../../common/component/general_toast_message.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
-import '../../common/model/initial_data_from_secure_storage.dart';
 import '../../common/secure_storage/secure_storage.dart';
 import '../repository/login_variable_provider.dart';
 
@@ -33,7 +31,7 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
 
   @override
   void initState() {
-    stfNo = widget.stfNo;
+    // stfNo = widget.stfNo;
 
     super.initState();
     // TODO: implement initState
@@ -55,148 +53,152 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
 
     final loginValue = ref.watch(loginVariableStateProvider);
 
+    final storage = ref.watch(secureStorageProvider);
 
     // print('loginValue.STF_NO : ' + loginValue.STF_NO.toString());
     // print('loginValue.HSP_TP_CD : ' + loginValue.HSP_TP_CD.toString());
 
+    setState(() {});
+    return FutureBuilder<String?>(
+        future: storage.read(key: CONST_STF_NO),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            stfNo = snapshot.data;
+            stfNoController.value = (TextEditingValue(text: stfNo ?? ''));
 
-    print('widget.stfNo is '+(widget.stfNo??'hoho'));
-    print('stfNo is '+(stfNo??'hoho'));
-    setState(() {
-      stfNoController.value = (TextEditingValue(text: widget.stfNo??''));
-    });
-    return DefaultLayout(
-      //SingleChildScrollView를 선언하여 키보드가 튀어나와도 화면 에러 안나도록
-      child: SingleChildScrollView(
-        //드래그 하면 키보드 집어넣기.
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: SafeArea(
-          top: true,
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _Title(),
-                const SizedBox(
-                  height: 16,
-                ),
-                _SubTitle(),
-                //사이즈 2/3
-                Image.asset(
-                  'asset/img/logo/main_logo.png',
-                  width: MediaQuery.of(context).size.width / 3,
-                  height: MediaQuery.of(context).size.height / 3 * 1.3,
-                ),
+          }
 
-                Row(
-                  children: [
-                    Expanded(
-                      child: RadioListTile(
-                          title: Text('se'),
-                          value: '01',
-                          activeColor: PRIMARY_COLOR,
-                          groupValue: loginValue.HSP_TP_CD,
-                          onChanged: (value) {
-                            FocusManager.instance.primaryFocus?.unfocus();
+          print('stfNo is ' + (stfNo ?? 'hoho'));
 
-                            ref
-                                .read(loginVariableStateProvider.notifier)
-                                .update(hspTpCd: value!);
+          return DefaultLayout(
+            //SingleChildScrollView를 선언하여 키보드가 튀어나와도 화면 에러 안나도록
+            child: SingleChildScrollView(
+              //드래그 하면 키보드 집어넣기.
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: SafeArea(
+                top: true,
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _Title(),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      _SubTitle(),
+                      //사이즈 2/3
+                      Image.asset(
+                        'asset/img/logo/main_logo.png',
+                        width: MediaQuery.of(context).size.width / 3,
+                        height: MediaQuery.of(context).size.height / 3 * 1.3,
+                      ),
 
-                            // print('업데이트 후2'+value);
-                          }),
-                    ),
-                    Expanded(
-                      child: RadioListTile(
-                          title: Text('md'),
-                          value: '02',
-                          groupValue: loginValue.HSP_TP_CD,
-                          activeColor: PRIMARY_COLOR,
-                          onChanged: (value) {
-                            FocusManager.instance.primaryFocus?.unfocus();
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile(
+                                title: Text('se'),
+                                value: '01',
+                                activeColor: PRIMARY_COLOR,
+                                groupValue: loginValue.HSP_TP_CD,
+                                onChanged: (value) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
 
-                            ref
-                                .read(loginVariableStateProvider.notifier)
-                                .update(hspTpCd: value!);
-                          }),
-                    ),
-                  ],
-                ),
-                CustomTextFormField(
-                  controller: stfNoController,
-                  hintText: '사번을 입력해주세요.',
-                  onChanged: (value) {
-                    // print('변경함');
+                                  ref
+                                      .read(loginVariableStateProvider.notifier)
+                                      .update(hspTpCd: value!);
 
-                    stfNo = value!;
+                                  // print('업데이트 후2'+value);
+                                }),
+                          ),
+                          Expanded(
+                            child: RadioListTile(
+                                title: Text('md'),
+                                value: '02',
+                                groupValue: loginValue.HSP_TP_CD,
+                                activeColor: PRIMARY_COLOR,
+                                onChanged: (value) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
 
-                    // ref
-                    //     .read(loginVariableStateProvider.notifier)
-                    //     .update(stfNo: value!);
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                CustomTextFormField(
-                  hintText: '비밀번호를 입력해주세요.',
-                  obscureText: true,
-                  onChanged: (value) {
-                    password = value;
+                                  ref
+                                      .read(loginVariableStateProvider.notifier)
+                                      .update(hspTpCd: value!);
+                                }),
+                          ),
+                        ],
+                      ),
+                      CustomTextFormField(
+                        // initValue: stfNo,
+                        controller: stfNoController,
+                        hintText: '사번을 입력해주세요.',
+                        onChanged: (value) {
+                          // print('변경함');
 
-                    // ref
-                    //     .read(loginVariableStateProvider.notifier)
-                    //     .update(password: value!);
-                  },
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                //dio post 요청 보내기
-                ElevatedButton(
-                  onPressed: () {
+                          stfNo = value!;
 
+                          // ref
+                          //     .read(loginVariableStateProvider.notifier)
+                          //     .update(stfNo: value!);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      CustomTextFormField(
+                        hintText: '비밀번호를 입력해주세요.',
+                        obscureText: true,
+                        onChanged: (value) {
+                          password = value;
 
-                    // print('stfNo'+stfNo);
-                    // print('password'+password);
-                    //
+                          // ref
+                          //     .read(loginVariableStateProvider.notifier)
+                          //     .update(password: value!);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      //dio post 요청 보내기
+                      ElevatedButton(
+                        onPressed: () {
+                          // print('stfNo'+stfNo);
+                          // print('password'+password);
+                          //
 
-                    if (validateBeforeLogin(LoginModel(
-                        HSP_TP_CD: loginValue.HSP_TP_CD,
-                        STF_NO: stfNo,
-                        PASSWORD: password))) {
-                      ref.read(userMeProvider.notifier).login(
-                          HSP_TP_CD: loginValue.HSP_TP_CD!,
-                          STF_NO: stfNo!,
-                          PASSWORD: password!);
-
-
-
-                    }
-                  },
-                  // onPressed: state is UserModelLoading
-                  //     ? null
-                  //     : () async {
-                  //         validateRequiredItem(
-                  //             radioTile, stfNo, password);
-                  //
-                  //         // ref.read(userMeProvider.notifier).login(username: username, password: password);
-                  //       },
-                  child: Text('로그인'),
-                  style: ElevatedButton.styleFrom(
-                    primary: PRIMARY_COLOR,
+                          if (validateBeforeLogin(LoginModel(
+                              HSP_TP_CD: loginValue.HSP_TP_CD,
+                              STF_NO: stfNo,
+                              PASSWORD: password))) {
+                            ref.read(userMeProvider.notifier).login(
+                                HSP_TP_CD: loginValue.HSP_TP_CD!,
+                                STF_NO: stfNo!,
+                                PASSWORD: password!);
+                          }
+                        },
+                        // onPressed: state is UserModelLoading
+                        //     ? null
+                        //     : () async {
+                        //         validateRequiredItem(
+                        //             radioTile, stfNo, password);
+                        //
+                        //         // ref.read(userMeProvider.notifier).login(username: username, password: password);
+                        //       },
+                        child: Text('로그인'),
+                        style: ElevatedButton.styleFrom(
+                          primary: PRIMARY_COLOR,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        });
   }
 
   bool validateBeforeLogin(LoginModel model) {
