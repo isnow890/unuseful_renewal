@@ -2,20 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'telephone_advance_model.g.dart';
 
-
-abstract class TelephoneAdvanceModelBase{}
-
-//에러났을때
-class TelephoneAdvanceModelError extends TelephoneAdvanceModelBase{
-  final String message;
-  TelephoneAdvanceModelError({required this.message});
-}
-
-class TelephoneAdvanceModelLoading extends TelephoneAdvanceModelBase{}
-
-
 @JsonSerializable()
-class TelephoneAdvanceModel extends TelephoneAdvanceModelBase{
+class TelephoneAdvanceModel {
   final String SECT_DEPT_CD;
   final String STF_NO;
   final String KOR_NM;
