@@ -6,7 +6,13 @@ import 'package:unuseful/user/model/login_model.dart';
 import '../../common/const/data.dart';
 
 
+final stfNoProvider = StateProvider((ref) async{
+  final secure = ref.watch(secureStorageProvider);
 
+  final value = await secure.read(key: CONST_STF_NO);
+  return value;
+
+});
 
 
 final loginVariableStateProvider = StateNotifierProvider<LoginVariableStateNofifier,LoginModel>((ref) {
@@ -24,12 +30,11 @@ class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
     getVariableFromSecureStorage();
   }
 
-  Future<void> getVariableFromSecureStorage() async {
+   getVariableFromSecureStorage() async {
     final STF_NO = await secure.read(key: CONST_STF_NO);
     final PASSWORD = await secure.read(key: CONST_PASSWORD);
     final HSP_TP_CD = await secure.read(key: CONST_HSP_TP_CD);
-    state =
-        LoginModel(HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
+    state = LoginModel(HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
   }
 
   void update({ String? hspTpCd,String? stfNo, String? password}){

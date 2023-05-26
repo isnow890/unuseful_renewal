@@ -30,9 +30,9 @@ class CustomInterceptor extends Interceptor {
     print('[REQ] [${options.method}] ${options.uri}');
 
     //acessToken
-    print(options.headers['accessToken']);
-    if (options.headers['accessToken'] == 'true') {
-      options.headers.remove('accessToken');
+    print(options.headers['accessKey']);
+    if (options.headers['accessKey'] == 'true') {
+      options.headers.remove('accessKey');
       final token = await storage.read(key: CONST_ACCESS_KEY);
       options.headers.addAll({
         'authorization': 'Bearer $token',

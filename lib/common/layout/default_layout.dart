@@ -7,8 +7,7 @@ class DefaultLayout extends StatelessWidget {
 
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
-
-  final Drawer? drawer;
+  final Widget? drawer;
 
   const DefaultLayout({Key? key,
     required this.child,

@@ -6,7 +6,7 @@ import 'package:unuseful/common/view/root_tab.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 import '../../common/const/data.dart';
-import '../../telephone/view/telephone_screen.dart';
+import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
 import '../repository/login_variable_provider.dart';
 import '../view/login_screen.dart';
@@ -106,8 +106,8 @@ class AuthProvider extends ChangeNotifier {
         ),
         GoRoute(
           path: '/telephone',
-          name: TelePhoneScreen.routeName,
-          builder: (context, state) => TelePhoneScreen(),
+          name: TelePhoneMainScreen.routeName,
+          builder: (context, state) => TelePhoneMainScreen(),
         ),
       ];
 }

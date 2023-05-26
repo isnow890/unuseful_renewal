@@ -10,3 +10,7 @@ const INPUT_BG_COLOR = Color(0xFFFBFBFB);
 const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
 
 
+
+const primaryColor = Color(0xFF009688);
+const darkColor = Color(0xFF00675B);
+const lightColor = Color(0xFF52C7B8);
