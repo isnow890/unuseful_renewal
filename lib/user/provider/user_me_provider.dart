@@ -65,7 +65,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
           MESSAGE: '',
           STF_NM: 'ycw',
           DEPT_CD: 'LMT',
-          DEPT_NM: '',
+          DEPT_NM: '잡부서',
           DR_YN: false,
           HITDUTY_YN: true,
           ADVANCE_TYPE: AdvanceType.master,

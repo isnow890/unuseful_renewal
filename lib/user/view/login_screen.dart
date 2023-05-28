@@ -23,12 +23,11 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LogInScreenState extends ConsumerState<LoginScreen> {
   String? hspTpCd;
   String? stfNo;
-  String? password='1111';
+  String? password = '1111';
 
   final stfNoController = TextEditingController();
 
-
-  getStfNo()async{
+  getStfNo() async {
     final loginValue = ref.read(stfNoProvider);
     stfNo = await loginValue;
     stfNoController.value = (TextEditingValue(text: stfNo ?? ''));
@@ -51,7 +50,6 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final loginValue = ref.watch(loginVariableStateProvider);
 
     // print(loginValue.STF_NO);
@@ -184,7 +182,7 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
       print('hspTpCd is null');
       showToast(msg: 'HspTpCd is required to login');
       return false;
-    } else if (model.STF_NO == null || model.STF_NO =='') {
+    } else if (model.STF_NO == null || model.STF_NO == '') {
       showToast(msg: 'StfNo is required to login');
       return false;
     } else if (model.PASSWORD == null) {

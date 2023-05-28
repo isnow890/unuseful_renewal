@@ -21,8 +21,7 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider({required this.ref}) {
     //유저가 로딩중인지 에러가 나는지등등을 알 수 있음
-    ref.listen<UserModelBase?>(userMeProvider, (previous, next)
-    {
+    ref.listen<UserModelBase?>(userMeProvider, (previous, next) {
       //다른 값이 들어올때만 AuthProvider에서 알려줌.
       if (previous != next) {
         notifyListeners();
@@ -53,14 +52,14 @@ class AuthProvider extends ChangeNotifier {
     //로그인 중이거나 현재 위치가 SplashScreen이면
     //홈으로 이동
 
-
     print(user);
 
     if (user is UserModel) {
       return logginIn || state.location == '/splash'
           ?
-      //null은 원래의 위치를 의미함.
-      '/' : null;
+          //null은 원래의 위치를 의미함.
+          '/'
+          : null;
     }
 
     //UserModelError
@@ -74,11 +73,12 @@ class AuthProvider extends ChangeNotifier {
     ref.read(userMeProvider.notifier).logout();
   }
 
-  List<GoRoute> get routes =>
-      [
-        GoRoute(path: '/',
-        name : RootTab.routeName,
-        builder: (contex,state)=>RootTab(),),
+  List<GoRoute> get routes => [
+        GoRoute(
+          path: '/',
+          name: RootTab.routeName,
+          builder: (contex, state) => RootTab(),
+        ),
         GoRoute(
           path: '/splash',
           name: SplashScreen.routeName,
@@ -88,13 +88,9 @@ class AuthProvider extends ChangeNotifier {
           path: '/login',
           name: LoginScreen.routeName,
           builder: (context, state) {
-
             final secure = ref.watch(secureStorageProvider);
 
-
-
             final loginValue = ref.read(loginVariableStateProvider);
-
 
             return LoginScreen(loginValue.STF_NO);
           },

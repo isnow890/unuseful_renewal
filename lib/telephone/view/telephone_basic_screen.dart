@@ -1,12 +1,111 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
+import 'package:unuseful/telephone/model/telephone_basic_model.dart';
+import 'package:unuseful/telephone/model/telephone_model.dart';
+import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
+import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
-class TelephoneBasicScreen extends ConsumerWidget {
+import '../../common/component/custom_text_form_field.dart';
+
+class TelephoneBasicScreen extends ConsumerStatefulWidget {
   const TelephoneBasicScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container(child: Text('basic'),);
+  ConsumerState<TelephoneBasicScreen> createState() =>
+      _TelephoneBasicScreenState();
+}
+
+class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
+  // String? searchValue;
+
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final searchValue = ref.watch(telephoneSearchValueProvider);
+    print('빌드함?');
+    final state = ref.watch(telephoneBasicFamilyProvider(searchValue));
+
+    if (state is TelephoneModel<TelephoneBasicModel>){
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: RefreshIndicator(
+          onRefresh: () async{
+            ref.read(telephoneBasicNotifierProvider.notifier);
+          },
+          child: ListView.separated(
+
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        state.data[index].HSP_TP_CD,
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: PRIMARY_COLOR,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.phone_android_outlined,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
+                  title: Text(state.data[index].DEPT_NM),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text( state.data[index].TEL_NO_ABBR_NM),
+                      Row(
+                        children: [
+                          Text(
+                            state.data[index].ETNT_TEL_NO,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: PRIMARY_COLOR),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            state.data
+                            [index].TEL_NO_NM,
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  isThreeLine: true,
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 20.0,
+                );
+              },
+              itemCount: state.data.length),
+        ),
+      );
+    }
+
+
+    if (state is TelephoneModelLoading){
+      return CircularProgressIndicator();
+    }
+
+    else
+      return Center(child: Text('에러'),);
   }
 }

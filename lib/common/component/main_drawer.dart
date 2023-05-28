@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/const/colors.dart';
+import 'package:unuseful/user/model/user_model.dart';
+
+import '../../user/provider/user_me_provider.dart';
 
 typedef OnSelectedTap = void Function(String menu);
 
@@ -17,12 +20,19 @@ class MainDrawer extends ConsumerWidget {
     fontSize: 15.0,
   );
 
-  final iconSize = 15.0;
-  final iconColor = Colors.white;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> tmpList = ['home','telephone', 'speicemen', 'meal', 'patient'];
+    final user = ref.watch(userMeProvider.notifier).state;
+
+    final convertedUser = user as UserModel;
+
+    List<String> tmpList = [
+      'home',
+      'telephone',
+      'speciemen',
+      'meal',
+      'patient'
+    ];
 
     return Container(
       width: 150,
@@ -30,32 +40,50 @@ class MainDrawer extends ConsumerWidget {
         backgroundColor: PRIMARY_COLOR,
         child: ListView(
           children: [
-            DrawerHeader(
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.phone,
-                    size: iconSize,
-                    color: iconColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'telephone',
-                    style: ts,
-                  ),
-                ],
+            SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                margin: EdgeInsets.all(0.0),
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          convertedUser.STF_NM,
+                          style: ts,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          convertedUser.DEPT_NM,
+                          style: ts,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            ...tmpList.map((e) => renderListTile(e,context)).toList(),
+            ...tmpList.map((e) => renderListTile(e, context)).toList(),
           ],
         ),
       ),
     );
   }
 
-  Widget renderListTile(String value,BuildContext context) {
+  Widget renderListTile(String value, BuildContext context) {
     return ListTile(
       //누르는 공간 전체
       tileColor: Colors.transparent,

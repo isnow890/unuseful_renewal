@@ -12,6 +12,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final String? initValue;
 
+  final Icon? prefixIcon;
+  final EdgeInsets? contentPadding;
 
   const CustomTextFormField(
       {Key? key,
@@ -19,7 +21,7 @@ class CustomTextFormField extends StatelessWidget {
         this.errorText,
         this.obscureText = false,
         this.autofocus = false,
-        required this.onChanged, this.initValue, this.controller})
+        required this.onChanged, this.initValue, this.controller, this.contentPadding, this.prefixIcon})
       : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class CustomTextFormField extends StatelessWidget {
         ));
 
     return TextFormField(
+
       controller: controller,
       initialValue: initValue,
       onChanged: onChanged,
@@ -43,7 +46,9 @@ class CustomTextFormField extends StatelessWidget {
       cursorColor: PRIMARY_COLOR,
       //커서 시작 부분 밀기.
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(20),
+
+        contentPadding: contentPadding??EdgeInsets.all(20),
+        prefixIcon: prefixIcon,
         hintText: hintText,
         errorText: errorText,
         //힌트 스타일

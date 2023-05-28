@@ -22,7 +22,7 @@ abstract class TelephoneAdvanceRepository{
 
   @GET('/')
   @Headers({'accessKey': 'true'})
-  Future<TelephoneAdvanceModel> getAdvance();
+  Future<List<TelephoneAdvanceModel>> getAdvance();
 
 
 }

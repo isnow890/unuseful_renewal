@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:unuseful/common/const/colors.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
-  final String? title;
+  final Widget? title;
 
   final Widget? bottomNavigationBar;
   final Widget? floatingActionButton;
   final Widget? drawer;
+  final bool? centerTitle;
+
+  final List<Widget>? actions;
+
 
   const DefaultLayout({Key? key,
     required this.child,
     this.backgroundColor,
     this.title,
     this.bottomNavigationBar,
-    this.floatingActionButton, this.drawer,})
+    this.floatingActionButton, this.drawer, this.centerTitle, this.actions,})
       : super(key: key);
 
   @override
@@ -34,18 +39,13 @@ class DefaultLayout extends StatelessWidget {
       return null;
     } else {
       return AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.white,
+        centerTitle: centerTitle??true,
+        backgroundColor: PRIMARY_COLOR,
         //앱바가 튀어나오도록 보이게끔
         elevation: 0,
-        title: Text(
-          title!,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        title: title,
         foregroundColor: Colors.black,
+        actions: actions,
       );
     }
   }
