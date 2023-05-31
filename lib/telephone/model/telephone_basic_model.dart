@@ -1,15 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/common/model/model_with_order_seq.dart';
 
 part 'telephone_basic_model.g.dart';
 
 @JsonSerializable()
-class TelephoneBasicModel {
+class TelephoneBasicModel implements IModelWithDataSeq{
   String deptNm;
   String telNoNm;
   String hspTpCd;
   String etntTelNo;
   String telNoAbbrNm;
   String sectDeptNm;
+  int orderSeq;
 
   TelephoneBasicModel(
       {required this.deptNm,
@@ -17,7 +19,8 @@ class TelephoneBasicModel {
       required this.hspTpCd,
       required this.etntTelNo,
       required this.telNoAbbrNm,
-      required this.sectDeptNm});
+      required this.sectDeptNm,
+      required this.orderSeq});
 
   factory TelephoneBasicModel.fromJson(Map<String, dynamic> json) =>
       _$TelephoneBasicModelFromJson(json);

@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/common/model/model_with_order_seq.dart';
 
 part 'telephone_advance_model.g.dart';
 
 @JsonSerializable()
-class TelephoneAdvanceModel {
+class TelephoneAdvanceModel implements IModelWithDataSeq{
   String sectDeptCd;
   String stfNo;
   String korNm;

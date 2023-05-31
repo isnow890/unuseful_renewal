@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
+import 'package:unuseful/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/telephone/model/telephone_advance_model.dart';
 
 import '../../common/const/colors.dart';
@@ -17,7 +18,7 @@ class TelephoneAdvanceScreen extends ConsumerWidget {
     print('빌드함?');
     final state = ref.watch(telephoneAdvanceFamilyProvider(searchValue));
 
-    if (state is TelephoneModel<TelephoneAdvanceModel>) {
+    if (state is CursorPagination<TelephoneAdvanceModel>) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: RefreshIndicator(
@@ -87,7 +88,7 @@ class TelephoneAdvanceScreen extends ConsumerWidget {
       );
     }
 
-    if (state is TelephoneModelLoading) {
+    if (state is CursorPaginationLoading) {
       return CircularProgressIndicator();
     } else
       return Center(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
+import 'package:unuseful/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/telephone/model/telephone_basic_model.dart';
-import 'package:unuseful/telephone/model/telephone_model.dart';
 import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
@@ -29,7 +29,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     print('빌드함?');
     final state = ref.watch(telephoneBasicFamilyProvider(searchValue));
 
-    if (state is TelephoneModel<TelephoneBasicModel>){
+    if (state is CursorPagination<TelephoneBasicModel>){
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: RefreshIndicator(
@@ -101,7 +101,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     }
 
 
-    if (state is TelephoneModelLoading){
+    if (state is CursorPaginationLoading){
       return CircularProgressIndicator();
     }
 
