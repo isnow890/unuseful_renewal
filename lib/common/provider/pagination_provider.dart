@@ -55,6 +55,10 @@ U extends IBasePaginationRepository<T>>
   }
 
   Future<void> paginate({
+
+    //조회조건
+    List<String>? searchValue,
+
     int fetchCount = 20,
     // 추가로 데이터 더 가져오기.
 

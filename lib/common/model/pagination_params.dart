@@ -6,16 +6,23 @@ part 'pagination_params.g.dart';
 class PaginationParams {
   final int? after;
   final int? count;
+  final List<String>? searchValue;
 
-  const PaginationParams({this.after, this.count});
+  const PaginationParams({
+    this.after,
+    this.count,
+    this.searchValue,
+  });
 
   PaginationParams copyWith({
     int? after,
     int? count,
+    List<String>? searchValue,
   }) {
     return PaginationParams(
       after: after ?? this.after,
       count: count ?? this.count,
+      searchValue:  searchValue?? this.searchValue,
     );
   }
 
