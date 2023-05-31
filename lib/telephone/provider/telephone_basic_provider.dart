@@ -5,22 +5,21 @@ import 'package:unuseful/telephone/repository/telephone_basic_repository.dart';
 import '../model/telephone_model.dart';
 
 final telephoneBasicFamilyProvider =
-Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
+    Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
   final searchResult = ref.watch(telephoneBasicNotifierProvider.notifier);
 
   print('searchValue');
   print(searchValue);
 
-
-  List<TelephoneBasicModel> testModel = List<TelephoneBasicModel>.generate(
-      1000, (index) {
-    return TelephoneBasicModel(HSP_TP_CD: '서울',
-        DEPT_NM: '전산정보팀'
-        ,
-        ETNT_TEL_NO: '5509',
-        TEL_NO_NM: '양찬우'+index.toString(),
-        TEL_NO_ABBR_NM: 'EMR 진단검사,  인터페이스(진단검사',
-        SECT_DEPT_NM: '');
+  List<TelephoneBasicModel> testModel =
+      List<TelephoneBasicModel>.generate(1000, (index) {
+    return TelephoneBasicModel(
+        hspTpCd: '서울',
+        deptNm: '전산정보팀',
+        etntTelNo: '5509',
+        telNoNm: '양찬우' + index.toString(),
+        telNoAbbrNm: 'EMR 진단검사,  인터페이스(진단검사',
+        sectDeptNm: '');
   });
 
   print('estModel.length');
@@ -29,39 +28,28 @@ Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
 
   var tmpList = TelephoneModel<TelephoneBasicModel>(data: testModel);
 
-
-
-  if (searchValue == null || searchValue =='') {
+  if (searchValue == null || searchValue == '') {
     // if (searchResult is TelephoneModelError)
     //   return searchResult as TelephoneModelError;
 
     // if (searchResult is TelephoneModel<TelephoneBasicModel>)
-      return tmpList as TelephoneModel<TelephoneBasicModel>;
+    return tmpList as TelephoneModel<TelephoneBasicModel>;
   } else {
-    var convertedSearchResult =
-    tmpList as TelephoneModel<TelephoneBasicModel>;
-
-
+    var convertedSearchResult = tmpList as TelephoneModel<TelephoneBasicModel>;
 
     //
-  // if (searchValue == null) {
-  //   if (searchResult is TelephoneModelError)
-  //     return searchResult as TelephoneModelError;
-  //
-  //   if (searchResult is TelephoneModel<TelephoneBasicModel>)
-  //     return searchResult as TelephoneModel<TelephoneBasicModel>;
-  // } else {
-  //   var convertedSearchResult =
-  //   searchResult as TelephoneModel<TelephoneBasicModel>;
-
-
-
-
-
-
+    // if (searchValue == null) {
+    //   if (searchResult is TelephoneModelError)
+    //     return searchResult as TelephoneModelError;
+    //
+    //   if (searchResult is TelephoneModel<TelephoneBasicModel>)
+    //     return searchResult as TelephoneModel<TelephoneBasicModel>;
+    // } else {
+    //   var convertedSearchResult =
+    //   searchResult as TelephoneModel<TelephoneBasicModel>;
 
     convertedSearchResult.data
-        .removeWhere((element) => element.HSP_TP_CD == "00");
+        .removeWhere((element) => element.hspTpCd == "00");
 
 // List<TelephoneBasicModel> tmpData = []..addAll(convertedSearchResult.data
 //     .where((element) => element.TEL_NO_ABBR_NM.isEmpty)
@@ -75,7 +63,6 @@ Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
 //   ETNT_TEL_NO: e.ETNT_TEL_NO))
 //       .toList());
 
-
     var tmpDataCopy = convertedSearchResult.data;
 
     var searchValueArray = searchValue
@@ -86,10 +73,11 @@ Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
 
     for (var values in searchValueArray) {
       for (var ii = 0; ii < tmpDataCopy.length; ii++) {
-        if (tmpDataCopy[ii].DEPT_NM.toUpperCase().contains(values) ||
-            tmpDataCopy[ii].TEL_NO_NM.toUpperCase().contains(values) ||
-            tmpDataCopy[ii].ETNT_TEL_NO.toUpperCase().contains(values) ||
-            tmpDataCopy[ii].HSP_TP_CD.toUpperCase().contains(values)) {} else {
+        if (tmpDataCopy[ii].deptNm.toUpperCase().contains(values) ||
+            tmpDataCopy[ii].telNoNm.toUpperCase().contains(values) ||
+            tmpDataCopy[ii].etntTelNo.toUpperCase().contains(values) ||
+            tmpDataCopy[ii].hspTpCd.toUpperCase().contains(values)) {
+        } else {
           convertedSearchResult.data.remove(tmpDataCopy[ii]);
         }
       }
@@ -99,7 +87,7 @@ Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
 });
 
 final telephoneBasicNotifierProvider =
-StateNotifierProvider<TelephoneBasicNotifier, TelephoneModelBase?>((ref) {
+    StateNotifierProvider<TelephoneBasicNotifier, TelephoneModelBase?>((ref) {
   final repository = ref.watch(telephoneBasicRepositoryProvider);
   final notifier = TelephoneBasicNotifier(repository: repository);
   return notifier;

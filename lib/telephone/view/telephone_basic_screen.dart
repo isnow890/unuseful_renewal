@@ -44,7 +44,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state.data[index].HSP_TP_CD,
+                        state.data[index].hspTpCd,
                         style: TextStyle(
                             fontSize: 22,
                             color: PRIMARY_COLOR,
@@ -61,15 +61,15 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                       ),
                     ],
                   ),
-                  title: Text(state.data[index].DEPT_NM),
+                  title: Text(state.data[index].deptNm),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text( state.data[index].TEL_NO_ABBR_NM),
+                      Text( state.data[index].telNoAbbrNm),
                       Row(
                         children: [
                           Text(
-                            state.data[index].ETNT_TEL_NO,
+                            state.data[index].etntTelNo,
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -80,7 +80,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                           ),
                           Text(
                             state.data
-                            [index].TEL_NO_NM,
+                            [index].telNoNm,
                             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
                         ],

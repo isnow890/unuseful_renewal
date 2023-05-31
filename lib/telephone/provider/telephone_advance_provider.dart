@@ -8,65 +8,67 @@ final telephoneAdvanceFamilyProvider =
     Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
   final searchResult = ref.watch(telephoneAdvanceNotifierProvider.notifier);
 
-  List<TelephoneAdvanceModel> testModel =
-      List<TelephoneAdvanceModel>.generate(1000, (index) {
-    return TelephoneAdvanceModel(
-        SECT_DEPT_CD: 'SECT_DEPT_CD',
-        STF_NO: 'STF_NO',
-        KOR_NM: '양찬우',
-        TEL_NO_NM: 'TEL_NO_NM',
-        TEL_NO_ABBR_NM: 'TEL_NO_ABBR_NM',
-        ETNT_TEL_NO: '5509',
-        UGT_TEL_NO: '010-4575-1190',
-        PLC: 'PLC',
-        TEL_NO_TP_CD: 'TEL_NO_TP_CD',
-        TMLD_YN: 'TMLD_YN',
-        OPN_YN: 'OPN_YN',
-        PDA_NM: 'PDA_NM',
-        SEQ: 1,
-        RMK_NM: 'RMK_NM',
-        DEPT_CD: 'DEPT_CD',
-        DEPT_CD_NM: '전산정보팀',
-        HSP_TP_CD: '서울병원',
-        TEL_NO_SEQ: 1,
-        SID: 'SID',
-        DEPT_NM: '전산정보팀');
-  });
+  List<TelephoneAdvanceModel> testModel = List<TelephoneAdvanceModel>.generate(
+    1000,
+    (index) {
+      return TelephoneAdvanceModel(
+          sectDeptCd: 'SECT_DEPT_CD',
+          stfNo: 'STF_NO',
+          korNm: '양찬우',
+          telNoNm: 'TEL_NO_NM',
+          telNoAbbrNm: 'TEL_NO_ABBR_NM',
+          etntTelNo: '5509',
+          ugtTelNo: '010-4575-1190',
+          plc: 'PLC',
+          telNoTpCd: 'TEL_NO_TP_CD',
+          tmldYn: 'TMLD_YN',
+          opnYn: 'OPN_YN',
+          pdaNm: 'PDA_NM',
+          seq: 1,
+          rmkNm: 'RMK_NM',
+          deptCd: 'DEPT_CD',
+          deptCdNm: '전산정보팀',
+          hspTpCd: '서울병원',
+          telNoSeq: 1,
+          sid: 'SID',
+          deptNm: '전산정보팀', orderSeq: 1);
+    },
+  );
 
   return TelephoneModel<TelephoneAdvanceModel>(data: testModel);
-
-  if (searchValue == null) {
-    return searchResult as TelephoneModel<TelephoneAdvanceModel>;
-  } else {
-    var convertedSearchResult =
-        searchResult as TelephoneModel<TelephoneAdvanceModel>;
-
-    var tmpData = convertedSearchResult.data;
-    var tmpDataCopy = tmpData;
-
-    var searchValueArray = searchValue
-        .toUpperCase()
-        .split(' ')
-        .where((element) => !element.isEmpty)
-        .toList();
-
-    for (var values in searchValueArray) {
-      for (var ii = 0; ii < tmpDataCopy.length; ii++) {
-        if ((tmpDataCopy[ii].KOR_NM ?? '').toUpperCase().contains(values) ||
-            (tmpDataCopy[ii].DEPT_CD_NM ?? '').toUpperCase().contains(values) ||
-            (tmpDataCopy[ii].ETNT_TEL_NO ?? '')
-                .toUpperCase()
-                .contains(values) ||
-            (tmpDataCopy[ii].UGT_TEL_NO ?? '').toUpperCase().contains(values) ||
-            (tmpDataCopy[ii].STF_NO ?? '').toUpperCase().contains(values) ||
-            (tmpDataCopy[ii].HSP_TP_CD ?? '').toUpperCase().contains(values)) {
-        } else {
-          tmpData.remove(tmpDataCopy[ii]);
-        }
-      }
-    }
-    return TelephoneModel(data: tmpData);
-  }
+  //
+  // if (searchValue == null) {
+  //   return searchResult as TelephoneModel<TelephoneAdvanceModel>;
+  // } else {
+  //   var convertedSearchResult =
+  //       searchResult as TelephoneModel<TelephoneAdvanceModel>;
+  //
+  //   var tmpData = convertedSearchResult.data;
+  //   var tmpDataCopy = tmpData;
+  //
+  //   var searchValueArray = searchValue
+  //       .toUpperCase()
+  //       .split(' ')
+  //       .where((element) => !element.isEmpty)
+  //       .toList();
+  //
+  //   for (var values in searchValueArray) {
+  //     for (var ii = 0; ii < tmpDataCopy.length; ii++) {
+  //       if ((tmpDataCopy[ii].KOR_NM ?? '').toUpperCase().contains(values) ||
+  //           (tmpDataCopy[ii].DEPT_CD_NM ?? '').toUpperCase().contains(values) ||
+  //           (tmpDataCopy[ii].ETNT_TEL_NO ?? '')
+  //               .toUpperCase()
+  //               .contains(values) ||
+  //           (tmpDataCopy[ii].UGT_TEL_NO ?? '').toUpperCase().contains(values) ||
+  //           (tmpDataCopy[ii].STF_NO ?? '').toUpperCase().contains(values) ||
+  //           (tmpDataCopy[ii].HSP_TP_CD ?? '').toUpperCase().contains(values)) {
+  //       } else {
+  //         tmpData.remove(tmpDataCopy[ii]);
+  //       }
+  //     }
+  //   }
+  //   return TelephoneModel(data: tmpData);
+  // }
 });
 
 final telephoneAdvanceNotifierProvider =

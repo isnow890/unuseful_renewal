@@ -31,7 +31,7 @@ class TelephoneAdvanceScreen extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        state.data[index].KOR_NM,
+                        state.data[index].korNm,
                         style: TextStyle(
                             fontSize: 22,
                             color: PRIMARY_COLOR,
@@ -48,15 +48,15 @@ class TelephoneAdvanceScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  title: Text('${state.data[index].DEPT_NM}'),
+                  title: Text('${state.data[index].deptNm}'),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${state.data[index].HSP_TP_CD}'),
+                      Text('${state.data[index].hspTpCd}'),
                       Row(
                         children: [
                           Text(
-                            state.data[index].ETNT_TEL_NO,
+                            state.data[index].etntTelNo,
                             style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -66,7 +66,7 @@ class TelephoneAdvanceScreen extends ConsumerWidget {
                             width: 10,
                           ),
                           Text(
-                            state.data[index].UGT_TEL_NO,
+                            state.data[index].ugtTelNo,
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w500),
                           ),
