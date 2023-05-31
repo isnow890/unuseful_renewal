@@ -14,7 +14,6 @@ part 'telephone_basic_repository.g.dart';
 
 final telephoneBasicRepositoryProvider =
     Provider<TelephoneBasicRepository>((ref) {
-  final searchValue = ref.watch(telephoneSearchValueProvider);
   final dio = ref.watch(dioProvider);
   final repository = TelephoneBasicRepository(dio,
       baseUrl: 'http://$ip/telephone/basic');

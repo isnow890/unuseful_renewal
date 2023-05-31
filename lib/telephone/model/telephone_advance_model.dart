@@ -25,7 +25,9 @@ class TelephoneAdvanceModel implements IModelWithDataSeq{
   int telNoSeq;
   String sid;
   String deptNm;
+  @override
   int orderSeq;
+  String purifiedTelNo;
 
   TelephoneAdvanceModel(
       {required this.sectDeptCd,
@@ -48,7 +50,9 @@ class TelephoneAdvanceModel implements IModelWithDataSeq{
         required this.telNoSeq,
         required this.sid,
         required this.deptNm,
-        required this.orderSeq});
+        required this.orderSeq,
+        required this.purifiedTelNo,
+      });
 
   factory TelephoneAdvanceModel.fromJson(Map<String, dynamic> json) =>
       _$TelephoneAdvanceModelFromJson(json);
