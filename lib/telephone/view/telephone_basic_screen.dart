@@ -8,6 +8,7 @@ import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
 import '../../common/component/custom_text_form_field.dart';
+import '../../common/utils/pagination_utils.dart';
 
 class TelephoneBasicScreen extends ConsumerStatefulWidget {
   const TelephoneBasicScreen({Key? key}) : super(key: key);
@@ -19,15 +20,29 @@ class TelephoneBasicScreen extends ConsumerStatefulWidget {
 
 class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
   // String? searchValue;
+  final ScrollController controller = ScrollController();
 
 
+
+
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller.addListener(listener);
+}
+  void listener() {
+    PaginationUtils.paginate(
+        controller: controller, provider: ref.read(telephoneBasicNotifierProvider.notifier));
+  }
 
   @override
   Widget build(BuildContext context) {
 
     final searchValue = ref.watch(telephoneSearchValueProvider);
     print('빌드함?');
-    final state = ref.watch(telephoneBasicFamilyProvider(searchValue));
+    final state = ref.watch(telephoneBasicNotifierProvider);
 
     if (state is CursorPagination<TelephoneBasicModel>){
       return Padding(

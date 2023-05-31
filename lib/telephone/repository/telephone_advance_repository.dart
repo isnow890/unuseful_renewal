@@ -30,7 +30,7 @@ abstract class TelephoneAdvanceRepository
   @Headers({'accessKey': 'true'})
   Future<CursorPagination<TelephoneAdvanceModel>> paginate({
     @Queries() PaginationParams? paginationParams =
-    const PaginationParams(after: null, count: null),
+    const PaginationParams(after: null, count: null,searchValue: null),
   });
 
 

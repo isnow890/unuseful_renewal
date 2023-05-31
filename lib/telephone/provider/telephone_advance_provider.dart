@@ -3,38 +3,43 @@ import 'package:unuseful/telephone/model/telephone_advance_model.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 import 'package:unuseful/telephone/repository/telephone_advance_repository.dart';
 
-final telephoneAdvanceFamilyProvider =
-    Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
-  final searchResult = ref.watch(telephoneAdvanceNotifierProvider.notifier);
+import '../../common/model/cursor_pagination_model.dart';
+import '../../common/provider/pagination_provider.dart';
 
-  List<TelephoneAdvanceModel> testModel = List<TelephoneAdvanceModel>.generate(
-    1000,
-    (index) {
-      return TelephoneAdvanceModel(
-          sectDeptCd: 'SECT_DEPT_CD',
-          stfNo: 'STF_NO',
-          korNm: '양찬우',
-          telNoNm: 'TEL_NO_NM',
-          telNoAbbrNm: 'TEL_NO_ABBR_NM',
-          etntTelNo: '5509',
-          ugtTelNo: '010-4575-1190',
-          plc: 'PLC',
-          telNoTpCd: 'TEL_NO_TP_CD',
-          tmldYn: 'TMLD_YN',
-          opnYn: 'OPN_YN',
-          pdaNm: 'PDA_NM',
-          seq: 1,
-          rmkNm: 'RMK_NM',
-          deptCd: 'DEPT_CD',
-          deptCdNm: '전산정보팀',
-          hspTpCd: '서울병원',
-          telNoSeq: 1,
-          sid: 'SID',
-          deptNm: '전산정보팀', orderSeq: 1);
-    },
-  );
 
-  return TelephoneModel<TelephoneAdvanceModel>(data: testModel);
+//
+// final telephoneAdvanceFamilyProvider =
+//     Provider.family<TelephoneModelBase?, String?>((ref, searchValue) {
+//   final searchResult = ref.watch(telephoneAdvanceNotifierProvider.notifier);
+//
+//   List<TelephoneAdvanceModel> testModel = List<TelephoneAdvanceModel>.generate(
+//     1000,
+//     (index) {
+//       return TelephoneAdvanceModel(
+//           sectDeptCd: 'SECT_DEPT_CD',
+//           stfNo: 'STF_NO',
+//           korNm: '양찬우',
+//           telNoNm: 'TEL_NO_NM',
+//           telNoAbbrNm: 'TEL_NO_ABBR_NM',
+//           etntTelNo: '5509',
+//           ugtTelNo: '010-4575-1190',
+//           plc: 'PLC',
+//           telNoTpCd: 'TEL_NO_TP_CD',
+//           tmldYn: 'TMLD_YN',
+//           opnYn: 'OPN_YN',
+//           pdaNm: 'PDA_NM',
+//           seq: 1,
+//           rmkNm: 'RMK_NM',
+//           deptCd: 'DEPT_CD',
+//           deptCdNm: '전산정보팀',
+//           hspTpCd: '서울병원',
+//           telNoSeq: 1,
+//           sid: 'SID',
+//           deptNm: '전산정보팀', orderSeq: 1);
+//     },
+//   );
+//
+//   return TelephoneModel<TelephoneAdvanceModel>(data: testModel);
   //
   // if (searchValue == null) {
   //   return searchResult as TelephoneModel<TelephoneAdvanceModel>;
@@ -68,35 +73,17 @@ final telephoneAdvanceFamilyProvider =
   //   }
   //   return TelephoneModel(data: tmpData);
   // }
-});
+//});
+//
+//
+// final telephoneAdvanceNotifierProvider =
+//     StateNotifierProvider<TelephoneAdvanceNotifier, CursorPaginationBase>((ref) {
+//   final repository = ref.watch(telephoneAdvanceRepositoryProvider);
+//   final notifier = TelephoneAdvanceNotifier(repository: repository);
+//   return notifier;
+// });
+//
+// class TelephoneAdvanceNotifier extends PaginationProvider<TelephoneAdvanceModel, TelephoneAdvanceRepository> {
+//   TelephoneAdvanceNotifier({required super.repository});
+// }
 
-final telephoneAdvanceNotifierProvider =
-    StateNotifierProvider<TelephoneAdvanceNotifier, TelephoneModelBase?>((ref) {
-  final repository = ref.watch(telephoneAdvanceRepositoryProvider);
-  final notifier = TelephoneAdvanceNotifier(repository: repository);
-  return notifier;
-});
-
-class TelephoneAdvanceNotifier extends StateNotifier<TelephoneModelBase?> {
-  final TelephoneAdvanceRepository repository;
-
-  TelephoneAdvanceNotifier({required this.repository})
-      : super(TelephoneModelLoading()) {
-    getAdvance();
-  }
-
-  Future<void> getAdvance() async {
-    state = TelephoneModelLoading();
-    try {
-      final resp = await repository.getAdvance();
-      state = TelephoneModel<TelephoneAdvanceModel>(data: resp);
-    } catch (e) {
-      state = TelephoneModelError(message: '에러가 발생했습니다');
-      return Future.value(state);
-    }
-  }
-
-//   TelephoneAdvanceNotifier({
-//     required this.
-// })
-}

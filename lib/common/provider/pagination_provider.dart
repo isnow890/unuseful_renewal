@@ -1,4 +1,3 @@
-
 import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/model/model_with_order_seq.dart';
@@ -8,6 +7,7 @@ import '../model/pagination_params.dart';
 import '../repository/base_pagination_provider.dart';
 
 class _PaginationInfo {
+  final String searchValue;
   final int fetchCount;
 
   // 추가로 데이터 더 가져오기.
@@ -22,9 +22,10 @@ class _PaginationInfo {
   final bool forceRefetch;
 
   _PaginationInfo(
-      {this.fetchCount = 20,
-        this.fetchMore = false,
-        this.forceRefetch = false});
+      {this.searchValue = '',
+      this.fetchCount = 20,
+      this.fetchMore = false,
+      this.forceRefetch = false});
 }
 
 //113355
@@ -33,8 +34,9 @@ class _PaginationInfo {
 //IModelWithId의 경우 (T) 리턴되는 타입인데 이것도 제네릭을 사용하기 위하여 공통되게 사용하는 Id 생성함.
 //IModelWithId(U)는 T의 지나친 일반화를 줄여주는 역할을 함. 모델을 다 IModelWithID를 상속받게끔 해서.
 class PaginationProvider<T extends IModelWithDataSeq,
-U extends IBasePaginationRepository<T>>
+        U extends IBasePaginationRepository<T>>
     extends StateNotifier<CursorPaginationBase> {
+  final String searchValue;
   final U repository;
   final paginationThrottle = Throttle(
     Duration(seconds: 5), initialValue: _PaginationInfo(),
@@ -42,23 +44,21 @@ U extends IBasePaginationRepository<T>>
     checkEquality: false,
   );
 
-  PaginationProvider({required this.repository})
+  PaginationProvider({required this.searchValue, required this.repository})
       : super(CursorPaginationLoading()) {
     paginate();
 
     //리스너 생성
     paginationThrottle.values.listen(
-          (state) {
+      (state) {
         _throttledPagination(state);
       },
     );
   }
 
   Future<void> paginate({
-
     //조회조건
-    List<String>? searchValue,
-
+    String searchValue = '',
     int fetchCount = 20,
     // 추가로 데이터 더 가져오기.
 
@@ -72,12 +72,15 @@ U extends IBasePaginationRepository<T>>
     bool forceRefetch = false,
   }) async {
     paginationThrottle.setValue(_PaginationInfo(
-        fetchCount: fetchCount,
-        fetchMore: fetchMore,
-        forceRefetch: forceRefetch));
+      fetchCount: fetchCount,
+      fetchMore: fetchMore,
+      forceRefetch: forceRefetch,
+      searchValue: searchValue,
+    ));
   }
 
   _throttledPagination(_PaginationInfo info) async {
+    final String searchValue = info.searchValue;
     final int fetchCount = info.fetchCount;
 
     // 추가로 데이터 더 가져오기.
@@ -135,6 +138,7 @@ U extends IBasePaginationRepository<T>>
       // PaginationParams 생성
       PaginationParams paginationParams = PaginationParams(
         count: fetchCount,
+        searchValue: searchValue,
       );
 
       // fetchMore
@@ -142,13 +146,14 @@ U extends IBasePaginationRepository<T>>
       if (fetchMore) {
         final pState = (state as CursorPagination<T>);
         state =
-        //pState.meta pState.data-> 이미 조회된 상태에서 데이터를 더 붙일것이므로.
+            //pState.meta pState.data-> 이미 조회된 상태에서 데이터를 더 붙일것이므로.
 
-        CursorPaginationFetchingMore(meta: pState.meta, data: pState.data);
+            CursorPaginationFetchingMore(meta: pState.meta, data: pState.data);
 
         //113355 다이나믹으로 유추중이므로 IModelWithId를 만들게 됨.
         paginationParams = paginationParams.copyWith(
           after: pState.data.last.orderSeq,
+          searchValue: searchValue,
         );
       }
 
@@ -159,20 +164,20 @@ U extends IBasePaginationRepository<T>>
         if (state is CursorPagination && !forceRefetch) {
           final pState = state as CursorPagination<T>;
 
-          state =
-              CursorPaginationRefetching<T>(meta: pState.meta, data: pState.data);
+          state = CursorPaginationRefetching<T>(
+              meta: pState.meta, data: pState.data);
         } else {
           state = CursorPaginationLoading();
         }
       }
 
       final resp =
-      await repository.paginate(paginationParams: paginationParams);
+          await repository.paginate(paginationParams: paginationParams);
 
       if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPaginationFetchingMore;
         state = resp.copywith(
-          //기존에 있던 데이터 + 새로운 데이터가 추가됨.
+            //기존에 있던 데이터 + 새로운 데이터가 추가됨.
             data: [
               ...pState.data,
               ...resp.data,

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
-import 'package:unuseful/telephone/model/telephone_advance_model.dart';
+import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
 import '../../common/const/data.dart';
 import '../../common/dio/dio.dart';
@@ -12,24 +12,25 @@ import '../model/telephone_basic_model.dart';
 
 part 'telephone_basic_repository.g.dart';
 
-final telephoneBasicRepositoryProvider = Provider<TelephoneBasicRepository>((ref) {
- final dio = ref.watch(dioProvider);
- final repository = TelephoneBasicRepository(dio,baseUrl: 'http://$ip/telephone/basic');
- return repository;
+final telephoneBasicRepositoryProvider =
+    Provider<TelephoneBasicRepository>((ref) {
+  final searchValue = ref.watch(telephoneSearchValueProvider);
+  final dio = ref.watch(dioProvider);
+  final repository = TelephoneBasicRepository(dio,
+      baseUrl: 'http://$ip/telephone/basic');
+  return repository;
 });
 
-
 @RestApi()
- abstract class TelephoneBasicRepository extends IBasePaginationRepository<TelephoneBasicModel>{
-  factory TelephoneBasicRepository(Dio dio, {String baseUrl})=_TelephoneBasicRepository;
+abstract class TelephoneBasicRepository
+    extends IBasePaginationRepository<TelephoneBasicModel> {
+  factory TelephoneBasicRepository(Dio dio, {String baseUrl}) =
+      _TelephoneBasicRepository;
 
   @GET('/')
   @Headers({'accessKey': 'true'})
   Future<CursorPagination<TelephoneBasicModel>> paginate({
-   @Queries() PaginationParams? paginationParams =
-   const PaginationParams(after: null, count: null),
+    @Queries() PaginationParams? paginationParams =
+        const PaginationParams(after: null, count: null, searchValue: null),
   });
-
-
-
 }
