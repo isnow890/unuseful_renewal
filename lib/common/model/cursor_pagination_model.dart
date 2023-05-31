@@ -37,20 +37,30 @@ class CursorPagination<T> extends CursorPaginationBase {
 
   //제네릭 사용 3 T 필요한 부분 선언
   factory CursorPagination.fromJson(
-      Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$CursorPaginationFromJson(json, fromJsonT);
 }
 
 @JsonSerializable()
 class CursorPaginationMeta {
-  final int count;
+  final int statusCode;
   final bool hasMore;
+  final int totalCount;
+  final String message;
 
-  CursorPaginationMeta({required this.count, required this.hasMore});
+  CursorPaginationMeta({
+    required this.statusCode,
+    required this.hasMore,
+    required this.totalCount,
+    required this.message,
+  });
 
-  CursorPaginationMeta copyWith({int? count, bool? hasMore}) {
+  CursorPaginationMeta copyWith({int? statusCode, bool? hasMore, int? totalCount, String? message}) {
     return CursorPaginationMeta(
-        count: count ?? this.count, hasMore: hasMore ?? this.hasMore);
+        statusCode: statusCode ?? this.statusCode,
+        hasMore: hasMore ?? this.hasMore,
+        totalCount: totalCount ?? this.totalCount,
+        message: message ?? this.message);
   }
 
   factory CursorPaginationMeta.fromJson(Map<String, dynamic> json) =>

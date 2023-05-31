@@ -6,19 +6,11 @@ import 'package:unuseful/user/model/login_model.dart';
 import '../../common/const/data.dart';
 
 
-final stfNoProvider = StateProvider((ref) async{
-  final secure = ref.watch(secureStorageProvider);
-
-  final value = await secure.read(key: CONST_STF_NO);
-  return value;
-
-});
-
+final stfNoProvider = StateProvider((ref) async => await ref.watch(secureStorageProvider).read(key: CONST_STF_NO));
 
 final loginVariableStateProvider = StateNotifierProvider<LoginVariableStateNofifier,LoginModel>((ref) {
   final secure = ref.watch(secureStorageProvider);
-  final notifier = LoginVariableStateNofifier(secure: secure);
-  return notifier;
+  return LoginVariableStateNofifier(secure: secure);
 });
 
 class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
@@ -29,23 +21,23 @@ class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
   }) : super(LoginModel()) {
     getVariableFromSecureStorage();
   }
-
    getVariableFromSecureStorage() async {
-    final STF_NO = await secure.read(key: CONST_STF_NO);
-    final PASSWORD = await secure.read(key: CONST_PASSWORD);
-    final HSP_TP_CD = await secure.read(key: CONST_HSP_TP_CD);
-    state = LoginModel(HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
+    final stfNo = await secure.read(key: CONST_STF_NO);
+    final password = await secure.read(key: CONST_PASSWORD);
+    final hspTpCd = await secure.read(key: CONST_HSP_TP_CD);
+    state = LoginModel(hspTpCd: hspTpCd, stfNo: stfNo, password: password);
   }
 
-  void update({ String? hspTpCd,String? stfNo, String? password}){
+  void updateModel({ String? hspTpCd,String? stfNo, String? password}){
     //print('hspTpCd??'+state.HSP_TP_CD!);
 
-    final tmpStfNo = state.STF_NO;
-    final  tmpPassword= state.PASSWORD;
-    final tmpHspTpCd = state.HSP_TP_CD;
+    final tmpStfNo = state.stfNo;
+    final  tmpPassword= state.password;
+    final tmpHspTpCd = state.hspTpCd;
 
-    state = LoginModel(HSP_TP_CD:hspTpCd ??tmpHspTpCd, STF_NO: stfNo??tmpStfNo,
-    PASSWORD: password?? tmpPassword);
+
+    state = LoginModel(hspTpCd:hspTpCd ??tmpHspTpCd, stfNo: stfNo??tmpStfNo,
+    password: password?? tmpPassword);
   }
 
 }

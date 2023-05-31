@@ -53,7 +53,7 @@ class MainDrawer extends ConsumerWidget {
                           width: 10,
                         ),
                         Text(
-                          convertedUser.STF_NM,
+                          convertedUser.stfNm,
                           style: ts,
                         ),
                       ],
@@ -67,7 +67,7 @@ class MainDrawer extends ConsumerWidget {
                           width: 10,
                         ),
                         Text(
-                          convertedUser.DEPT_NM,
+                          convertedUser.deptNm,
                           style: ts,
                         ),
                       ],

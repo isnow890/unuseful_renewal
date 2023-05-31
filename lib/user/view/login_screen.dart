@@ -89,13 +89,13 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
                           title: Text('se'),
                           value: '01',
                           activeColor: PRIMARY_COLOR,
-                          groupValue: loginValue.HSP_TP_CD,
+                          groupValue: loginValue.hspTpCd,
                           onChanged: (value) {
                             FocusManager.instance.primaryFocus?.unfocus();
 
                             ref
                                 .read(loginVariableStateProvider.notifier)
-                                .update(hspTpCd: value!);
+                                .updateModel(hspTpCd: value!);
 
                             // print('업데이트 후2'+value);
                           }),
@@ -104,14 +104,14 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
                       child: RadioListTile(
                           title: Text('md'),
                           value: '02',
-                          groupValue: loginValue.HSP_TP_CD,
+                          groupValue: loginValue.hspTpCd,
                           activeColor: PRIMARY_COLOR,
                           onChanged: (value) {
                             FocusManager.instance.primaryFocus?.unfocus();
 
                             ref
                                 .read(loginVariableStateProvider.notifier)
-                                .update(hspTpCd: value!);
+                                .updateModel(hspTpCd: value!);
                           }),
                     ),
                   ],
@@ -142,11 +142,11 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
                 ElevatedButton(
                   onPressed: () {
                     if (validateBeforeLogin(LoginModel(
-                        HSP_TP_CD: loginValue.HSP_TP_CD,
-                        STF_NO: stfNo,
-                        PASSWORD: password))) {
+                        hspTpCd: loginValue.hspTpCd,
+                        stfNo: stfNo,
+                        password: password))) {
                       ref.read(userMeProvider.notifier).login(
-                          HSP_TP_CD: loginValue.HSP_TP_CD!,
+                          HSP_TP_CD: loginValue.hspTpCd!,
                           STF_NO: stfNo!,
                           PASSWORD: password!);
                     }
@@ -178,14 +178,14 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
     // print(model.STF_NO);
     // print(model.PASSWORD);
 
-    if (model.HSP_TP_CD == null) {
+    if (model.hspTpCd == null) {
       print('hspTpCd is null');
       showToast(msg: 'HspTpCd is required to login');
       return false;
-    } else if (model.STF_NO == null || model.STF_NO == '') {
+    } else if (model.stfNo == null || model.stfNo == '') {
       showToast(msg: 'StfNo is required to login');
       return false;
-    } else if (model.PASSWORD == null) {
+    } else if (model.password == null) {
       showToast(msg: 'Password is required to login');
       return false;
     }

@@ -7,7 +7,6 @@ import '../model/pagination_params.dart';
 import '../repository/base_pagination_provider.dart';
 
 class _PaginationInfo {
-  final String searchValue;
   final int fetchCount;
 
   // 추가로 데이터 더 가져오기.
@@ -22,8 +21,7 @@ class _PaginationInfo {
   final bool forceRefetch;
 
   _PaginationInfo(
-      {this.searchValue = '',
-      this.fetchCount = 20,
+      {this.fetchCount = 50,
       this.fetchMore = false,
       this.forceRefetch = false});
 }
@@ -58,8 +56,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
 
   Future<void> paginate({
     //조회조건
-    String searchValue = '',
-    int fetchCount = 20,
+    int fetchCount = 50,
     // 추가로 데이터 더 가져오기.
 
     // true - 추가로 데이터 더 가져옴
@@ -75,12 +72,10 @@ class PaginationProvider<T extends IModelWithDataSeq,
       fetchCount: fetchCount,
       fetchMore: fetchMore,
       forceRefetch: forceRefetch,
-      searchValue: searchValue,
     ));
   }
 
   _throttledPagination(_PaginationInfo info) async {
-    final String searchValue = info.searchValue;
     final int fetchCount = info.fetchCount;
 
     // 추가로 데이터 더 가져오기.
@@ -172,7 +167,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
       }
 
       final resp =
-          await repository.paginate(paginationParams: paginationParams);
+          await repository.paginate( paginationParams: paginationParams);
 
       if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPaginationFetchingMore;

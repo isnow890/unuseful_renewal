@@ -1,8 +1,15 @@
-class LoginModel{
-  final String? HSP_TP_CD;
-  final String? STF_NO;
-  final String? PASSWORD;
+class LoginModel {
+  final String? hspTpCd;
+  final String? stfNo;
+  final String? password;
 
-  LoginModel({this.HSP_TP_CD,  this.STF_NO,  this.PASSWORD});
+  LoginModel({this.hspTpCd, this.stfNo, this.password});
 
+
+  LoginModel copywith({String? hspTpCd, String? stfNo, String? password}) {
+    return LoginModel(
+        hspTpCd: hspTpCd ?? this.hspTpCd,
+        stfNo: stfNo ?? this.stfNo,
+        password: this.password ?? password);
+  }
 }

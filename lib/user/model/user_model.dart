@@ -4,7 +4,7 @@ import '../../common/utils/data_utils.dart';
 part 'user_model.g.dart';
 
 
-enum AdvanceType {
+enum AdvancedType {
   basic,
   advance,
   master,
@@ -24,37 +24,37 @@ class UserModelLoading extends UserModelBase{}
 @JsonSerializable()
 class UserModel extends UserModelBase{
 
-  final String HSP_TP_CD;
-  final String STF_NO;
-  final String MESSAGE;
-  final String STF_NM;
-  final String DEPT_CD;
-  final String DEPT_NM;
+  final String hspTpCd;
+  final String stfNo;
+  final String message;
+  final String stfNm;
+  final String deptCd;
+  final String deptNm;
   @JsonKey(
   fromJson: DataUtils.toBool,
   )
-  final bool DR_YN;
+  final bool drYn;
   @JsonKey(
   fromJson: DataUtils.toBool,
   )
-  final bool HITDUTY_YN;
+  final bool hitDutyYn;
   @JsonKey(
   fromJson: DataUtils.findAdvanceTypeEnum
   )
-  final AdvanceType ADVANCE_TYPE;
-  final String ACCESS_KEY;
+  final AdvancedType advancedType;
+  final String accessKey;
 
   UserModel({
-  required this.HSP_TP_CD,
-  required this.STF_NO,
-  required this.MESSAGE,
-  required this.STF_NM,
-  required this.DEPT_CD,
-  required this.DEPT_NM,
-  required this.DR_YN,
-  required this.HITDUTY_YN,
-  required this.ADVANCE_TYPE,
-  required this.ACCESS_KEY,
+  required this.hspTpCd,
+  required this.stfNo,
+  required this.message,
+  required this.stfNm,
+  required this.deptCd,
+  required this.deptNm,
+  required this.drYn,
+  required this.hitDutyYn,
+  required this.advancedType,
+  required this.accessKey,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

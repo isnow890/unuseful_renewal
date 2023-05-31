@@ -34,12 +34,10 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
     return;
     final accessKey = await storage.read(key: CONST_ACCESS_KEY);
 
-
-
-    if (accessKey == null) state = null;
+    if (accessKey == null)
+      state = null;
     else
-
-    state = null;
+      state = null;
   }
 
   //로그인 로직
@@ -50,41 +48,37 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
     try {
       state = UserModelLoading();
 
-
-
       print('login 시작');
       print('HSP_TP_CD is $HSP_TP_CD');
       print('STF_NO is $STF_NO');
       print('PASSWORD is $PASSWORD');
 
-
       //테스트 용도
       final resp = UserModel(
-          HSP_TP_CD: HSP_TP_CD,
-          STF_NO: STF_NO,
-          MESSAGE: '',
-          STF_NM: 'ycw',
-          DEPT_CD: 'LMT',
-          DEPT_NM: '잡부서',
-          DR_YN: false,
-          HITDUTY_YN: true,
-          ADVANCE_TYPE: AdvanceType.master,
-          ACCESS_KEY: 'abc');
+          hspTpCd: HSP_TP_CD,
+          stfNo: STF_NO,
+          message: '',
+          stfNm: 'ycw',
+          deptCd: 'LMT',
+          deptNm: '잡부서',
+          drYn: false,
+          hitDutyYn: true,
+          advancedType: AdvancedType.master,
+          accessKey: 'abc');
 
       //실제
       // final resp = await authRepository.login(
       //     HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
 
-      if (resp.MESSAGE == '') {
-
+      if (resp.message == '') {
         print('save');
 
-        await storage.write(key: CONST_ACCESS_KEY, value: resp.ACCESS_KEY);
-        await storage.write(key: CONST_STF_NO, value: resp.STF_NO);
-        await storage.write(key: CONST_HSP_TP_CD, value: resp.HSP_TP_CD);
+        await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);
+        await storage.write(key: CONST_STF_NO, value: resp.stfNo);
+        await storage.write(key: CONST_HSP_TP_CD, value: resp.hspTpCd);
         state = resp;
       } else {
-        state = UserModelError(message: resp.MESSAGE);
+        state = UserModelError(message: resp.message);
       }
       return resp;
     } catch (e) {

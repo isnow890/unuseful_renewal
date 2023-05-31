@@ -92,7 +92,7 @@ class AuthProvider extends ChangeNotifier {
 
             final loginValue = ref.read(loginVariableStateProvider);
 
-            return LoginScreen(loginValue.STF_NO);
+            return LoginScreen(loginValue.stfNo);
           },
         ),
         GoRoute(

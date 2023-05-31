@@ -8,6 +8,11 @@ import '../secure_storage/secure_storage.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio();
+
+
+  dio.options.connectTimeout=5000;
+  dio.options.connectTimeout=3000;
+  dio.options.sendTimeout=3000;
   final storage = ref.watch(secureStorageProvider);
   dio.interceptors.add(CustomInterceptor(storage: storage, ref: ref));
   return dio;
