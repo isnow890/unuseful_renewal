@@ -2,17 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 
 class SplashScreen extends ConsumerWidget {
-  static String get routeName =>'splash';
+  static String get routeName => 'splash';
+
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
-      backgroundColor: PRIMARY_COLOR,
+      backgroundColor: Colors.white,
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: Column(
@@ -25,9 +27,7 @@ class SplashScreen extends ConsumerWidget {
             SizedBox(
               height: 16,
             ),
-            CircularProgressIndicator(
-              color: Colors.white,
-            ),
+            CustomCircularProgressIndicator(),
           ],
         ),
       ),

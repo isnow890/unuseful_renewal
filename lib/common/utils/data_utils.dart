@@ -10,7 +10,7 @@ class DataUtils {
 
   static bool toBool(String? value) => value == 'Y' ? true : false;
 
-  static String pathToUrl(String? value) => 'http://$ip/$value';
+  static String pathToUrl(String? value) => '$ip/$value';
 
 //Base64 인코딩
   static String plainToBase64(String plain) {

@@ -39,7 +39,6 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
   Widget build(BuildContext context) {
     //값이 바뀔때마다 재 빌드 하기 위하여.
     final searchValue = ref.watch(telephoneSearchValueProvider);
-    print('빌드함?');
     final state = ref.watch(telephoneBasicNotifierProvider);
 
     if (state is CursorPaginationLoading) {
@@ -87,6 +86,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
               .paginate(forceRefetch: true);
         },
         child: ListView.separated(
+          controller: controller,
           separatorBuilder: (context, index) {
             return Divider(
               height: 20.0,
@@ -111,8 +111,9 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
               leading: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+
                   Text(
-                    state.data[index].hspTpCd,
+                    state.data[index].hspTpCd??'',
                     style: TextStyle(
                         fontSize: 22,
                         color: PRIMARY_COLOR,
@@ -129,15 +130,15 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                   ),
                 ],
               ),
-              title: Text(state.data[index].deptNm),
+              title: Text(state.data[index].deptNm??''),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(state.data[index].telNoAbbrNm),
+                  Text(state.data[index].telNoAbbrNm??''),
                   Row(
                     children: [
                       Text(
-                        state.data[index].etntTelNo,
+                        state.data[index].etntTelNo??'',
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -147,7 +148,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                         width: 10,
                       ),
                       Text(
-                        state.data[index].telNoNm,
+                        state.data[index].telNoNm??'',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500),
                       ),

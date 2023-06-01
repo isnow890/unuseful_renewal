@@ -9,7 +9,7 @@ part 'user_me_repository.g.dart';
 
 final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = UserMeRepository(dio, baseUrl: 'http://$ip/user/me');
+  final repository = UserMeRepository(dio, baseUrl: '$ip/user/me');
   return repository;
 });
 

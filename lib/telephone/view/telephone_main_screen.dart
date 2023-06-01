@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/component/text_title.dart';
@@ -29,6 +31,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   int index = 0;
 
   late final String searchText;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -76,6 +79,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
                               groupValue: orderRadioTile,
                               activeColor: PRIMARY_COLOR,
                               onChanged: () {
+
                                 ref
                                     .read(telephoneOrderRadioTileProvider
                                     .notifier)
@@ -126,10 +130,16 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
             contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
             hintText: 'Enter some text to search.',
             onChanged: (value) {
-              ref
-                  .read(telephoneSearchValueProvider
-                  .notifier)
-                  .update((state) => value);
+              if (_timer?.isActive ?? false) _timer!.cancel();
+              _timer = Timer(const Duration(milliseconds: 500), () {
+
+                ref
+                    .read(telephoneSearchValueProvider
+                    .notifier)
+                    .update((state) => value);
+
+
+              });
 
               print('value 업데이트 함');
 

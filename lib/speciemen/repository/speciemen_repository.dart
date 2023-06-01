@@ -11,7 +11,7 @@ part 'speciemen_repository.g.dart';
 
 final specimenRepositoryProvider = Provider<SpeciemenRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = SpeciemenRepository(dio, baseUrl: 'http:/$ip/specimen');
+  final repository = SpeciemenRepository(dio, baseUrl: '$ip/specimen');
   return repository;
 });
 

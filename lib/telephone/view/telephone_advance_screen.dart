@@ -38,7 +38,6 @@ class _TelephoneAdvanceScreenState
   @override
   Widget build(BuildContext context) {
     final searchValue = ref.watch(telephoneSearchValueProvider);
-    print('빌드함?');
     final state = ref.watch(telephoneAdvanceNotifierProvider);
 
     if (state is CursorPaginationLoading) {

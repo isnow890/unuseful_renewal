@@ -16,7 +16,7 @@ final telephoneBasicRepositoryProvider =
     Provider<TelephoneBasicRepository>((ref) {
   final dio = ref.watch(dioProvider);
   final repository = TelephoneBasicRepository(dio,
-      baseUrl: 'http://$ip/telephone/basic');
+      baseUrl: '$ip/telephone/basic');
   return repository;
 });
 

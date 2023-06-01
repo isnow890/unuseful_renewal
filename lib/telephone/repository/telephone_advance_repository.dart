@@ -16,7 +16,7 @@ final telephoneAdvanceRepositoryProvider =
     Provider<TelephoneAdvanceRepository>((ref) {
   final dio = ref.watch(dioProvider);
   final repository =
-      TelephoneAdvanceRepository(dio, baseUrl: 'http://$ip/telephone/advance');
+      TelephoneAdvanceRepository(dio, baseUrl: '$ip/telephone/advance');
   return repository;
 });
 

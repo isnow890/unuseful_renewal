@@ -21,7 +21,7 @@ class _PaginationInfo {
   final bool forceRefetch;
 
   _PaginationInfo(
-      {this.fetchCount = 50,
+      {this.fetchCount = 200,
       this.fetchMore = false,
       this.forceRefetch = false});
 }
@@ -37,10 +37,13 @@ class PaginationProvider<T extends IModelWithDataSeq,
   final String searchValue;
   final U repository;
   final paginationThrottle = Throttle(
-    Duration(seconds: 5), initialValue: _PaginationInfo(),
+    Duration(seconds: 3), initialValue: _PaginationInfo(),
     //값이 업데이트될때 throttle 사용여부
     checkEquality: false,
   );
+
+
+
 
   PaginationProvider({required this.searchValue, required this.repository})
       : super(CursorPaginationLoading()) {
@@ -56,7 +59,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
 
   Future<void> paginate({
     //조회조건
-    int fetchCount = 50,
+    int fetchCount = 200,
     // 추가로 데이터 더 가져오기.
 
     // true - 추가로 데이터 더 가져옴
@@ -134,6 +137,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
       PaginationParams paginationParams = PaginationParams(
         count: fetchCount,
         searchValue: searchValue,
+        after: 0,
       );
 
       // fetchMore
@@ -169,6 +173,9 @@ class PaginationProvider<T extends IModelWithDataSeq,
       final resp =
           await repository.paginate( paginationParams: paginationParams);
 
+
+      print(resp);
+
       if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPaginationFetchingMore;
         state = resp.copywith(
@@ -181,7 +188,9 @@ class PaginationProvider<T extends IModelWithDataSeq,
         state = resp;
       }
     } catch (e, stack) {
-      // print(e);
+
+      print('에러발생');
+      print(e);
       // print(stack);
       state = CursorPaginationError(message: '데이터 못가져옴');
     }

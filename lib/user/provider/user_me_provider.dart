@@ -75,7 +75,7 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       print(resp.stfNo);
       print(resp.stfNm);
 
-      if (resp.message == '') {
+      if (resp.message== null) {
 
 
         await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);

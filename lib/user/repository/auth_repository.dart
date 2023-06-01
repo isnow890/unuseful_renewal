@@ -10,7 +10,7 @@ import '../../common/utils/data_utils.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = AuthRepository(dio: dio, baseUrl: 'http://$ip');
+  final repository = AuthRepository(dio: dio, baseUrl: '$ip');
   return repository;
 });
 

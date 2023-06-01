@@ -5,15 +5,15 @@ part 'telephone_basic_model.g.dart';
 
 @JsonSerializable()
 class TelephoneBasicModel implements IModelWithDataSeq{
-  String deptNm;
-  String telNoNm;
-  String hspTpCd;
-  String etntTelNo;
-  String telNoAbbrNm;
-  String sectDeptNm;
+  String? deptNm;
+  String? telNoNm;
+  String? hspTpCd;
+  String? etntTelNo;
+  String? telNoAbbrNm;
+  String? sectDeptNm;
   @override
   int orderSeq;
-  String purifiedTelNo;
+  String? purifiedTelNo;
 
   TelephoneBasicModel(
       {required this.deptNm,
