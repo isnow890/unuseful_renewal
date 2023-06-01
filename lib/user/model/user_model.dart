@@ -14,38 +14,36 @@ abstract class UserModelBase{}
 //에러났을때
 class UserModelError extends UserModelBase{
   final String message;
-  UserModelError({required this.message});
+  UserModelError({required this.message}){print('생성');}
 }
 
 //로딩중
 
 class UserModelLoading extends UserModelBase{}
-
+// {"stfNo":"30430","message":null,"stfNm":"양찬우","deptCd":"HIT","deptNm":"HIT","drYn":null,"advancedType":"basic","hitDutyYn":"Y"}
 @JsonSerializable()
 class UserModel extends UserModelBase{
 
-  final String hspTpCd;
-  final String stfNo;
-  final String message;
-  final String stfNm;
-  final String deptCd;
-  final String deptNm;
+  final String? stfNo;
+  final String? message;
+  final String? stfNm;
+  final String? deptCd;
+  final String? deptNm;
   @JsonKey(
   fromJson: DataUtils.toBool,
   )
-  final bool drYn;
+  final bool? drYn;
   @JsonKey(
   fromJson: DataUtils.toBool,
   )
-  final bool hitDutyYn;
+  final bool? hitDutyYn;
   @JsonKey(
   fromJson: DataUtils.findAdvanceTypeEnum
   )
-  final AdvancedType advancedType;
-  final String accessKey;
+  final AdvancedType? advancedType;
+  final String? accessKey;
 
   UserModel({
-  required this.hspTpCd,
   required this.stfNo,
   required this.message,
   required this.stfNm,

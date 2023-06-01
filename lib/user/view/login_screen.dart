@@ -7,7 +7,8 @@ import '../../common/component/custom_text_form_field.dart';
 import '../../common/component/general_toast_message.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
-import '../repository/login_variable_provider.dart';
+import '../model/user_model.dart';
+import '../provider/login_variable_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen(this.stfNo, {Key? key}) : super(key: key);
@@ -24,6 +25,9 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
   String? hspTpCd;
   String? stfNo;
   String? password = '1111';
+
+
+
 
   final stfNoController = TextEditingController();
 
@@ -50,6 +54,10 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final state = ref.watch(userMeProvider);
+
+
     final loginValue = ref.watch(loginVariableStateProvider);
 
     // print(loginValue.STF_NO);
@@ -140,15 +148,16 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
                 ),
                 //dio post 요청 보내기
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: state is UserModelLoading ? null : () {
+
                     if (validateBeforeLogin(LoginModel(
                         hspTpCd: loginValue.hspTpCd,
                         stfNo: stfNo,
                         password: password))) {
                       ref.read(userMeProvider.notifier).login(
-                          HSP_TP_CD: loginValue.hspTpCd!,
-                          STF_NO: stfNo!,
-                          PASSWORD: password!);
+                          hspTpCd: loginValue.hspTpCd!,
+                          stfNo: stfNo!,
+                          password: password!);
                     }
                   },
                   // onPressed: state is UserModelLoading
@@ -179,7 +188,6 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
     // print(model.PASSWORD);
 
     if (model.hspTpCd == null) {
-      print('hspTpCd is null');
       showToast(msg: 'HspTpCd is required to login');
       return false;
     } else if (model.stfNo == null || model.stfNo == '') {

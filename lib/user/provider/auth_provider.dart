@@ -8,7 +8,7 @@ import 'package:unuseful/user/provider/user_me_provider.dart';
 import '../../common/const/data.dart';
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
-import '../repository/login_variable_provider.dart';
+import 'login_variable_provider.dart';
 import '../view/login_screen.dart';
 import '../view/splash_screen.dart';
 

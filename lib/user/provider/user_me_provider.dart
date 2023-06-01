@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:unuseful/user/model/user_model.dart';
 
+import '../../common/component/general_toast_message.dart';
 import '../../common/const/data.dart';
 import '../../common/secure_storage/secure_storage.dart';
 import '../repository/auth_repository.dart';
@@ -24,65 +25,75 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
   UserMeStateNotifier(
       {required this.storage,
       required this.repository,
-      required this.authRepository})
-      : super(UserModelLoading()) {
+      required this.authRepository}) : super(null)
+       {
     getMe();
   }
 
   Future<void> getMe() async {
-    state = null;
-    return;
-    final accessKey = await storage.read(key: CONST_ACCESS_KEY);
-
-    if (accessKey == null)
-      state = null;
-    else
-      state = null;
+    // state =
+    // return;
+    // final accessKey = await storage.read(key: CONST_ACCESS_KEY);
+    //
+    // if (accessKey == null)
+    //   state = null;
+    // else
+    //   state = null;
   }
 
   //로그인 로직
   Future<UserModelBase> login(
-      {required String HSP_TP_CD,
-      required String STF_NO,
-      required String PASSWORD}) async {
+      {required String hspTpCd,
+      required String stfNo,
+      required String password}) async {
     try {
       state = UserModelLoading();
-
+      //
       print('login 시작');
-      print('HSP_TP_CD is $HSP_TP_CD');
-      print('STF_NO is $STF_NO');
-      print('PASSWORD is $PASSWORD');
+      print('hspTpCd is $hspTpCd');
+      print('stfNo is $stfNo');
+      print('password is $password');
 
-      //테스트 용도
-      final resp = UserModel(
-          hspTpCd: HSP_TP_CD,
-          stfNo: STF_NO,
-          message: '',
-          stfNm: 'ycw',
-          deptCd: 'LMT',
-          deptNm: '잡부서',
-          drYn: false,
-          hitDutyYn: true,
-          advancedType: AdvancedType.master,
-          accessKey: 'abc');
+      // //테스트 용도
+      // final resp = UserModel(
+      //     hspTpCd: hspTpCd,
+      //     stfNo: stfNo,
+      //     message: '',
+      //     stfNm: 'ycw',
+      //     deptCd: 'LMT',
+      //     deptNm: '잡부서',
+      //     drYn: false,
+      //     hitDutyYn: true,
+      //     advancedType: AdvancedType.master,
+      //     accessKey: 'abc');
 
       //실제
-      // final resp = await authRepository.login(
-      //     HSP_TP_CD: HSP_TP_CD, STF_NO: STF_NO, PASSWORD: PASSWORD);
+      final resp = await authRepository.login(hspTpCd: hspTpCd, stfNo: stfNo, password: password);
+
+      print('print');
+
+      print(resp.stfNo);
+      print(resp.stfNm);
 
       if (resp.message == '') {
-        print('save');
+
 
         await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);
         await storage.write(key: CONST_STF_NO, value: resp.stfNo);
-        await storage.write(key: CONST_HSP_TP_CD, value: resp.hspTpCd);
+        await storage.write(key: CONST_HSP_TP_CD, value: hspTpCd);
         state = resp;
       } else {
-        state = UserModelError(message: resp.message);
+
+        showToast(msg: resp.message!);
+
+        // state = UserModelError(message: resp.message);
       }
       return resp;
     } catch (e) {
+      print(e.toString());
       state = UserModelError(message: '로그인에 실패했습니다.');
+      showToast(msg: '로그인에 실패했습니다.');
+
       return Future.value(state);
     }
   }

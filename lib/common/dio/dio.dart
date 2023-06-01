@@ -73,7 +73,8 @@ class CustomInterceptor extends Interceptor {
     //토큰을 재발급 받는 시도를 하고 토큰이 재발급되면
     //다시 새로운 토큰으로 요청.
 
-    print('[ERR] [${err.requestOptions.method}] ${err.requestOptions.uri}');
+
+    print('[ERR] [${err.requestOptions.method}] ${err.requestOptions.uri} ${err.message} ${err.stackTrace.toString()}');
 
     //토큰이 없을 경우 로그아웃 처리함.
 

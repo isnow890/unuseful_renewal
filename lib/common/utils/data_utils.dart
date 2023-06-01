@@ -5,12 +5,12 @@ import '../const/data.dart';
 
 class DataUtils {
   //ADVANCE_TYPE enum으로 변환
-  static findAdvanceTypeEnum(String value) =>
+  static findAdvanceTypeEnum(String? value) =>
       AdvancedType.values.firstWhere((element) => element.name == value);
 
-  static bool toBool(String value) => value == 'Y' ? true : false;
+  static bool toBool(String? value) => value == 'Y' ? true : false;
 
-  static String pathToUrl(String value) => 'http://$ip/$value';
+  static String pathToUrl(String? value) => 'http://$ip/$value';
 
 //Base64 인코딩
   static String plainToBase64(String plain) {
