@@ -42,9 +42,6 @@ class PaginationProvider<T extends IModelWithDataSeq,
     checkEquality: false,
   );
 
-
-
-
   PaginationProvider({required this.searchValue, required this.repository})
       : super(CursorPaginationLoading()) {
     paginate();
@@ -171,10 +168,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
       }
 
       final resp =
-          await repository.paginate( paginationParams: paginationParams);
-
-
-      print(resp);
+          await repository.paginate(paginationParams: paginationParams);
 
       if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPaginationFetchingMore;
@@ -188,7 +182,6 @@ class PaginationProvider<T extends IModelWithDataSeq,
         state = resp;
       }
     } catch (e, stack) {
-
       print('에러발생');
       print(e);
       // print(stack);

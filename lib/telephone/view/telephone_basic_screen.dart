@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/const/colors.dart';
-import 'package:unuseful/common/layout/default_layout.dart';
 import 'package:unuseful/common/model/cursor_pagination_model.dart';
+import 'package:unuseful/common/utils/url_launcher_utils.dart';
 import 'package:unuseful/telephone/model/telephone_basic_model.dart';
 import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
-import '../../common/component/custom_text_form_field.dart';
 import '../../common/utils/pagination_utils.dart';
 
 class TelephoneBasicScreen extends ConsumerStatefulWidget {
@@ -108,12 +107,13 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
             }
 
             return ListTile(
+              contentPadding: EdgeInsets.only(left: 0.0),
+
               leading: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   Text(
-                    state.data[index].hspTpCd??'',
+                    state.data[index].hspTpCd ?? '',
                     style: TextStyle(
                         fontSize: 22,
                         color: PRIMARY_COLOR,
@@ -124,21 +124,23 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.phone_android_outlined,
-                    color: Colors.red,
-                  ),
+                  if (state.data[index].purifiedTelNo != null)
+                    IconButton(
+                      onPressed: () { UrlLauncherUtils.makePhoneCall(state.data[index].purifiedTelNo!);},
+                      icon: Icon(Icons.phone_android_outlined),
+                      color: Colors.red,
+                    ),
                 ],
               ),
-              title: Text(state.data[index].deptNm??''),
+              title: Text(state.data[index].deptNm ?? ''),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(state.data[index].telNoAbbrNm??''),
+                  Text(state.data[index].telNoNm ?? ''),
                   Row(
                     children: [
                       Text(
-                        state.data[index].etntTelNo??'',
+                        state.data[index].etntTelNo ?? '',
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -148,7 +150,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                         width: 10,
                       ),
                       Text(
-                        state.data[index].telNoNm??'',
+                        state.data[index].telNoAbbrNm ?? '',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w500),
                       ),
@@ -163,4 +165,9 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
       ),
     );
   }
+
+
+
 }
+
+

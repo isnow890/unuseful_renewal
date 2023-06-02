@@ -5,12 +5,12 @@ import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
-import '../../common/const/data.dart';
+
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
-import 'login_variable_provider.dart';
 import '../view/login_screen.dart';
 import '../view/splash_screen.dart';
+import 'login_variable_provider.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider(ref: ref);

@@ -9,7 +9,7 @@ part 'user_me_repository.g.dart';
 
 final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = UserMeRepository(dio, baseUrl: '$ip/user/me');
+  final repository = UserMeRepository(dio, baseUrl: '$ip/auth');
   return repository;
 });
 
@@ -18,8 +18,7 @@ final userMeRepositoryProvider = Provider<UserMeRepository>((ref) {
 @RestApi()
 abstract class UserMeRepository {
   factory UserMeRepository(Dio dio, {String baseUrl}) = _UserMeRepository;
-
-  @GET('/')
+  @POST('/getMe')
   @Headers({'accessKey': 'true'})
   Future<UserModel> getMe();
 

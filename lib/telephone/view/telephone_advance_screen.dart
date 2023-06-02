@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/telephone/model/telephone_advance_model.dart';
-import 'package:unuseful/telephone/repository/telephone_advance_repository.dart';
 
 import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/const/colors.dart';
 import '../../common/utils/pagination_utils.dart';
+import '../../common/utils/url_launcher_utils.dart';
 import '../provider/telephone_advance_provider.dart';
 import '../provider/telephone_search_value_provider.dart';
 
@@ -82,6 +82,8 @@ class _TelephoneAdvanceScreenState
                 .paginate(forceRefetch: true);
           },
           child: ListView.separated(
+            controller: controller,
+
             separatorBuilder: (context, index) {
               return Divider(
                 height: 20.0,
@@ -103,51 +105,60 @@ class _TelephoneAdvanceScreenState
               }
 
               return ListTile(
+                contentPadding: EdgeInsets.only(left: 0.0),
+
                 leading: Column(
+
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      state.data[index].korNm,
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: PRIMARY_COLOR,
-                          fontWeight: FontWeight.w600),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      child: Text(
+
+                        state.data[index].korNm ?? '',
+                        overflow: TextOverflow.visible,
+                        softWrap: false,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: PRIMARY_COLOR,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ],
                 ),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.phone_android_outlined,
-                      color: Colors.blue,
-                    ),
+                    if (state.data[index].ugtTelNo != null)
+                      IconButton(
+                        onPressed: () { UrlLauncherUtils.makePhoneCall(state.data[index].ugtTelNo!);},
+                        icon: Icon(Icons.phone_android_outlined),
+                        color: Colors.blue,
+                      ),
                   ],
                 ),
-                title: Text('${state.data[index].deptCdNm}'),
+                title: Text('${state.data[index].deptCdNm ?? ''}'),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${state.data[index].hspTpCd}'),
-                    Row(
-                      children: [
-                        Text(
-                          state.data[index].etntTelNo,
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: PRIMARY_COLOR),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          state.data[index].ugtTelNo,
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    )
+                    Text('${state.data[index].hspTpCd ?? ''}'),
+                    Text(
+                      state.data[index].ugtTelNo ?? '',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    if (state.data[index].etntTelNo != null)
+                      Text(
+                        state.data[index].etntTelNo ?? '',
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: PRIMARY_COLOR),
+                      ),
                   ],
                 ),
                 isThreeLine: true,

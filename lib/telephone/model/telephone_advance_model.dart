@@ -5,29 +5,29 @@ part 'telephone_advance_model.g.dart';
 
 @JsonSerializable()
 class TelephoneAdvanceModel implements IModelWithDataSeq{
-  String sectDeptCd;
-  String stfNo;
-  String korNm;
-  String telNoNm;
-  String telNoAbbrNm;
-  String etntTelNo;
-  String ugtTelNo;
-  String plc;
-  String telNoTpCd;
-  String tmldYn;
-  String opnYn;
-  String pdaNm;
-  int seq;
-  String rmkNm;
-  String deptCd;
-  String deptCdNm;
-  String hspTpCd;
-  int telNoSeq;
-  String sid;
-  String deptNm;
+  String? sectDeptCd;
+  String? stfNo;
+  String? korNm;
+  String? telNoNm;
+  String? telNoAbbrNm;
+  String? etntTelNo;
+  String? ugtTelNo;
+  String? plc;
+  String? telNoTpCd;
+  String? tmldYn;
+  String? opnYn;
+  String? pdaNm;
+  int? seq;
+  String? rmkNm;
+  String? deptCd;
+  String? deptCdNm;
+  String? hspTpCd;
+  double? telNoSeq;
+  String? sid;
+  String? deptNm;
   @override
   int orderSeq;
-  String purifiedTelNo;
+
 
   TelephoneAdvanceModel(
       {required this.sectDeptCd,
@@ -51,7 +51,6 @@ class TelephoneAdvanceModel implements IModelWithDataSeq{
         required this.sid,
         required this.deptNm,
         required this.orderSeq,
-        required this.purifiedTelNo,
       });
 
   factory TelephoneAdvanceModel.fromJson(Map<String, dynamic> json) =>

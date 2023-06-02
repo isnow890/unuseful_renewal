@@ -10,7 +10,7 @@ import '../../common/utils/data_utils.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = AuthRepository(dio: dio, baseUrl: '$ip');
+  final repository = AuthRepository(dio: dio, baseUrl: '$ip/auth');
   return repository;
 });
 
@@ -25,7 +25,6 @@ class AuthRepository {
   Future<UserModel> login(
       {required String hspTpCd, required String stfNo, required String password}) async {
     final String serialized = DataUtils.plainToBase64('$stfNo:$password:$hspTpCd');
-
 
     print(serialized);
     final resp = await dio.post(
