@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
+import 'package:unuseful/patient/view/patient_screen.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
@@ -100,6 +101,12 @@ class AuthProvider extends ChangeNotifier {
           name: SpeciemenScreen.routeName,
           builder: (context, state) => SpeciemenScreen(),
         ),
+    GoRoute(
+      path: '/patient',
+      name: PatientScreen.routeName,
+      builder: (context, state) => PatientScreen(),
+    ),
+
         GoRoute(
           path: '/telephone',
           name: TelePhoneMainScreen.routeName,

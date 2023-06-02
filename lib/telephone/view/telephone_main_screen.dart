@@ -39,6 +39,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
     super.initState();
     controller = TabController(length: 2, vsync: this);
     controller.addListener(tabListener);
+    print('실행 테스트');
   }
 
   void tabListener() {
@@ -57,63 +58,59 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   Widget build(BuildContext context) {
     final select = ref.watch(drawerSelectProvider);
     final orderRadioTile = ref.watch(telephoneOrderRadioTileProvider);
-
-
+    final searchValue = ref.watch(telephoneSearchValueProvider);
     return DefaultLayout(
       centerTitle: false,
-      actions: [
-        IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Data Order'),
-                    content: Container(
-                      width: 300,
-                      height: 100,
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: CustomRadioTile(
-                              groupValue: orderRadioTile,
-                              activeColor: PRIMARY_COLOR,
-                              onChanged: () {
-
-                                ref
-                                    .read(telephoneOrderRadioTileProvider
-                                    .notifier)
-                                    .update((state) => 'asc');
-                              },
-                              value: 'asc',
-                              title: 'Ascending',
-                            ),
-
-                          ),
-                          Expanded(
-                            child: CustomRadioTile(
-                              groupValue: orderRadioTile,
-                              activeColor: PRIMARY_COLOR,
-                              onChanged: () {
-                                ref
-                                    .read(telephoneOrderRadioTileProvider
-                                        .notifier)
-                                    .update((state) => 'desc');
-                              },
-                              value: 'desc',
-                              title: 'Descending',
-                            ),
-
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            icon: Icon(Icons.more_vert)),
-      ],
+      // actions: [
+      //   IconButton(
+      //       onPressed: () {
+      //         showDialog(
+      //           context: context,
+      //           builder: (context) {
+      //             return AlertDialog(
+      //               title: Text('Data Order'),
+      //               content: Container(
+      //                 width: 300,
+      //                 height: 100,
+      //                 child: Column(
+      //                   children: [
+      //                     Expanded(
+      //                       child: CustomRadioTile(
+      //                         groupValue: orderRadioTile,
+      //                         activeColor: PRIMARY_COLOR,
+      //                         onChanged: () {
+      //                           ref
+      //                               .read(telephoneOrderRadioTileProvider
+      //                                   .notifier)
+      //                               .update((state) => 'asc');
+      //                         },
+      //                         value: 'asc',
+      //                         title: 'Ascending',
+      //                       ),
+      //                     ),
+      //                     Expanded(
+      //                       child: CustomRadioTile(
+      //                         groupValue: orderRadioTile,
+      //                         activeColor: PRIMARY_COLOR,
+      //                         onChanged: () {
+      //                           ref
+      //                               .read(telephoneOrderRadioTileProvider
+      //                                   .notifier)
+      //                               .update((state) => 'desc');
+      //                         },
+      //                         value: 'desc',
+      //                         title: 'Descending',
+      //                       ),
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //             );
+      //           },
+      //         );
+      //       },
+      //       icon: Icon(Icons.more_vert)),
+      // ],
       drawer: MainDrawer(
         onSelectedTap: (String menu) {
           ref.read(drawerSelectProvider.notifier).update((state) => menu);
@@ -126,23 +123,22 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
         child: SizedBox(
           height: 40,
           child: CustomTextFormField(
+            initValue: searchValue,
             prefixIcon: Icon(Icons.search),
             contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
             hintText: 'Enter some text to search.',
             onChanged: (value) {
               if (_timer?.isActive ?? false) _timer!.cancel();
-              _timer = Timer(const Duration(milliseconds: 500), () {
-
-                ref
-                    .read(telephoneSearchValueProvider
-                    .notifier)
-                    .update((state) => value);
-
-
-              });
+              _timer = Timer(
+                const Duration(milliseconds: 500),
+                () {
+                  ref
+                      .read(telephoneSearchValueProvider.notifier)
+                      .update((state) => value);
+                },
+              );
 
               print('value 업데이트 함');
-
             },
           ),
         ),

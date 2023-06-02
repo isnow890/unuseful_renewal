@@ -76,101 +76,121 @@ class _TelephoneAdvanceScreenState
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: RefreshIndicator(
+          color: PRIMARY_COLOR,
           onRefresh: () async {
             ref
                 .read(telephoneAdvanceNotifierProvider.notifier)
                 .paginate(forceRefetch: true);
           },
-          child: ListView.separated(
+          child: Scrollbar(
+            thumbVisibility: true,
             controller: controller,
-
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 20.0,
-              );
-            },
-            itemCount: state.data.length + 1,
-            itemBuilder: (context, index) {
-              if (index == cp.data.length) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  child: Center(
-                      child: cp is CursorPaginationFetchingMore
-                          ? CircularProgressIndicator()
-                          : Text('마지막 데이터입니다.')),
+            child: ListView.separated(
+              controller: controller,
+              separatorBuilder: (context, index) {
+                return Divider(
+                  height: 20.0,
                 );
-              }
+              },
+              itemCount: state.data.length + 1,
+              itemBuilder: (context, index) {
+                if (index == cp.data.length) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    child: Center(
+                        child: cp is CursorPaginationFetchingMore
+                            ? CustomCircularProgressIndicator()
+                            : Text('마지막 데이터입니다.')),
+                  );
+                }
 
-              return ListTile(
-                contentPadding: EdgeInsets.only(left: 0.0),
+                return ListTile(
+                  contentPadding: EdgeInsets.only(left: 0.0),
+                  leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        child: Column(
+                          children: [
+                            Text(
+                              state.data[index].korNm ?? '',
+                              overflow: TextOverflow.visible,
+                              softWrap: false,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: PRIMARY_COLOR,
+                                  fontWeight: FontWeight.w600),
 
-                leading: Column(
+                            ),
+                            Text(
+                              state.data[index].stfNo ?? '',
+                              overflow: TextOverflow.visible,
+                              softWrap: false,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: BODY_TEXT_COLOR,
+                                  ),
 
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      child: Text(
-
-                        state.data[index].korNm ?? '',
-                        overflow: TextOverflow.visible,
-                        softWrap: false,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 22,
-                            color: PRIMARY_COLOR,
-                            fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (state.data[index].ugtTelNo != null)
-                      IconButton(
-                        onPressed: () { UrlLauncherUtils.makePhoneCall(state.data[index].ugtTelNo!);},
-                        icon: Icon(Icons.phone_android_outlined),
-                        color: Colors.blue,
-                      ),
-                  ],
-                ),
-                title: Text('${state.data[index].deptCdNm ?? ''}'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${state.data[index].hspTpCd ?? ''}'),
-                    Text(
-                      state.data[index].ugtTelNo ?? '',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    if (state.data[index].etntTelNo != null)
+                    ],
+                  ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (state.data[index].ugtTelNo != null)
+                        IconButton(
+                          onPressed: () {
+                            UrlLauncherUtils.makePhoneCall(
+                                state.data[index].ugtTelNo!);
+                          },
+                          icon: Icon(Icons.phone_android_outlined),
+                          color: Colors.blue,
+                        ),
+                    ],
+                  ),
+                  title: Text('${state.data[index].deptCdNm ?? ''}'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${state.data[index].hspTpCd ?? ''}'),
                       Text(
-                        state.data[index].etntTelNo ?? '',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: PRIMARY_COLOR),
+                        state.data[index].ugtTelNo ?? '',
+                        style:
+                            TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                       ),
-                  ],
-                ),
-                isThreeLine: true,
-              );
-            },
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      if (state.data[index].etntTelNo != null)
+                        Text(
+                          state.data[index].etntTelNo ?? '',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: PRIMARY_COLOR),
+                        ),
+                    ],
+                  ),
+                  isThreeLine: true,
+                );
+              },
+            ),
           ),
         ),
       );
     }
 
     if (state is CursorPaginationLoading) {
-      return CircularProgressIndicator();
+      return CustomCircularProgressIndicator();
     } else
       return Center(
         child: Text('에러'),

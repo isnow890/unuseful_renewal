@@ -12,6 +12,8 @@ class DataUtils {
 
   static String pathToUrl(String? value) => '$ip/$value';
 
+  static String hspTpCdToNm(String value) => value == '01' ? "서울" : "목동";
+
 //Base64 인코딩
   static String plainToBase64(String plain) {
     Codec<String, String> stringToBase64 = utf8.fuse(base64);

@@ -78,6 +78,9 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(
+                  height: 16,
+                ),
                 _Title(),
                 const SizedBox(
                   height: 16,
