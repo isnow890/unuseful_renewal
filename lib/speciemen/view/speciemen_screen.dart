@@ -18,8 +18,6 @@ class SpeciemenScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final select = ref.watch(drawerSelectProvider);
-
     return DefaultLayout(
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.refresh)),
@@ -34,14 +32,6 @@ class SpeciemenScreen extends ConsumerWidget {
         ),
       ),
       centerTitle: false,
-
-      drawer: MainDrawer(
-        onSelectedTap: (String menu) {
-          ref.read(drawerSelectProvider.notifier).update((state) => menu);
-          Navigator.of(context).pop();
-        },
-        selectedMenu: select,
-      ),
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(

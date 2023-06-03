@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share/share.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/model/cursor_pagination_model.dart';
@@ -33,8 +34,6 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
         controller: controller,
         provider: ref.read(telephoneBasicNotifierProvider.notifier));
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,15 +81,13 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: RefreshIndicator(
         color: PRIMARY_COLOR,
-
         onRefresh: () async {
           ref
               .read(telephoneBasicNotifierProvider.notifier)
               .paginate(forceRefetch: true);
         },
         child: Scrollbar(
-          thumbVisibility: true
-          ,
+          thumbVisibility: true,
           controller: controller,
           child: ListView.separated(
             controller: controller,
@@ -115,8 +112,8 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
               }
 
               return ListTile(
+                horizontalTitleGap: 10,
                 contentPadding: EdgeInsets.only(left: 0.0),
-
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -132,12 +129,43 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (state.data[index].purifiedTelNo != null)
-                      IconButton(
-                        onPressed: () { UrlLauncherUtils.makePhoneCall(state.data[index].purifiedTelNo!);},
-                        icon: Icon(Icons.phone_rounded),
-                        color: Colors.red,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Share.share(shareInfo(
+                                  hspTpCd: state.data[index].hspTpCd,
+                                  deptNm: state.data[index].deptNm,
+                                  telNoNm: state.data[index].telNoNm,
+                                  etntTelNo: state.data[index].etntTelNo,
+                                  telNoAbbrNm: state.data[index].telNoAbbrNm,
+                                  purifiedTelNo:
+                                      state.data[index].purifiedTelNo));
+                            },
+                            icon: Icon(
+                              Icons.share_outlined,
+                              size: 20,
+                            ),
+                            color: Colors.red,
+                          ),
+                          if (state.data[index].purifiedTelNo != null)
+                            IconButton(
+                              onPressed: () {
+                                UrlLauncherUtils.makePhoneCall(
+                                    state.data[index].purifiedTelNo!);
+                              },
+                              icon: Icon(
+                                Icons.phone_rounded,
+                                size: 20,
+                              ),
+                              color: Colors.red,
+                            ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
                 title: Text(state.data[index].deptNm ?? ''),
@@ -166,7 +194,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                     )
                   ],
                 ),
-                isThreeLine: true,
+                // isThreeLine: true,
               );
             },
           ),
@@ -175,8 +203,18 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     );
   }
 
+  shareInfo(
+      {required String? hspTpCd,
+      required String? deptNm,
+      required String? telNoNm,
+      required String? etntTelNo,
+      required String? telNoAbbrNm,
+      required String? purifiedTelNo}) {
+    String tmpTelNoAbbrNm = '';
+    if (telNoNm != null) tmpTelNoAbbrNm = "이름:${telNoAbbrNm}\n";
 
-
+    final String returnedText =
+        '병원:$hspTpCd\n부서:$deptNm\n실방:$telNoNm\n${tmpTelNoAbbrNm}TEL:${etntTelNo}${purifiedTelNo != null? "\n$purifiedTelNo" : ''}';
+    return returnedText;
+  }
 }
-
-

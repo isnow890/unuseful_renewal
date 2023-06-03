@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import '../../user/model/user_model.dart';
 import '../const/data.dart';
@@ -24,4 +25,10 @@ class DataUtils {
   static DateTime stringToDateTime(String value) {
     return DateTime.parse(value);
   }
+
+
+  static Uint8List base64Decoder(String encodedImage){
+    return base64.decode(encodedImage);
+  }
+
 }

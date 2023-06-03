@@ -56,7 +56,6 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
 
   @override
   Widget build(BuildContext context) {
-    final select = ref.watch(drawerSelectProvider);
     final orderRadioTile = ref.watch(telephoneOrderRadioTileProvider);
     final searchValue = ref.watch(telephoneSearchValueProvider);
     return DefaultLayout(
@@ -111,13 +110,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
       //       },
       //       icon: Icon(Icons.more_vert)),
       // ],
-      drawer: MainDrawer(
-        onSelectedTap: (String menu) {
-          ref.read(drawerSelectProvider.notifier).update((state) => menu);
-          Navigator.of(context).pop();
-        },
-        selectedMenu: select,
-      ),
+
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(

@@ -7,6 +7,7 @@ import '../../common/component/main_drawer.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
 import '../../common/provider/drawer_selector_provider.dart';
+import '../provider/patient_total_count_provider.dart';
 
 class PatientScreen extends ConsumerStatefulWidget {
   const PatientScreen({Key? key}) : super(key: key);
@@ -22,12 +23,10 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final select = ref.watch(drawerSelectProvider);
     final state = ref.watch(patientNotifierProvider);
 
     if (state is PatientModelLoading) {
       return renderDefaultLayOut(
-        select: select,
         totalCount: null,
         widget: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -41,7 +40,6 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
 
     if (state is PatientModelError) {
       return renderDefaultLayOut(
-        select: select,
         totalCount: null,
         widget: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -62,10 +60,10 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
     }
 
     final cp = state as PatientModel;
+    ref.read(patientTotalProvider.notifier).update((state) => cp.data.length);
 
     return renderDefaultLayOut(
-      select: select,
-      totalCount: state.data.length,
+      totalCount: ref.read(patientTotalProvider),
       widget: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: RefreshIndicator(
@@ -133,7 +131,7 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(state.data[index].wardInfo ?? ''),
+                      Text(state.data[index].diagnosis ?? ''),
                       const SizedBox(
                         height: 5,
                       ),
@@ -168,19 +166,11 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
   }
 
   renderDefaultLayOut({
-    required String select,
     required int? totalCount,
     required Widget widget,
   }) {
     return DefaultLayout(
         centerTitle: false,
-        drawer: MainDrawer(
-          onSelectedTap: (String menu) {
-            ref.read(drawerSelectProvider.notifier).update((state) => menu);
-            Navigator.of(context).pop();
-          },
-          selectedMenu: select,
-        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

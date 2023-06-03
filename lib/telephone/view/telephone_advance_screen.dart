@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:share/share.dart';
 import 'package:unuseful/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/telephone/model/telephone_advance_model.dart';
 
@@ -108,6 +109,7 @@ class _TelephoneAdvanceScreenState
                 }
 
                 return ListTile(
+                  horizontalTitleGap: 10,
                   contentPadding: EdgeInsets.only(left: 0.0),
                   leading: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +127,6 @@ class _TelephoneAdvanceScreenState
                                   fontSize: 18,
                                   color: PRIMARY_COLOR,
                                   fontWeight: FontWeight.w600),
-
                             ),
                             Text(
                               state.data[index].stfNo ?? '',
@@ -133,10 +134,9 @@ class _TelephoneAdvanceScreenState
                               softWrap: false,
                               maxLines: 1,
                               style: TextStyle(
-                                  fontSize: 12,
-                                  color: BODY_TEXT_COLOR,
-                                  ),
-
+                                fontSize: 12,
+                                color: BODY_TEXT_COLOR,
+                              ),
                             ),
                           ],
                         ),
@@ -147,13 +147,37 @@ class _TelephoneAdvanceScreenState
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (state.data[index].ugtTelNo != null)
-                        IconButton(
-                          onPressed: () {
-                            UrlLauncherUtils.makePhoneCall(
-                                state.data[index].ugtTelNo!);
-                          },
-                          icon: Icon(Icons.phone_android_outlined),
-                          color: Colors.blue,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Share.share(_shareInfo(
+                                      hspTpCd: state.data[index].hspTpCd,
+                                      korNm: state.data[index].korNm,
+                                      stfNo: state.data[index].stfNo,
+                                      deptCdNm: state.data[index].deptCdNm,
+                                      etntTelNo: state.data[index].etntTelNo,
+                                      ugtTelNo: state.data[index].ugtTelNo));
+                                },
+                                icon: Icon(
+                                  Icons.share_outlined,
+                                  size: 20,
+                                ),
+                                color: Colors.blue,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  UrlLauncherUtils.makePhoneCall(
+                                      state.data[index].ugtTelNo!);
+                                },
+                                icon: Icon(Icons.phone_android_outlined),
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
                     ],
                   ),
@@ -164,8 +188,8 @@ class _TelephoneAdvanceScreenState
                       Text('${state.data[index].hspTpCd ?? ''}'),
                       Text(
                         state.data[index].ugtTelNo ?? '',
-                        style:
-                            TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(
                         width: 10,
@@ -180,7 +204,7 @@ class _TelephoneAdvanceScreenState
                         ),
                     ],
                   ),
-                  isThreeLine: true,
+                  // isThreeLine: true,
                 );
               },
             ),
@@ -195,5 +219,20 @@ class _TelephoneAdvanceScreenState
       return Center(
         child: Text('에러'),
       );
+  }
+
+  _shareInfo(
+      {required String? hspTpCd,
+      required String? korNm,
+      required String? stfNo,
+      required String? deptCdNm,
+      required String? etntTelNo,
+      required String? ugtTelNo}) {
+    String tmpEtntTelNo = '';
+    if (etntTelNo != null) tmpEtntTelNo = "내선번호:${etntTelNo}\n";
+
+    final String returnedText =
+        '직원:${korNm}(${stfNo})\n병원:$hspTpCd\n부서:${deptCdNm}\n${tmpEtntTelNo}전화번호:${ugtTelNo}';
+    return returnedText;
   }
 }

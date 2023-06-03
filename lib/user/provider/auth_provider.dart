@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unuseful/common/component/full_photo.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
+import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
+import '../../meal/model/meal_model.dart';
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
 import '../view/login_screen.dart';
@@ -90,9 +93,7 @@ class AuthProvider extends ChangeNotifier {
           name: LoginScreen.routeName,
           builder: (context, state) {
             final secure = ref.watch(secureStorageProvider);
-
             final loginValue = ref.read(loginVariableStateProvider);
-
             return LoginScreen(loginValue.stfNo);
           },
         ),
@@ -101,16 +102,29 @@ class AuthProvider extends ChangeNotifier {
           name: SpeciemenScreen.routeName,
           builder: (context, state) => SpeciemenScreen(),
         ),
-    GoRoute(
-      path: '/patient',
-      name: PatientScreen.routeName,
-      builder: (context, state) => PatientScreen(),
-    ),
-
+        GoRoute(
+          path: '/meal',
+          name: MealScreen.routeName,
+          builder: (context, state) => MealScreen(),
+        ),
+        GoRoute(
+          path: '/patient',
+          name: PatientScreen.routeName,
+          builder: (context, state) => PatientScreen(),
+        ),
         GoRoute(
           path: '/telephone',
           name: TelePhoneMainScreen.routeName,
           builder: (context, state) => TelePhoneMainScreen(),
         ),
+    GoRoute(
+      path: '/fullPhoto',
+      name: FullPhoto.routeName,
+      builder: (context, state) {
+        final values = state.extra as List<MealImageModel>;
+        return FullPhoto(images:values);
+      },
+    ),
       ];
 }
+

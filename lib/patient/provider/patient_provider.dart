@@ -20,6 +20,9 @@ class PatientNotifier extends StateNotifier<PatientModelBase?> {
 
   Future<PatientModelBase> getPatient() async {
     try {
+
+      state =PatientModelLoading();
+
       final List<PatientModelList> resp = await repository.getPatient();
 
       state = PatientModel(data: resp);

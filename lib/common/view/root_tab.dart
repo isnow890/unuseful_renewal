@@ -17,9 +17,6 @@ class RootTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final select = ref.watch(drawerSelectProvider);
-
-
     return DefaultLayout(
         actions: [
           IconButton(
@@ -52,15 +49,6 @@ class RootTab extends ConsumerWidget {
               },
               icon: Icon(Icons.logout)),
         ],
-        drawer: MainDrawer(
-          onSelectedTap: (String menu) {
-            ref.read(drawerSelectProvider.notifier).update((state) => menu);
-            Navigator.of(context).pop();
-            // print('selected menu is ');
-            // print(select);
-          },
-          selectedMenu: select,
-        ),
         title: TextTitle(title: 'home'),
         child: Center(
           child: Text('루트탭입니다.'),
