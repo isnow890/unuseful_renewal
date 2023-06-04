@@ -9,6 +9,4 @@ import '../../user/provider/login_variable_provider.dart';
 //
 //   return loginValue.hspTpCd!;
 // });
-final hspTpCdProvider = StateProvider<String>((ref) {
-return '01';
-});
+final hspTpCdProvider = StateProvider<String>((ref) =>'');

@@ -39,7 +39,11 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
 
       if (resp.message == null) {
         state = resp;
-      } else {
+          // await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);
+          // await storage.write(key: CONST_STF_NO, value: resp.stfNo);
+          // await storage.write(key: CONST_HSP_TP_CD, value: '01');
+
+        } else {
         showToast(msg: resp.message!, toastLength: Toast.LENGTH_LONG);
       }
       return resp;
@@ -60,14 +64,22 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
     try {
       state = UserModelLoading();
       //
-      print('login 시작');
-      print('hspTpCd is $hspTpCd');
-      print('stfNo is $stfNo');
-      print('password is $password');
+      // print('login 시작');
+      // print('hspTpCd is $hspTpCd');
+      // print('stfNo is $stfNo');
+      // print('password is $password');
+
+      print('시작');
+
+
 
       //실제
       final resp = await authRepository.login(
           hspTpCd: hspTpCd, stfNo: stfNo, password: password);
+
+
+
+
 
       if (resp.message == null) {
         await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);

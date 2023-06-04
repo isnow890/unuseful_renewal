@@ -43,7 +43,7 @@ class SpeciemenScreen extends ConsumerWidget {
               ref
                   .read(telephoneSearchValueProvider.notifier)
                   .update((state) => value);
-              print('value 업데이트 함');
+
             },
           ),
         ),

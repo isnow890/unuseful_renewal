@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/full_photo.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
+import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
@@ -75,6 +76,7 @@ class AuthProvider extends ChangeNotifier {
 
   void logout() {
     ref.read(userMeProvider.notifier).logout();
+    ref.watch(hspTpCdProvider.notifier).update((state) => '');
   }
 
   List<GoRoute> get routes => [
@@ -117,14 +119,18 @@ class AuthProvider extends ChangeNotifier {
           name: TelePhoneMainScreen.routeName,
           builder: (context, state) => TelePhoneMainScreen(),
         ),
-    GoRoute(
-      path: '/fullPhoto',
-      name: FullPhoto.routeName,
-      builder: (context, state) {
-        final values = state.extra as List<MealImageModel>;
-        return FullPhoto(images:values);
-      },
-    ),
+        GoRoute(
+          path: '/fullPhoto',
+          name: FullPhoto.routeName,
+          builder: (context, state) {
+            final values = state.extra as List<MealImageModel>;
+            return FullPhoto(
+                images: values,
+                currentIndex: int.parse(state.queryParameters['currentIndex']!),
+                totalCount: int.parse(
+                  state.queryParameters['totalCount']!,
+                ));
+          },
+        ),
       ];
 }
-

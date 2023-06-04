@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/user/model/user_model.dart';
+import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../user/provider/user_me_provider.dart';
 
@@ -23,6 +24,8 @@ class MainDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userMeProvider.notifier).state;
+     final hspTpCd = ref.watch(loginVariableStateProvider).hspTpCd;
+
 
     final convertedUser = user as UserModel;
 
@@ -41,12 +44,26 @@ class MainDrawer extends ConsumerWidget {
         child: ListView(
           children: [
             SizedBox(
-              height: 100,
+              height: 120,
               child: DrawerHeader(
                 margin: EdgeInsets.all(0.0),
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
                 child: Column(
                   children: [
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          hspTpCd == "01"? 'se':'md',
+                          style: ts,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
                     Row(
                       children: [
                         const SizedBox(
@@ -96,7 +113,8 @@ class MainDrawer extends ConsumerWidget {
       selected: value == selectedMenu,
       onTap: () {
         onSelectedTap(value);
-        context.goNamed(value);
+        // context.goNamed(value);
+        context.pushNamed(value);
         print(value);
       },
       title: Text(value),

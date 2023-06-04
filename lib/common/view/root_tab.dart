@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/main_drawer.dart';
+import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
+import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../user/provider/auth_provider.dart';
 import '../component/text_title.dart';
@@ -17,6 +19,12 @@ class RootTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+
+    // final login = ref.watch(loginVariableStateProvider);
+    //
+    // ref.watch(hspTpCdProvider.notifier).update((state) => login.hspTpCd!);
+
     return DefaultLayout(
         actions: [
           IconButton(

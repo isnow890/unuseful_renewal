@@ -131,7 +131,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
                 },
               );
 
-              print('value 업데이트 함');
+
             },
           ),
         ),

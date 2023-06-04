@@ -10,6 +10,9 @@ final stfNoProvider = StateProvider((ref) async => await ref.watch(secureStorage
 
 final loginVariableStateProvider = StateNotifierProvider<LoginVariableStateNofifier,LoginModel>((ref) {
   final secure = ref.watch(secureStorageProvider);
+  final notifier =LoginVariableStateNofifier(secure: secure);
+
+
   return LoginVariableStateNofifier(secure: secure);
 });
 
@@ -21,11 +24,12 @@ class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
   }) : super(LoginModel()) {
     getVariableFromSecureStorage();
   }
-   getVariableFromSecureStorage() async {
+   Future <LoginModel> getVariableFromSecureStorage() async {
     final stfNo = await secure.read(key: CONST_STF_NO);
     final password = await secure.read(key: CONST_PASSWORD);
     final hspTpCd = await secure.read(key: CONST_HSP_TP_CD);
     state = LoginModel(hspTpCd: hspTpCd, stfNo: stfNo, password: password);
+    return LoginModel(hspTpCd: hspTpCd, stfNo: stfNo, password: password);
   }
 
   void updateModel({ String? hspTpCd,String? stfNo, String? password}){
@@ -35,6 +39,9 @@ class LoginVariableStateNofifier extends StateNotifier<LoginModel> {
     final  tmpPassword= state.password;
     final tmpHspTpCd = state.hspTpCd;
 
+    print('updateModel')
+    ;
+    print(tmpHspTpCd);
 
     state = LoginModel(hspTpCd:hspTpCd ??tmpHspTpCd, stfNo: stfNo??tmpStfNo,
     password: password?? tmpPassword);
