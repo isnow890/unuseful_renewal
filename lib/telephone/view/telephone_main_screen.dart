@@ -49,9 +49,12 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
 
   @override
   void dispose() {
+
+    print('dispose 실행');
     // TODO: implement dispose
     controller.removeListener(tabListener);
     super.dispose();
+
   }
 
   @override

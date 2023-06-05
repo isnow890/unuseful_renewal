@@ -5,6 +5,7 @@ import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/user/model/user_model.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
 
+import '../../telephone/provider/telephone_search_value_provider.dart';
 import '../../user/provider/user_me_provider.dart';
 
 typedef OnSelectedTap = void Function(String menu);
@@ -93,7 +94,7 @@ class MainDrawer extends ConsumerWidget {
                 ),
               ),
             ),
-            ...tmpList.map((e) => renderListTile(e, context)).toList(),
+            ...tmpList.map((e) => renderListTile(e, context,ref)).toList(),
 
     ],
         ),
@@ -101,7 +102,7 @@ class MainDrawer extends ConsumerWidget {
     );
   }
 
-  Widget renderListTile(String value, BuildContext context) {
+  Widget renderListTile(String value, BuildContext context, WidgetRef ref) {
     return ListTile(
       //누르는 공간 전체
       tileColor: Colors.transparent,
@@ -112,9 +113,15 @@ class MainDrawer extends ConsumerWidget {
       //selected로 선택된 상태를 조절할 수 있음
       selected: value == selectedMenu,
       onTap: () {
+        ref.refresh(telephoneSearchValueProvider);
+
         onSelectedTap(value);
         // context.goNamed(value);
-        context.pushNamed(value);
+
+        if(value =='home')
+          context.goNamed(value);
+        else
+          context.pushNamed(value);
         print(value);
       },
       title: Text(value),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/full_photo.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
+import 'package:unuseful/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
@@ -119,6 +120,14 @@ class AuthProvider extends ChangeNotifier {
           name: TelePhoneMainScreen.routeName,
           builder: (context, state) => TelePhoneMainScreen(),
         ),
+    GoRoute(
+      path: '/hitSchedule',
+      name: TelePhoneMainScreen.routeName,
+      builder: (context, state) => HitScheduleScreen(),
+    ),
+
+
+
         GoRoute(
           path: '/fullPhoto',
           name: FullPhoto.routeName,
@@ -126,6 +135,7 @@ class AuthProvider extends ChangeNotifier {
             final values = state.extra as List<MealImageModel>;
             return FullPhoto(
                 images: values,
+                title: state.queryParameters['title']!,
                 currentIndex: int.parse(state.queryParameters['currentIndex']!),
                 totalCount: int.parse(
                   state.queryParameters['totalCount']!,
