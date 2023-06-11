@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/const/colors.dart';
+import 'package:unuseful/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
 import 'package:unuseful/user/model/user_model.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
 
@@ -35,7 +36,8 @@ class MainDrawer extends ConsumerWidget {
       'telephone',
       'speciemen',
       'meal',
-      'patient'
+      'patient',
+      'hitSchedule'
     ];
 
     return Container(
@@ -114,7 +116,7 @@ class MainDrawer extends ConsumerWidget {
       selected: value == selectedMenu,
       onTap: () {
         ref.refresh(telephoneSearchValueProvider);
-
+        ref.refresh(hitScheduleSelectedDayProvider);
         onSelectedTap(value);
         // context.goNamed(value);
 

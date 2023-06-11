@@ -122,7 +122,7 @@ class AuthProvider extends ChangeNotifier {
         ),
     GoRoute(
       path: '/hitSchedule',
-      name: TelePhoneMainScreen.routeName,
+      name: HitScheduleScreen.routeName,
       builder: (context, state) => HitScheduleScreen(),
     ),
 
