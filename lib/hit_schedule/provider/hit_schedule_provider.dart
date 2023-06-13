@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:unuseful/hit_schedule/model/hit_schedule_model.dart';
 import 'package:unuseful/hit_schedule/repository/hit_schedule_repository.dart';
 
@@ -39,8 +40,9 @@ class HitScheduleNotifier extends StateNotifier<HitScheduleModelBase?> {
 
   Future<HitScheduleModelBase> getHitSchedule(bool isAll) async {
     try {
+
       state = HitScheduleModelLoading();
-      List<HitScheduleListModel> resp = await repository.getHitSchedule();
+      List<HitScheduleListModel> resp = await repository.getHitSchedule(DateFormat('yyyyMM').format(selectedDay));
 
       print('selectedDay');
       print(selectedDay);

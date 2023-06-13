@@ -87,6 +87,7 @@ class CustomCalendar extends ConsumerWidget {
             date.month == selectedDay!.month &&
             date.day == selectedDay!.day;
       },
+      // eventLoader: ,
 
       // onPageChanged: (focusedDay) {
       //   // No need to call `setState()` here

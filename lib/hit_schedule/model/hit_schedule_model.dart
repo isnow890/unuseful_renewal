@@ -31,7 +31,7 @@ class HitScheduleListModel {
   final String startTime;
   final String endTime;
   final String scheduleId;
-  final List<HitScheduleListListModel> scheduleList;
+  final String scheduleType;
 
   HitScheduleListModel({
     required this.startDate,
@@ -41,35 +41,10 @@ class HitScheduleListModel {
     required this.startTime,
     required this.endTime,
     required this.scheduleId,
-    required this.scheduleList,
+    required this.scheduleType,
   });
 
   factory HitScheduleListModel.fromJson(Map<String, dynamic> json) =>
       _$HitScheduleListModelFromJson(json);
 }
-@JsonSerializable()
 
-class HitScheduleListListModel {
-  final String scheduleId;
-  final DateTime scheduleDate;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String stfNm;
-  final String scheduleName;
-  final String startTime;
-  final String endTime;
-
-  HitScheduleListListModel({
-    required this.scheduleId,
-    required this.scheduleDate,
-    required this.startDate,
-    required this.endDate,
-    required this.stfNm,
-    required this.scheduleName,
-    required this.startTime,
-    required this.endTime,
-  });
-  
-  factory HitScheduleListListModel.fromJson(Map<String,dynamic> json)
-  =>_$HitScheduleListListModelFromJson(json);
-}

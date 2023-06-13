@@ -36,10 +36,9 @@ class UserModel extends UserModelBase {
     fromJson: DataUtils.toBool,
   )
   final bool? drYn;
-  @JsonKey(
-    fromJson: DataUtils.toBool,
-  )
-  final bool? hitDutyYn;
+
+  final String? hitDutyYn;
+
   @JsonKey(fromJson: DataUtils.findAdvanceTypeEnum)
   final AdvancedType? advancedType;
   final String? accessKey;
