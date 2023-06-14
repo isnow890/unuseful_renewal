@@ -51,13 +51,15 @@ class HitScheduleNotifier extends StateNotifier<HitScheduleModelBase?> {
         print('all 아님 실행');
         resp = resp
             .where((element) =>
-        (element.startDate.isBefore(selectedDay) ||element.startDate.compareTo(selectedDay) == 0) &&
-            (element.endDate.isAfter(selectedDay)|| element.endDate.compareTo(selectedDay) == 0))
+        (element.startDate.isBefore(DateTime(selectedDay.year, selectedDay.month, selectedDay.day) ) ||element.startDate.compareTo(DateTime(selectedDay.year, selectedDay.month, selectedDay.day)) == 0) &&
+            (element.endDate.isAfter(DateTime(selectedDay.year, selectedDay.month, selectedDay.day))|| element.endDate.compareTo(DateTime(selectedDay.year, selectedDay.month, selectedDay.day)) == 0))
             .toList();
       } else {
         print('all 실행');
       }
       state = HitScheduleModel(data: resp);
+
+      // print((state as HitScheduleModel).data[0].stfNm);
 
       return HitScheduleModel(data: resp);
     } catch (e) {
