@@ -46,29 +46,34 @@ class ScheduleCard extends StatelessWidget {
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Date(
-                  startDate: startDate,
-                  endDate: endDate,
-                  endTime: endTime,
-                  startTime: startTime,
-                  color: tmpColor,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                _Content(
-                  content: content,
-                  scheduleType: scheduleType,
-                  stfNm: stfNm,
-                ),
-              ],
+            Expanded(
+              flex: 5,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Date(
+                    startDate: startDate,
+                    endDate: endDate,
+                    endTime: endTime,
+                    startTime: startTime,
+                    color: tmpColor,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  _Content(
+                    content: content,
+                    scheduleType: scheduleType,
+                    stfNm: stfNm,
+                  ),
+                ],
+              ),
             ),
-            _RightInfo(
-              scheduleType: scheduleType,
-              color: tmpColor,
+            Expanded(
+              child: _RightInfo(
+                scheduleType: scheduleType,
+                color: tmpColor,
+              ),
             )
           ],
         )
@@ -106,16 +111,21 @@ class _RightInfo extends StatelessWidget {
     if (scheduleType == 'schedule') {
       tmpType = '일정';
     } else if (scheduleType == 'tempDuty') {
-      tmpType = '당직(예상)';
+      tmpType = ' 당직 예정';
     }
 
-    return Text(
-      tmpType,
-      style: TextStyle(
-        fontSize: 15.0,
-        color: color,
-        fontWeight: FontWeight.w500,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          tmpType,
+          style: TextStyle(
+            fontSize: 11.0,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -259,8 +269,12 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text((scheduleType == 'schedule' ? '' : '${stfNm} ') + content),
+        Expanded(
+          child:
+              Text((scheduleType == 'schedule' ? '' : '${stfNm} ') + content),
+        ),
       ],
     );
   }

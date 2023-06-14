@@ -43,4 +43,8 @@ class HitDutyScheduleUpdateModel extends HitDutyScheduleUpdateModelBase {
 
   factory HitDutyScheduleUpdateModel.fromJson(Map<String, dynamic> json) =>
       _$HitDutyScheduleUpdateModelFromJson(json);
+
+
+  Map<String, dynamic> toJson() => _$HitDutyScheduleUpdateModelToJson(this);
+
 }

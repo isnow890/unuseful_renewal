@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'hit_schedule_model.g.dart';
 
 abstract class HitScheduleModelBase {}
 
-
-class HitScheduleModelLoading extends HitScheduleModelBase{}
+class HitScheduleModelLoading extends HitScheduleModelBase {}
 
 class HitScheduleModelError extends HitScheduleModelBase {
   final String message;
@@ -32,6 +32,8 @@ class HitScheduleListModel {
   final String? endTime;
   final String? scheduleId;
   final String? scheduleType;
+  final String? dutyTypeCode;
+  final String? hdyYn;
 
   HitScheduleListModel({
     required this.startDate,
@@ -42,9 +44,10 @@ class HitScheduleListModel {
     required this.endTime,
     required this.scheduleId,
     required this.scheduleType,
+    required this.dutyTypeCode,
+    required this.hdyYn,
   });
 
   factory HitScheduleListModel.fromJson(Map<String, dynamic> json) =>
       _$HitScheduleListModelFromJson(json);
 }
-

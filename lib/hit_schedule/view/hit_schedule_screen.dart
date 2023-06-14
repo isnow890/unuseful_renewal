@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/common/component/custom_calendar.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
+import 'package:unuseful/hit_schedule/component/schedule_bottom_sheet.dart';
 import 'package:unuseful/hit_schedule/component/schedule_card.dart';
 import 'package:unuseful/hit_schedule/component/today_banner.dart';
 import 'package:unuseful/hit_schedule/model/hit_schedule_for_event_model.dart';
@@ -27,7 +28,6 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
-
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
     var eventsLinkedHashMap =
@@ -122,14 +122,30 @@ class _ScheduleList extends ConsumerWidget {
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ScheduleCard(
-              startDate: state.data[index].startDate,
-              endDate: state.data[index].endDate,
-              startTime: state.data[index].startTime ?? '',
-              endTime: state.data[index].endTime ?? '',
-              content: state.data[index].scheduleName ?? '',
-              stfNm: state.data[index].stfNm ?? '',
-              scheduleType: state.data[index].scheduleType ?? '',
+            child: GestureDetector(
+              onTap: () {
+                if (state.data[index].scheduleType == 'duty') {
+                  showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) {
+                        return ScheduleBottomSheet(
+                            dutyTypeCode: state.data[index].dutyTypeCode!,
+                            dutyDate: state.data[index].startDate,
+                            dutyName: state.data[index].scheduleName!,
+                            stfNm: state.data[index].stfNm!);
+                      });
+                }
+              },
+              child: ScheduleCard(
+                startDate: state.data[index].startDate,
+                endDate: state.data[index].endDate,
+                startTime: state.data[index].startTime ?? '',
+                endTime: state.data[index].endTime ?? '',
+                content: state.data[index].scheduleName ?? '',
+                stfNm: state.data[index].stfNm ?? '',
+                scheduleType: state.data[index].scheduleType ?? '',
+              ),
             ),
           );
         },
