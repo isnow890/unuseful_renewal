@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:unuseful/hit_schedule/model/hit_schedule_for_event_model.dart';
 
 import '../const/colors.dart';
 
@@ -8,6 +11,9 @@ class CustomCalendar extends ConsumerWidget {
   final DateTime? selectedDay;
   final DateTime focusedDay;
   final OnDaySelected? onDaySelected;
+
+  final LinkedHashMap<DateTime?, HitScheduleForEventListModel> events;
+  List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
 
   final defaultTextStyle = TextStyle(
     color: Colors.grey[600],
@@ -20,15 +26,17 @@ class CustomCalendar extends ConsumerWidget {
     borderRadius: BorderRadius.circular(6.0),
   );
 
-   CustomCalendar({required this.selectedDay,
-    required this.focusedDay,
-    required this.onDaySelected,
-    Key? key})
+  CustomCalendar(
+      {required this.events,
+      required this.selectedDay,
+      required this.focusedDay,
+      required this.onDaySelected,
+      Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return  TableCalendar(
+    return TableCalendar(
       daysOfWeekHeight: 20,
       locale: 'ko_KR',
       focusedDay: focusedDay,
@@ -87,12 +95,41 @@ class CustomCalendar extends ConsumerWidget {
             date.month == selectedDay!.month &&
             date.day == selectedDay!.day;
       },
-      // eventLoader: ,
 
-      // onPageChanged: (focusedDay) {
-      //   // No need to call `setState()` here
-      //   _focusedDay = focusedDay;
-      // },
+      calendarBuilders: CalendarBuilders(
+        // dowBuilder: (context, day) {
+        //   return Center(child: Text(days[day.weekday]));
+        // },
+        markerBuilder: (context, date, eventss) {
+          DateTime _date = DateTime(date.year, date.month, date.day);
+
+          if (events[_date] != null) {
+            if (isSameDay(
+                _date, events[_date]!.scheduleDate ?? DateTime(2023))) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Stack(children: [
+                      Container(
+                        width: 20,
+                        padding: const EdgeInsets.only(bottom: 5),
+                        decoration: const BoxDecoration(
+                          color: PRIMARY_COLOR,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      // Text(events[_date]!.count.toString()),
+                    ]),
+                  ],
+                ),
+              );
+            }
+          }
+        },
+      ),
+
     );
   }
 }

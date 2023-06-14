@@ -26,12 +26,12 @@ class HitScheduleModel extends HitScheduleModelBase {
 class HitScheduleListModel {
   final DateTime startDate;
   final DateTime endDate;
-  final String stfNm;
-  final String scheduleName;
-  final String startTime;
-  final String endTime;
-  final String scheduleId;
-  final String scheduleType;
+  final String? stfNm;
+  final String? scheduleName;
+  final String? startTime;
+  final String? endTime;
+  final String? scheduleId;
+  final String? scheduleType;
 
   HitScheduleListModel({
     required this.startDate,

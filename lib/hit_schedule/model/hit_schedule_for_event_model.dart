@@ -14,7 +14,7 @@ class HitScheduleForEventModelError extends HitScheduleForEventModelBase {
 
 @JsonSerializable()
 class HitScheduleForEventModel extends HitScheduleForEventModelBase {
-  final List<HitScheduleForEventListModel> data;
+  final List<HitScheduleForEventListModel>? data;
 
   HitScheduleForEventModel({
     required this.data,
@@ -27,10 +27,12 @@ class HitScheduleForEventModel extends HitScheduleForEventModelBase {
 
 @JsonSerializable()
 class HitScheduleForEventListModel extends HitScheduleForEventModelBase {
-  final DateTime scheduleDate;
+  final DateTime? scheduleDate;
+  final int count;
 
-  HitScheduleForEventListModel({
+  HitScheduleForEventListModel( {
     required this.scheduleDate,
+    required this.count,
   });
 
   factory HitScheduleForEventListModel.fromJson(Map<String, dynamic> json) =>

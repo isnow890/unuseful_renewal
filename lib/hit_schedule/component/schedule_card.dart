@@ -11,6 +11,9 @@ class ScheduleCard extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;
 
+  final String stfNm;
+  final String scheduleType;
+
   const ScheduleCard({
     Key? key,
     required this.startTime,
@@ -18,34 +21,100 @@ class ScheduleCard extends StatelessWidget {
     required this.content,
     required this.startDate,
     required this.endDate,
+    required this.stfNm,
+    required this.scheduleType,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var tmpColor = PRIMARY_COLOR;
+
+    if (scheduleType == 'duty')
+      tmpColor = Colors.orange;
+    else if (scheduleType == 'tempDuty') tmpColor = Colors.redAccent;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: PRIMARY_COLOR,
+          color: tmpColor,
         ),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Date(startDate: startDate, endDate: endDate),
-              SizedBox(
-                width: 16.0,
-              ),
-              _Content(
-                content: content,
-              ),
-              // Category(color: color),
-            ],
-          ),
-        ),
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _Date(
+                  startDate: startDate,
+                  endDate: endDate,
+                  endTime: endTime,
+                  startTime: startTime,
+                  color: tmpColor,
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                _Content(
+                  content: content,
+                  scheduleType: scheduleType,
+                  stfNm: stfNm,
+                ),
+              ],
+            ),
+            _RightInfo(
+              scheduleType: scheduleType,
+              color: tmpColor,
+            )
+          ],
+        )
+
+            // Row(
+            //   crossAxisAlignment: CrossAxisAlignment.stretch,
+            //   children: [
+            //     _Date(startDate: startDate, endDate: endDate),
+            //     SizedBox(
+            //       width: 16.0,
+            //     ),
+            //     _Content(
+            //       content: content,
+            //     ),
+            //     // Category(color: color),
+            //   ],
+            // ),
+            ),
+      ),
+    );
+  }
+}
+
+class _RightInfo extends StatelessWidget {
+  final Color color;
+  final String scheduleType;
+
+  const _RightInfo({Key? key, required this.color, required this.scheduleType})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var tmpType = '당직';
+
+    if (scheduleType == 'schedule') {
+      tmpType = '일정';
+    } else if (scheduleType == 'tempDuty') {
+      tmpType = '당직(예상)';
+    }
+
+    return Text(
+      tmpType,
+      style: TextStyle(
+        fontSize: 15.0,
+        color: color,
+        fontWeight: FontWeight.w500,
       ),
     );
   }
@@ -54,39 +123,98 @@ class ScheduleCard extends StatelessWidget {
 class _Date extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;
+  final String startTime;
+  final String endTime;
+  final Color color;
 
-  const _Date({Key? key, required this.startDate, required this.endDate})
-      : super(key: key);
+  const _Date({
+    Key? key,
+    required this.startDate,
+    required this.endDate,
+    required this.startTime,
+    required this.endTime,
+    required this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final textStyle = TextStyle(
       fontWeight: FontWeight.w600,
-      color: PRIMARY_COLOR,
+      color: color,
       fontSize: 12.0,
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-
+    return Row(
       children: [
         Text(
           DateFormat('yyyy-MM-dd').format(startDate),
           style: textStyle,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '~',
-              style: textStyle,
-            ),
-          ],
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          startTime,
+          style: textStyle,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          '~',
+          style: textStyle,
+        ),
+        const SizedBox(
+          width: 5,
         ),
         Text(DateFormat('yyyy-MM-dd').format(endDate), style: textStyle),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          endTime,
+          style: textStyle,
+        ),
       ],
     );
   }
 }
+
+//
+// class _Date extends StatelessWidget {
+//   final DateTime startDate;
+//   final DateTime endDate;
+//
+//   const _Date({Key? key, required this.startDate, required this.endDate})
+//       : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final textStyle = TextStyle(
+//       fontWeight: FontWeight.w600,
+//       color: PRIMARY_COLOR,
+//       fontSize: 12.0,
+//     );
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       children: [
+//         Text(
+//           DateFormat('yyyy-MM-dd').format(startDate),
+//           style: textStyle,
+//         ),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Text(
+//               '~',
+//               style: textStyle,
+//             ),
+//           ],
+//         ),
+//         Text(DateFormat('yyyy-MM-dd').format(endDate), style: textStyle),
+//       ],
+//     );
+//   }
+// }
 
 class _Time extends StatelessWidget {
   final String startTime;
@@ -118,15 +246,22 @@ class _Time extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final String content;
+  final String scheduleType;
+  final String stfNm;
 
-  const _Content({required this.content, Key? key}) : super(key: key);
+  const _Content({
+    required this.content,
+    Key? key,
+    required this.scheduleType,
+    required this.stfNm,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        child: Text(content),
-      ),
+    return Row(
+      children: [
+        Text((scheduleType == 'schedule' ? '' : '${stfNm} ') + content),
+      ],
     );
   }
 }
