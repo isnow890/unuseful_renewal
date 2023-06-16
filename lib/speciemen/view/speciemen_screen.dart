@@ -35,7 +35,7 @@ class SpeciemenScreen extends ConsumerWidget {
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
-          height: 40,
+          height: 30,
           child: CustomTextFormField(
             contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
             hintText: 'Scanned data will be shown. Or just type it.',

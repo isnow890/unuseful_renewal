@@ -77,7 +77,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     // Text('test' + widget.stfNum)
     return SafeArea(
       child: Container(
-        height: MediaQuery.of(context).size.height / 3.7 + bottomInset,
+        height: MediaQuery.of(context).size.height / 3.5 + bottomInset,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Column(
@@ -142,7 +142,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                 height: 5,
               ),
               Container(
-                height: 60,
+                height: 40,
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
@@ -193,12 +193,13 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return const SizedBox(width: 9);
+                    return const SizedBox(width: 10);
                   },
                   itemCount: cp.data.length,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
+              SizedBox(height: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

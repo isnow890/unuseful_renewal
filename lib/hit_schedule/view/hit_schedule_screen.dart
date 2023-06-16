@@ -15,6 +15,7 @@ import 'package:unuseful/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_for_event_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
+import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
@@ -35,6 +36,8 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
     ref.watch(hitDutyCalendarChangeMonthProvider);
 
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
+
+
 
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
@@ -78,11 +81,11 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
           ),
         ),
         SizedBox(
-          height: 8,
+          height: 5,
         ),
         TodayBanner(),
         SizedBox(
-          height: 8,
+          height: 5,
         ),
         SizedBox(height: 200, child: _ScheduleList()),
       ],

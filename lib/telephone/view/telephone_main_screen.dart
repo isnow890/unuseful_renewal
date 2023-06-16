@@ -117,10 +117,10 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
       title: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
-          height: 40,
+          height: 30,
           child: CustomTextFormField(
             initValue: searchValue,
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: Icon(Icons.search, color: PRIMARY_COLOR,),
             contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
             hintText: 'Enter some text to search.',
             onChanged: (value) {

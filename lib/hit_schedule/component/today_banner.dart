@@ -31,6 +31,7 @@ class _TodayBanner extends ConsumerWidget {
   final textStyle = TextStyle(
     fontWeight: FontWeight.w600,
     color: Colors.white,
+    fontSize: 13.0,
   );
 
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +50,7 @@ class _TodayBanner extends ConsumerWidget {
               '${selectedDay.year}년 ${selectedDay.month}월 ${selectedDay.day}일',
               style: textStyle,
             ),
-            Text('${count}개'),
+            Text('${count}개',style: textStyle),
           ],
         ),
       ),

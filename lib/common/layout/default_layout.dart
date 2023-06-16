@@ -54,19 +54,22 @@ class DefaultLayout extends ConsumerWidget {
     );
   }
 
-  AppBar? _renderAppbar(bool titleVisibility ) {
+  PreferredSize? _renderAppbar(bool titleVisibility ) {
     if (title == null) {
       return null;
     } else {
-      return AppBar(
+      return PreferredSize(
+        preferredSize: Size.fromHeight(40.0),
+        child: AppBar(
 
-        centerTitle: centerTitle ?? true,
-        backgroundColor: titleVisibility ? PRIMARY_COLOR : Colors.black,
-        //앱바가 튀어나오도록 보이게끔
-        elevation: 0,
-        title: title,
-        foregroundColor: Colors.black,
-        actions: actions,
+          centerTitle: centerTitle ?? true,
+          backgroundColor: titleVisibility ? PRIMARY_COLOR : Colors.black,
+          //앱바가 튀어나오도록 보이게끔
+          elevation: 0,
+          title: title,
+          foregroundColor: Colors.black,
+          actions: actions,
+        ),
       );
     }
   }

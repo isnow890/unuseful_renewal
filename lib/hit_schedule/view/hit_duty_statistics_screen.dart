@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+import 'package:unuseful/common/const/colors.dart';
 
 import '../../common/component/custom_circular_progress_indicator.dart';
+import '../../user/model/user_model.dart';
+import '../../user/provider/user_me_provider.dart';
 import '../model/hit_duty_statistics_model.dart';
 import '../provider/hit_duty_statistics_provider.dart';
 
@@ -16,10 +19,15 @@ class HitDutyStatisticsScreen extends ConsumerStatefulWidget {
 
 class _HitDutyStatisticsScreenState
     extends ConsumerState<HitDutyStatisticsScreen> {
+  final double height = 40;
+  HDTRefreshController _hdtRefreshController = HDTRefreshController();
+
   @override
   Widget build(
     BuildContext context,
   ) {
+    final user = ref.watch(userMeProvider.notifier).state as UserModel;
+
     final state = ref.watch(hitDutyStatisticsFamilyProvider(''));
     if (state is HitDutyStatisticsModelLoading) {
       return Column(
@@ -30,8 +38,6 @@ class _HitDutyStatisticsScreenState
         ],
       );
     }
-
-
 
     if (state is HitDutyStatisticsModelError) {
       return Column(
@@ -44,7 +50,9 @@ class _HitDutyStatisticsScreenState
           ),
           ElevatedButton(
               onPressed: () {
-                ref.read(hitDutyStatisticsFamilyProvider('').notifier).getDutyLog();
+                ref
+                    .read(hitDutyStatisticsFamilyProvider('').notifier)
+                    .getDutyLog();
               },
               child: Text('다시 시도')),
         ],
@@ -52,15 +60,18 @@ class _HitDutyStatisticsScreenState
     }
     final cp = state as HitDutyStatisticsModel;
 
-
-
-
-
     return HorizontalDataTable(
-      leftHandSideColumnWidth: 100,
-      rightHandSideColumnWidth: 1000,
+      refreshIndicator: ClassicHeader(),
+      loadIndicator: ClassicFooter(),
+      refreshIndicatorHeight: 60,
+      htdRefreshController: _hdtRefreshController,
+      enablePullToRefresh: true,
+      leftHandSideColumnWidth: 80,
+      rightHandSideColumnWidth: 670,
       isFixedHeader: true,
+
       headerWidgets: _getTitleWidget(),
+      onRefresh: _onRefresh,
       // isFixedFooter: true,
       footerWidgets: _getTitleWidget(),
       itemCount: cp.data.length,
@@ -71,81 +82,141 @@ class _HitDutyStatisticsScreenState
       ),
       leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
       rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-      itemExtent: 55,
+      itemExtent: 45,
 
       leftSideItemBuilder: (BuildContext context, int index) {
         return Container(
-          width: 100,
-          height: 52,
-          padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-          alignment: Alignment.centerLeft,
-          child: Text(cp.data[index].stfNm),
+          width: 80,
+          height: height,
+          alignment: Alignment.center,
+          child: Text(
+            cp.data[index].stfNm,
+            style: TextStyle(
+              color: cp.data[index].stfNm == user.stfNm
+                  ? Colors.orange
+                  : Colors.black,
+            ),
+          ),
         );
       },
       rightSideItemBuilder: (BuildContext context, int index) {
         return Row(
           children: <Widget>[
             Container(
-                width: 100,
-                height: 52,
-                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                alignment: Alignment.centerLeft,
-                child: Text(cp.data[index].rank.toString())),
+                width: 30,
+                height: height,
+                alignment: Alignment.center,
+                child: Text(
+                  cp.data[index].rank.toString(),
+                  style: TextStyle(
+                    color: cp.data[index].stfNm == user.stfNm
+                        ? Colors.orange
+                        : Colors.black,
+                  ),
+                )),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].totalCount.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].totalCount.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].totalHour.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].totalHour.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].afternoonCount.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].afternoonCount.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].afternoonHour.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].afternoonHour.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].morningHolidayCount.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].morningHolidayCount.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].morningHolidayHour.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].morningHolidayHour.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].afternoonHolidayCount.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].afternoonHolidayCount.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
             Container(
-              width: 100,
-              height: 52,
-              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-              alignment: Alignment.centerLeft,
-              child: Text(cp.data[index].afternoonHolidayHour.toString()),
+              width: 80,
+              height: height,
+              alignment: Alignment.center,
+              child: Text(
+                cp.data[index].afternoonHolidayHour.toString(),
+                style: TextStyle(
+                  color: cp.data[index].stfNm == user.stfNm
+                      ? Colors.orange
+                      : Colors.black,
+                ),
+              ),
             ),
           ],
         );
@@ -155,25 +226,25 @@ class _HitDutyStatisticsScreenState
 
   List<Widget> _getTitleWidget() {
     return [
-      _getTitleItemWidget('직원명', 100),
-      _getTitleItemWidget('순위', 100),
-      _getTitleItemWidget('총 근무 횟수', 100),
-      _getTitleItemWidget('총 근무 시간', 100),
-      _getTitleItemWidget('주중오후\n근무횟수', 100),
-      _getTitleItemWidget('주중오후\n근무시간', 100),
-      _getTitleItemWidget('morningHolidayCount', 100),
-      _getTitleItemWidget('morningHolidayHour', 100),
-      _getTitleItemWidget('afternoonHolidayCount', 100),
-      _getTitleItemWidget('afternoonHolidayHour', 100),
+      _getTitleItemWidget('직원명', 80),
+      _getTitleItemWidget('순위', 30),
+      _getTitleItemWidget('총 횟수', 80),
+      _getTitleItemWidget('총 근무 시간', 80),
+      _getTitleItemWidget('주중오후\n근무횟수', 80),
+      _getTitleItemWidget('주중오후\n근무시간', 80),
+      _getTitleItemWidget('휴일오전\n근무횟수', 80),
+      _getTitleItemWidget('휴일오전\n근무시간', 80),
+      _getTitleItemWidget('휴일오후\n근무횟수', 80),
+      _getTitleItemWidget('휴일오후\n근무시간', 80),
     ];
   }
 
   Widget _getTitleItemWidget(String label, double width) {
     return Container(
       width: width,
-      height: 56,
-      padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-      alignment: Alignment.centerLeft,
+      color: INPUT_BORDER_COLOR,
+      height: height,
+      alignment: Alignment.center,
       child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
@@ -242,4 +313,11 @@ class _HitDutyStatisticsScreenState
 //       ),
 //     );
 //   }
+
+  void _onRefresh() async {
+    //do some network call and get the response
+
+    ref.read(hitDutyStatisticsFamilyProvider('').notifier).getDutyLog();
+    _hdtRefreshController.refreshCompleted();
+  }
 }
