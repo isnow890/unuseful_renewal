@@ -14,6 +14,7 @@ final userMeProvider =
   final repository = ref.watch(userMeRepositoryProvider);
   final storage = ref.watch(secureStorageProvider);
   final authRepository = ref.watch(authRepositoryProvider);
+final StateNotifierProviderRef refs;
 
   return UserMeStateNotifier(
       repository: repository, storage: storage, authRepository: authRepository);
@@ -76,8 +77,6 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       //실제
       final resp = await authRepository.login(
           hspTpCd: hspTpCd, stfNo: stfNo, password: password);
-
-
 
 
 

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/common/component/custom_calendar.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
@@ -15,6 +16,8 @@ import 'package:unuseful/hit_schedule/provider/hit_schedule_for_event_provider.d
 import 'package:unuseful/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
 
+import '../provider/hit_duty_calendar_change_month_provider.dart';
+
 class HitScheduleScreen extends ConsumerStatefulWidget {
   static String get routeName => 'hitSchedule';
 
@@ -27,7 +30,10 @@ class HitScheduleScreen extends ConsumerStatefulWidget {
 class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   @override
   Widget build(BuildContext context) {
+    ref.watch(hitDutyCalendarChangeMonthProvider);
+
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
+
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
     var eventsLinkedHashMap =
@@ -49,15 +55,30 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
       title: Text('HitSchedule'),
       child: Column(
         children: [
-          CustomCalendar(
-            events: eventsLinkedHashMap,
-            selectedDay: selectedDay,
-            focusedDay: selectedDay,
-            onDaySelected: (selectedDay, focusedDay) {
-              ref
-                  .read(hitScheduleSelectedDayProvider.notifier)
-                  .update((state) => selectedDay);
-            },
+          Flexible(
+            flex: 2,
+            fit: FlexFit.tight,
+            child: CustomCalendar(
+              onPageChanged: (DateTime month) {
+                print('tana?');
+                print(month);
+                ref
+                    .read(hitScheduleSelectedDayProvider.notifier)
+                    .update((state) => month);
+
+                ref
+                    .read(hitDutyCalendarChangeMonthProvider.notifier)
+                    .update((state) => DateFormat('yyyyMM').format(month));
+              },
+              events: eventsLinkedHashMap,
+              selectedDay: selectedDay,
+              focusedDay: selectedDay,
+              onDaySelected: (selectedDay, focusedDay) {
+                ref
+                    .read(hitScheduleSelectedDayProvider.notifier)
+                    .update((state) => selectedDay);
+              },
+            ),
           ),
           SizedBox(
             height: 8,
@@ -66,7 +87,7 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
           SizedBox(
             height: 8,
           ),
-          Expanded(child: _ScheduleList()),
+          SizedBox(height: 210, child: _ScheduleList()),
         ],
       ),
     );

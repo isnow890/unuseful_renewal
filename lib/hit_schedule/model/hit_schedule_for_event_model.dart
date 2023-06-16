@@ -24,15 +24,18 @@ class HitScheduleForEventModel extends HitScheduleForEventModelBase {
       _$HitScheduleForEventModelFromJson(json);
 }
 
-
 @JsonSerializable()
 class HitScheduleForEventListModel extends HitScheduleForEventModelBase {
   final DateTime? scheduleDate;
   final int count;
+  final String? morningNm;
+  final String? afternoonNm;
 
-  HitScheduleForEventListModel( {
+  HitScheduleForEventListModel({
     required this.scheduleDate,
     required this.count,
+    required this.morningNm,
+    required this.afternoonNm,
   });
 
   factory HitScheduleForEventListModel.fromJson(Map<String, dynamic> json) =>

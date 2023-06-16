@@ -32,7 +32,7 @@ abstract class HitScheduleRepository {
 
   @GET('/hitSchedule/getHitScheduleForEvent')
   @Headers({'accessKey': 'true'})
-  Future<List<HitScheduleForEventListModel>> getHitScheduleForEvent();
+  Future<List<HitScheduleForEventListModel>> getHitScheduleForEvent(@Query("wkMonth") String wkMonth);
 
   @GET('/hitSchedule/getDutyStatistics')
   @Headers({'accessKey': 'true'})
