@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/full_photo.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
+import 'package:unuseful/hit_schedule/view/hit_schedule_main_screen.dart';
 import 'package:unuseful/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
@@ -122,8 +123,8 @@ class AuthProvider extends ChangeNotifier {
         ),
     GoRoute(
       path: '/hitSchedule',
-      name: HitScheduleScreen.routeName,
-      builder: (context, state) => HitScheduleScreen(),
+      name: HitScheduleMainScreen.routeName,
+      builder: (context, state) => HitScheduleMainScreen(),
     ),
 
 

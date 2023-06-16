@@ -35,8 +35,9 @@ class HitDutyStatisticsListModel {
   final int afternoonHolidayHour;
   final int totalCount;
   final int totalHour;
+  final int rank;
 
-  HitDutyStatisticsListModel({
+  HitDutyStatisticsListModel( {
     required this.stfNm,
     required this.stfNo,
     required this.stfNum,
@@ -48,6 +49,7 @@ class HitDutyStatisticsListModel {
     required this.afternoonHolidayHour,
     required this.totalCount,
     required this.totalHour,
+    required this.rank,
   });
 
   factory HitDutyStatisticsListModel.fromJson(Map<String, dynamic> json) =>

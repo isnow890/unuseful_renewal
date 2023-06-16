@@ -41,7 +41,7 @@ class ScheduleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(7.0),
         child: IntrinsicHeight(
             child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

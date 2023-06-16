@@ -36,16 +36,7 @@ class MealNotifier extends StateNotifier<MealModelBase?> {
 
   Future<MealModelBase> getMeal() async {
     try {
-
-      print('무슨에러인가2');
-
-
       final hspTpCd2 = await storage.read(key: CONST_HSP_TP_CD);
-
-
-      print('무슨에러인가');
-      print(hspTpCd2);
-
       state = MealModelLoading();
       final List<MealModelList> resp = await repository.getMeal(hspTpCd == ''? hspTpCd2!:hspTpCd);
       state = MealModel(data: resp);

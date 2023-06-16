@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/hit_schedule_log_model.dart';
 import '../repository/hit_schedule_repository.dart';
 
+
+
 final hitDutyLogNotifierProvider =
     StateNotifierProvider<HitDutyLogNotifier, HitDutyLogModelBase?>(
   (ref) {
