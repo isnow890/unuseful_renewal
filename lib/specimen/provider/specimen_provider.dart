@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:unuseful/common/const/data.dart';
-import 'package:unuseful/speciemen/model/specimen_model.dart';
+import 'package:unuseful/specimen/model/specimen_model.dart';
 
-import '../model/speciemen_params.dart';
+import '../model/specimen_params.dart';
 import '../repository/specimen_repository.dart';
 
 final specimenFamilyProvider = StateNotifierProvider.family<
     SpecimenStateNotifier,
     SpecimenModelBase?,
-    SpeciemenParams>((ref, params) {
+    SpecimenParams>((ref, params) {
   final repository = ref.watch(specimenRepositoryProvider);
 
   // final getMe = ref.watch(getmeprovider)
@@ -22,7 +22,7 @@ final specimenFamilyProvider = StateNotifierProvider.family<
 
 class SpecimenStateNotifier extends StateNotifier<SpecimenModelBase?> {
   final SpecimenRepository repository;
-  final SpeciemenParams params;
+  final SpecimenParams params;
 
   SpecimenStateNotifier({
     required this.params,
@@ -43,7 +43,7 @@ class SpecimenStateNotifier extends StateNotifier<SpecimenModelBase?> {
     }
     try {
       final resp = await repository.getSpcmInformation(
-          speciemenParams: params
+          specimenParams: params
       );
       state = SpecimenModel(data: resp);
       return SpecimenModel(data: resp);

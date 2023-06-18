@@ -34,7 +34,7 @@ class MainDrawer extends ConsumerWidget {
     List<String> tmpList = [
       'home',
       'telephone',
-      'speciemen',
+      'specimen',
       'meal',
       'patient',
       'hitSchedule'

@@ -1,23 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'speciemen_params.g.dart';
+part 'specimen_params.g.dart';
 
 @JsonSerializable()
-class SpeciemenParams {
+class SpecimenParams {
   final String? searchValue;
   final String? strDt;
   final String? endDt;
   final String? orderBy;
 
-  const SpeciemenParams({
+  const SpecimenParams({
      this.searchValue,
      this.strDt,
      this.endDt,
      this.orderBy,
 }
   );
-  factory SpeciemenParams.fromJson(Map<String, dynamic> json) =>
-      _$SpeciemenParamsFromJson(json);
+  factory SpecimenParams.fromJson(Map<String, dynamic> json) =>
+      _$SpecimenParamsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SpeciemenParamsToJson(this);
+  Map<String, dynamic> toJson() => _$SpecimenParamsToJson(this);
 }

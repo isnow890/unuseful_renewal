@@ -2,9 +2,9 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
-import 'package:unuseful/speciemen/model/speciemen_params.dart';
-import 'package:unuseful/speciemen/model/specimen_model.dart';
-import 'package:unuseful/speciemen/provider/specimen_provider.dart';
+import 'package:unuseful/specimen/model/specimen_params.dart';
+import 'package:unuseful/specimen/model/specimen_model.dart';
+import 'package:unuseful/specimen/provider/specimen_provider.dart';
 
 import '../../common/component/custom_error_widget.dart';
 import '../../common/component/custom_loading_indicator_widget.dart';
@@ -16,15 +16,15 @@ import '../../common/provider/drawer_selector_provider.dart';
 import '../../telephone/provider/telephone_order_radio_tile_provider.dart';
 import '../../telephone/provider/telephone_search_value_provider.dart';
 
-class SpeciemenScreen extends ConsumerStatefulWidget {
+class SpecimenScreen extends ConsumerStatefulWidget {
 
-  const SpeciemenScreen({Key? key}) : super(key: key);
+  const SpecimenScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SpeciemenScreen> createState() => _SpeciemenScreenState();
+  ConsumerState<SpecimenScreen> createState() => _SpecimenScreenState();
 }
 
-class _SpeciemenScreenState extends ConsumerState<SpeciemenScreen> {
+class _SpecimenScreenState extends ConsumerState<SpecimenScreen> {
   final searchValueController = TextEditingController();
 
   final String searchValue = '';
@@ -41,7 +41,7 @@ class _SpeciemenScreenState extends ConsumerState<SpeciemenScreen> {
   Widget build(BuildContext context) {
     final haha = List<String>.generate(1, (index) => 'test');
 
-    final state = ref.watch(specimenFamilyProvider(SpeciemenParams()));
+    final state = ref.watch(specimenFamilyProvider(SpecimenParams()));
 
     if (state is SpecimenModelLoading) {
       return _renderDefaultLayout(widget: const CustomLoadingIndicatorWidget());
@@ -164,7 +164,7 @@ class _SpeciemenScreenState extends ConsumerState<SpeciemenScreen> {
           widget: CustomErrorWidget(
               message: state.message,
               onPressed: () {
-                ref.read(specimenFamilyProvider(SpeciemenParams(
+                ref.read(specimenFamilyProvider(SpecimenParams(
                     searchValue: searchValue,
                     strDt: null,
                     endDt: null,
@@ -174,7 +174,7 @@ class _SpeciemenScreenState extends ConsumerState<SpeciemenScreen> {
 
     return _renderDefaultLayout(
       widget: Center(
-        child: Text('speciemen'),
+        child: Text('specimen'),
       ),
     );
   }

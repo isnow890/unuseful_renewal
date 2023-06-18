@@ -9,11 +9,10 @@ import 'package:unuseful/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
-import 'package:unuseful/speciemen/view/speciemen_screen.dart';
-import 'package:unuseful/speciemen/view/specimen_main_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
 import '../../meal/model/meal_model.dart';
+import '../../specimen/view/specimen_main_screen.dart';
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
 import '../view/login_screen.dart';
@@ -103,7 +102,7 @@ class AuthProvider extends ChangeNotifier {
           },
         ),
         GoRoute(
-          path: '/speciemen',
+          path: '/specimen',
           name: SpecimenMainScreen.routeName,
           builder: (context, state) => SpecimenMainScreen(),
         ),

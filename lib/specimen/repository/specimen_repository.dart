@@ -2,7 +2,7 @@ import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
 import 'package:unuseful/common/dio/dio.dart';
-import 'package:unuseful/speciemen/model/speciemen_params.dart';
+import 'package:unuseful/specimen/model/specimen_params.dart';
 
 import '../../common/const/data.dart';
 import '../model/specimen_model.dart';
@@ -23,6 +23,6 @@ abstract class SpecimenRepository {
   @GET('/')
   @Headers({'accessKey': 'true'})
   Future<List<SpecimenPrimaryModel>> getSpcmInformation({
-    @Queries() SpeciemenParams? speciemenParams =
-    const SpeciemenParams(searchValue: '', strDt: '', endDt: '', orderBy: '')});
+    @Queries() SpecimenParams? specimenParams =
+    const SpecimenParams(searchValue: '', strDt: '', endDt: '', orderBy: '')});
 }

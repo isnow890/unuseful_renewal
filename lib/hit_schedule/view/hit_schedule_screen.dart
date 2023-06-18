@@ -69,6 +69,7 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
           flex: 2,
           fit: FlexFit.tight,
           child: CustomCalendar(
+
             shouldFillViewport: true,
             calendarStyle : CalendarStyle(
               outsideDaysVisible: false,

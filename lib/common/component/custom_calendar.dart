@@ -20,7 +20,13 @@ class CustomCalendar extends ConsumerWidget {
   final OnPageChanged? onPageChanged;
   final CalendarBuilders? calendarBuilders;
   final bool shouldFillViewport;
-final CalendarStyle? calendarStyle;
+  final CalendarStyle? calendarStyle;
+  final DateTime? rangeStart;
+  final DateTime? rangeEnd;
+  final RangeSelectionMode? rangeSelected;
+  final OnRangeSelected? onRangeSelected;
+
+
 
   final LinkedHashMap<DateTime?, HitScheduleForEventListModel>? events;
   List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
@@ -38,68 +44,68 @@ final CalendarStyle? calendarStyle;
   );
 
   CustomCalendar(
-
-      {
-        required this.shouldFillViewport,
-        required this.calendarStyle,
-        required this.onPageChanged,
+      {this.rangeSelected,
+      this.rangeStart,
+      this.rangeEnd,
+      required this.shouldFillViewport,
+      required this.calendarStyle,
+      required this.onPageChanged,
       required this.events,
-      required this.selectedDay,
+      this.selectedDay,
       required this.focusedDay,
       required this.onDaySelected,
-        required this.calendarBuilders,
+        this.onRangeSelected,
+       this.calendarBuilders,
       Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return TableCalendar(
+      // holidayPredicate: (day) {
+      //   return true;
+      // },
 
-    return SizedBox(
-      height: 100,
-      child: TableCalendar(
-        // holidayPredicate: (day) {
-        //   return true;
-        // },
-        shouldFillViewport: shouldFillViewport,
-        daysOfWeekHeight: 20,
-        locale: 'ko_KR',
-        focusedDay: focusedDay,
-        firstDay: DateTime(1800),
-        lastDay: DateTime(3000),
-        headerStyle: HeaderStyle(
-          headerPadding: EdgeInsets.all(0),
-          formatButtonVisible: false,
-          titleCentered: true, //March 2023 가운데 정렬
-          // 헤더 사이즈 변경
-          titleTextStyle: TextStyle(
-            fontWeight: FontWeight.w700,
-            fontSize: 16,
-          ),
+
+      onRangeSelected: onRangeSelected,
+      rangeSelectionMode: rangeSelected ?? RangeSelectionMode.toggledOff,
+      rangeStartDay: rangeStart,
+      rangeEndDay: rangeEnd,
+      shouldFillViewport: shouldFillViewport,
+      daysOfWeekHeight: 20,
+      locale: 'ko_KR',
+      focusedDay: focusedDay,
+      firstDay: DateTime(1800),
+      lastDay: DateTime(3000),
+      headerStyle: HeaderStyle(
+        headerPadding: EdgeInsets.all(0),
+        formatButtonVisible: false,
+        titleCentered: true, //March 2023 가운데 정렬
+        // 헤더 사이즈 변경
+        titleTextStyle: TextStyle(
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
         ),
-        onPageChanged: onPageChanged,
-        calendarStyle: calendarStyle??CalendarStyle(),
-
-        //selectedDay - 동그라미 쳐 놓은 날짜
-        //focusedday - 보고 있는 월
-        //onDaySelected - 날자를 선택했을때
-        onDaySelected: onDaySelected,
-        selectedDayPredicate: (DateTime date) {
-          if (selectedDay == null) {
-            return false;
-          }
-          //DateTime date는 현재 selectedDayPredicate가 체크하고 있는 날짜. (전체 날짜 다 선택함.)
-          //return true를 하면 전체 날짜가 선택되므로
-          return date.year == selectedDay!.year &&
-              date.month == selectedDay!.month &&
-              date.day == selectedDay!.day;
-        },
-
-        calendarBuilders: calendarBuilders?? CalendarBuilders(),
-
-
       ),
+      onPageChanged: onPageChanged,
+      calendarStyle: calendarStyle ?? CalendarStyle(),
+
+      //selectedDay - 동그라미 쳐 놓은 날짜
+      //focusedday - 보고 있는 월
+      //onDaySelected - 날자를 선택했을때
+      onDaySelected: onDaySelected,
+      selectedDayPredicate: (DateTime date) {
+        if (selectedDay == null) {
+          return false;
+        }
+        //DateTime date는 현재 selectedDayPredicate가 체크하고 있는 날짜. (전체 날짜 다 선택함.)
+        //return true를 하면 전체 날짜가 선택되므로
+        return date.year == selectedDay!.year &&
+            date.month == selectedDay!.month &&
+            date.day == selectedDay!.day;
+      },
+
+      calendarBuilders: calendarBuilders ?? CalendarBuilders(),
     );
   }
-
 }
-
