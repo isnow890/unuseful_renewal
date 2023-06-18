@@ -4,15 +4,18 @@ part 'speciemen_params.g.dart';
 
 @JsonSerializable()
 class SpeciemenParams {
-  final String? hspTpCd;
-  final String? spcmNo;
+  final String? searchValue;
+  final String? strDt;
+  final String? endDt;
+  final String? orderBy;
 
-  const SpeciemenParams({this.hspTpCd, this.spcmNo});
-
-  SpeciemenParams copyWith({String? hspTpCd, String? spcmNo}) =>
-      SpeciemenParams(
-          hspTpCd: hspTpCd ?? this.hspTpCd, spcmNo: spcmNo ?? this.spcmNo);
-
+  const SpeciemenParams({
+     this.searchValue,
+     this.strDt,
+     this.endDt,
+     this.orderBy,
+}
+  );
   factory SpeciemenParams.fromJson(Map<String, dynamic> json) =>
       _$SpeciemenParamsFromJson(json);
 

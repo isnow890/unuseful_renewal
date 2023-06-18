@@ -17,9 +17,12 @@ class CustomCalendar extends ConsumerWidget {
   final DateTime? selectedDay;
   final DateTime focusedDay;
   final OnDaySelected? onDaySelected;
-  final OnPageChanged onPageChanged;
+  final OnPageChanged? onPageChanged;
+  final CalendarBuilders? calendarBuilders;
+  final bool shouldFillViewport;
+final CalendarStyle? calendarStyle;
 
-  final LinkedHashMap<DateTime?, HitScheduleForEventListModel> events;
+  final LinkedHashMap<DateTime?, HitScheduleForEventListModel>? events;
   List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
 
   final defaultTextStyle = TextStyle(
@@ -35,31 +38,21 @@ class CustomCalendar extends ConsumerWidget {
   );
 
   CustomCalendar(
-      {required this.onPageChanged,
+
+      {
+        required this.shouldFillViewport,
+        required this.calendarStyle,
+        required this.onPageChanged,
       required this.events,
       required this.selectedDay,
       required this.focusedDay,
       required this.onDaySelected,
+        required this.calendarBuilders,
       Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userMeProvider.notifier).state as UserModel;
-    // calendarBuilders: CalendarBuilders(
-    //   dowBuilder: (context, day) {
-    //     if (day.weekday == DateTime.sunday) {
-    //       final text = DateFormat.E().format(day);
-    //
-    //       return Center(
-    //         child: Text(
-    //           text,
-    //           style: TextStyle(color: Colors.red),
-    //         ),
-    //       );
-    //     }
-    //   },
-    // ),
 
     return SizedBox(
       height: 100,
@@ -67,11 +60,10 @@ class CustomCalendar extends ConsumerWidget {
         // holidayPredicate: (day) {
         //   return true;
         // },
-        shouldFillViewport: true,
+        shouldFillViewport: shouldFillViewport,
         daysOfWeekHeight: 20,
         locale: 'ko_KR',
         focusedDay: focusedDay,
-
         firstDay: DateTime(1800),
         lastDay: DateTime(3000),
         headerStyle: HeaderStyle(
@@ -85,11 +77,7 @@ class CustomCalendar extends ConsumerWidget {
           ),
         ),
         onPageChanged: onPageChanged,
-
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: false,
-          isTodayHighlighted: false,
-        ),
+        calendarStyle: calendarStyle??CalendarStyle(),
 
         //selectedDay - 동그라미 쳐 놓은 날짜
         //focusedday - 보고 있는 월
@@ -106,185 +94,12 @@ class CustomCalendar extends ConsumerWidget {
               date.day == selectedDay!.day;
         },
 
-        calendarBuilders: CalendarBuilders(
-          outsideBuilder: (context, day, focusedDay) => _CalendarBuilders(
-            decoration: defaultBoxDeco.copyWith(
-              color: Colors.white,
-            ),
-            textColor: Colors.grey[400],
-            day: day,
-            focusedDay: focusedDay,
-          ),
-          selectedBuilder: (context, day, focusedDay) => _CalendarBuilders(
-            decoration: defaultBoxDeco.copyWith(
-                color: Colors.white,
-                border: Border.all(color: PRIMARY_COLOR, width: 1)),
-            textColor: PRIMARY_COLOR,
-            day: day,
-            focusedDay: focusedDay,
-          ),
-          defaultBuilder: (context, day, focusedDay) => _CalendarBuilders(
-              decoration: defaultBoxDeco,
-              day: day,
-              focusedDay: focusedDay,
-              textColor: day.weekday == DateTime.sunday ||
-                      day.weekday == DateTime.saturday
-                  ? Colors.red
-                  : Colors.black),
+        calendarBuilders: calendarBuilders?? CalendarBuilders(),
 
-          holidayBuilder: (context, day, focusedDay) {
-            return _CalendarBuilders(
-              decoration: defaultBoxDeco,
-              day: day,
-              focusedDay: focusedDay,
-            );
-          },
-          // defaultBuilder: (context, day, focusedDay){
-          //
-          //   return Container(
-          //     padding: EdgeInsets.all(3),
-          //     child: Container(
-          //       padding: EdgeInsets.only(top: 3, bottom: 3),
-          //       width: MediaQuery.of(context).size.width,
-          //       decoration: BoxDecoration(
-          //         borderRadius: BorderRadius.all(Radius.circular(7)),
-          //         color: PRIMARY_COLOR,
-          //       ),
-          //       child: Column(mainAxisAlignment: MainAxisAlignment.start,
-          //         crossAxisAlignment: CrossAxisAlignment.start,
-          //         children: [
-          //           Text(day.day.toString(), style: TextStyle(fontSize: 12),),
-          //           Expanded(child: Text("")),
-          //           // Text(moneyString,
-          //           //   textAlign: TextAlign.center,
-          //           //   style: TextStyle(fontSize: 12, color: nowIndexColor[900]),),
-          //         ],
-          //       ),
-          //     ),
-          //   );
-          // },
 
-          markerBuilder: (context, date, eventss) {
-            DateTime _date = DateTime(date.year, date.month, date.day);
-
-            if (events[_date] != null) {
-              if (isSameDay(
-                  _date, events[_date]!.scheduleDate ?? DateTime(2023))) {
-                return Stack(children: [
-                  Positioned(
-                      right: -1,
-                      bottom: -1,
-                      child: _buildEventsMarker(events[_date]!.count)),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 10.0),
-                        Text(
-                          events[_date]!.morningNm ?? '',
-                          style: TextStyle(
-                              fontSize: 10.0,
-                              color: events[_date]!.morningNm == user.stfNm
-                                  ? Colors.orange
-                                  : Colors.black),
-                        ),
-                        Text(events[_date]!.afternoonNm ?? '',
-                            style: TextStyle(
-                                fontSize: 10.0,
-                                color: events[_date]!.afternoonNm == user.stfNm
-                                    ? Colors.orange
-                                    : Colors.black)),
-                        // Text(
-                        //     events[_date]!.count == 0
-                        //         ? ''
-                        //         : ('일정:${events[_date]!.count}'),
-                        //     style: TextStyle(fontSize: 9.0)),
-                      ],
-                    ),
-                  ),
-                ]
-                    // Stack(children: [
-                    //   Container(
-                    //     width: 10,
-                    //     padding: const EdgeInsets.only(bottom: 4),
-                    //     decoration: const BoxDecoration(
-                    //       color: PRIMARY_COLOR,
-                    //       shape: BoxShape.circle,
-                    //     ),
-                    //   ),
-                    //   // Text(events[_date]!.count.toString()),
-                    // ]),
-
-                    );
-              }
-            }
-          },
-        ),
       ),
     );
   }
 
-  Widget _buildEventsMarker(int count) {
-    return count == 0
-        ? Text('')
-        : AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            decoration:
-                BoxDecoration(shape: BoxShape.rectangle, color: PRIMARY_COLOR),
-            width: 13.0,
-            height: 13.0,
-            child: Center(
-              child: Text(
-                '${count}',
-                style: TextStyle().copyWith(
-                  color: Colors.white,
-                  fontSize: 9.0,
-                ),
-              ),
-            ),
-          );
-  }
 }
 
-class _CalendarBuilders extends StatelessWidget {
-  final DateTime day;
-  final DateTime focusedDay;
-  final Decoration decoration;
-  final Color? textColor;
-
-  const _CalendarBuilders(
-      {Key? key,
-      required this.day,
-      required this.focusedDay,
-      required this.decoration,
-      this.textColor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(3),
-      child: Container(
-        padding: EdgeInsets.only(top: 1, bottom: 1),
-        width: MediaQuery.of(context).size.width,
-        decoration: decoration,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              day.day.toString(),
-              style: TextStyle(fontSize: 13, color: textColor ?? Colors.black),
-            ),
-            Expanded(child: Text("")),
-            // Text(moneyString,
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(fontSize: 12, color: nowIndexColor[900]),),
-          ],
-        ),
-      ),
-    );
-  }
-}

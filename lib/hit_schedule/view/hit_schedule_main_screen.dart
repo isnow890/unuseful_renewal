@@ -39,7 +39,6 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
   }
 
   void tabListener() {
-    print('동작');
     setState(() => index = controller.index);
   }
 

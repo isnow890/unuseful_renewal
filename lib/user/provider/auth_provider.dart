@@ -10,6 +10,7 @@ import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
 import 'package:unuseful/speciemen/view/speciemen_screen.dart';
+import 'package:unuseful/speciemen/view/specimen_main_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
 import '../../meal/model/meal_model.dart';
@@ -103,8 +104,8 @@ class AuthProvider extends ChangeNotifier {
         ),
         GoRoute(
           path: '/speciemen',
-          name: SpeciemenScreen.routeName,
-          builder: (context, state) => SpeciemenScreen(),
+          name: SpecimenMainScreen.routeName,
+          builder: (context, state) => SpecimenMainScreen(),
         ),
         GoRoute(
           path: '/meal',

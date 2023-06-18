@@ -43,7 +43,6 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   }
 
   void tabListener() {
-    print('동작');
     setState(() => index = controller.index);
   }
 

@@ -1,37 +1,54 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:unuseful/common/const/data.dart';
-import 'package:unuseful/speciemen/model/speciemen_model.dart';
+import 'package:unuseful/speciemen/model/specimen_model.dart';
 
 import '../model/speciemen_params.dart';
-import '../repository/speciemen_repository.dart';
+import '../repository/specimen_repository.dart';
 
-class SpecimenStateNotifier extends StateNotifier<SpeciemenModelBase?> {
-  final SpeciemenRepository repository;
-  final String? spcmNo;
-  final FlutterSecureStorage storage;
+final specimenFamilyProvider = StateNotifierProvider.family<
+    SpecimenStateNotifier,
+    SpecimenModelBase?,
+    SpeciemenParams>((ref, params) {
+  final repository = ref.watch(specimenRepositoryProvider);
+
+  // final getMe = ref.watch(getmeprovider)
+
+  final notifier = SpecimenStateNotifier(
+  repository: repository, params: params);
+  return notifier;
+},);
+
+
+class SpecimenStateNotifier extends StateNotifier<SpecimenModelBase?> {
+  final SpecimenRepository repository;
+  final SpeciemenParams params;
 
   SpecimenStateNotifier({
-    required this.storage,
-    required this.spcmNo,
+    required this.params,
     required this.repository,
-  }) : super(SpeciemenLoading()) {
+  }) : super(SpecimenModelLoading()) {
     getSpcmInformation();
   }
 
-  Future<void> getSpcmInformation() async {
-    state = SpeciemenLoading();
+  Future<SpecimenModelBase> getSpcmInformation() async {
+    state = SpecimenModelLoading();
 
-    if (spcmNo == null) state = null;
+    print('params.searchValue');
+    print(params.searchValue);
 
+    if (params.searchValue == null|| params.searchValue == '') {
+      state = SpecimenModelInit();
+      return SpecimenModelInit();
+    }
     try {
       final resp = await repository.getSpcmInformation(
-          speciemenParams: SpeciemenParams(
-              hspTpCd: await storage.read(key: CONST_HSP_TP_CD),
-              spcmNo: spcmNo));
-      state = resp;
+          speciemenParams: params
+      );
+      state = SpecimenModel(data: resp);
+      return SpecimenModel(data: resp);
     } catch (e) {
-      state = SpeciemenModelError(message: '데이터를 가져오지 못했습니다.');
+      state = SpecimenModelError(message: '데이터를 가져오지 못했습니다.');
       return Future.value(state);
     }
   }

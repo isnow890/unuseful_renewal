@@ -14,7 +14,6 @@ final userMeProvider =
   final repository = ref.watch(userMeRepositoryProvider);
   final storage = ref.watch(secureStorageProvider);
   final authRepository = ref.watch(authRepositoryProvider);
-final StateNotifierProviderRef refs;
 
   return UserMeStateNotifier(
       repository: repository, storage: storage, authRepository: authRepository);

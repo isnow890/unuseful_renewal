@@ -50,7 +50,6 @@ class _MealScreenState extends ConsumerState<MealScreen>
   }
 
   void tabListener() {
-    print('동작');
     setState(() => index = controller.index);
   }
 

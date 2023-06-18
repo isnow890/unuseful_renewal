@@ -17,6 +17,7 @@ import 'package:unuseful/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
 
+import '../../common/const/colors.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../provider/hit_duty_calendar_change_month_provider.dart';
@@ -33,12 +34,18 @@ class HitScheduleScreen extends ConsumerStatefulWidget {
 class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   @override
   Widget build(BuildContext context) {
+
+
+
+    final defaultBoxDeco = BoxDecoration(
+      color: Colors.grey[200],
+      //테두리 깍기
+      borderRadius: BorderRadius.circular(6.0),
+    );
+
     ref.watch(hitDutyCalendarChangeMonthProvider);
-
+    final user = ref.watch(userMeProvider.notifier).state as UserModel;
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
-
-
-
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
     var eventsLinkedHashMap =
@@ -62,6 +69,11 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
           flex: 2,
           fit: FlexFit.tight,
           child: CustomCalendar(
+            shouldFillViewport: true,
+            calendarStyle : CalendarStyle(
+              outsideDaysVisible: false,
+              isTodayHighlighted: false,
+            ),
             onPageChanged: (DateTime month) {
               ref
                   .read(hitScheduleSelectedDayProvider.notifier)
@@ -78,6 +90,99 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => selectedDay);
             },
+
+            calendarBuilders: CalendarBuilders(
+              outsideBuilder: (context, day, focusedDay) => _CalendarBuilders(
+                decoration: defaultBoxDeco.copyWith(
+                  color: Colors.white,
+                ),
+                textColor: Colors.grey[400],
+                day: day,
+                focusedDay: focusedDay,
+              ),
+              selectedBuilder: (context, day, focusedDay) => _CalendarBuilders(
+                decoration: defaultBoxDeco.copyWith(
+                    color: Colors.white,
+                    border: Border.all(color: PRIMARY_COLOR, width: 1)),
+                textColor: PRIMARY_COLOR,
+                day: day,
+                focusedDay: focusedDay,
+              ),
+              defaultBuilder: (context, day, focusedDay) => _CalendarBuilders(
+                  decoration: defaultBoxDeco,
+                  day: day,
+                  focusedDay: focusedDay,
+                  textColor: day.weekday == DateTime.sunday ||
+                      day.weekday == DateTime.saturday
+                      ? Colors.red
+                      : Colors.black),
+
+              holidayBuilder: (context, day, focusedDay) {
+                return _CalendarBuilders(
+                  decoration: defaultBoxDeco,
+                  day: day,
+                  focusedDay: focusedDay,
+                );
+              },
+
+              markerBuilder: (context, date, eventss) {
+                DateTime _date = DateTime(date.year, date.month, date.day);
+
+                if (eventsLinkedHashMap[_date] != null) {
+                  if (isSameDay(
+                      _date, eventsLinkedHashMap[_date]!.scheduleDate ?? DateTime(2023))) {
+                    return Stack(children: [
+                      Positioned(
+                          right: -1,
+                          bottom: -1,
+                          child: _buildEventsMarker(eventsLinkedHashMap[_date]!.count)),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 10.0),
+                            Text(
+                              eventsLinkedHashMap[_date]!.morningNm ?? '',
+                              style: TextStyle(
+                                  fontSize: 10.0,
+                                  color: eventsLinkedHashMap[_date]!.morningNm == user.stfNm
+                                      ? Colors.orange
+                                      : Colors.black),
+                            ),
+                            Text(eventsLinkedHashMap[_date]!.afternoonNm ?? '',
+                                style: TextStyle(
+                                    fontSize: 10.0,
+                                    color: eventsLinkedHashMap[_date]!.afternoonNm == user.stfNm
+                                        ? Colors.orange
+                                        : Colors.black)),
+                            // Text(
+                            //     events[_date]!.count == 0
+                            //         ? ''
+                            //         : ('일정:${events[_date]!.count}'),
+                            //     style: TextStyle(fontSize: 9.0)),
+                          ],
+                        ),
+                      ),
+                    ]
+                      // Stack(children: [
+                      //   Container(
+                      //     width: 10,
+                      //     padding: const EdgeInsets.only(bottom: 4),
+                      //     decoration: const BoxDecoration(
+                      //       color: PRIMARY_COLOR,
+                      //       shape: BoxShape.circle,
+                      //     ),
+                      //   ),
+                      //   // Text(events[_date]!.count.toString()),
+                      // ]),
+
+                    );
+                  }
+                }
+              },
+            ),
           ),
         ),
         SizedBox(
@@ -91,6 +196,28 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
       ],
     );
   }
+
+  Widget _buildEventsMarker(int count) {
+    return count == 0
+        ? Text('')
+        : AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration:
+      BoxDecoration(shape: BoxShape.rectangle, color: PRIMARY_COLOR),
+      width: 13.0,
+      height: 13.0,
+      child: Center(
+        child: Text(
+          '${count}',
+          style: TextStyle().copyWith(
+            color: Colors.white,
+            fontSize: 9.0,
+          ),
+        ),
+      ),
+    );
+  }
+
 }
 
 class _ScheduleList extends ConsumerWidget {
@@ -183,10 +310,48 @@ class _ScheduleList extends ConsumerWidget {
         },
         itemCount: cp.data.length + 1);
   }
+
+
 }
 
-// class Event {
-//   final DateTime? date;
-//
-//   Event({required this.date});
-// }
+
+class _CalendarBuilders extends StatelessWidget {
+  final DateTime day;
+  final DateTime focusedDay;
+  final Decoration decoration;
+  final Color? textColor;
+
+  const _CalendarBuilders(
+      {Key? key,
+        required this.day,
+        required this.focusedDay,
+        required this.decoration,
+        this.textColor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(3),
+      child: Container(
+        padding: EdgeInsets.only(top: 1, bottom: 1),
+        width: MediaQuery.of(context).size.width,
+        decoration: decoration,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              day.day.toString(),
+              style: TextStyle(fontSize: 13, color: textColor ?? Colors.black),
+            ),
+            Expanded(child: Text("")),
+            // Text(moneyString,
+            //   textAlign: TextAlign.center,
+            //   style: TextStyle(fontSize: 12, color: nowIndexColor[900]),),
+          ],
+        ),
+      ),
+    );
+  }
+}
