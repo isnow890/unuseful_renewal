@@ -12,7 +12,6 @@ class SpecimenModelError extends SpecimenModelBase {
   SpecimenModelError({required this.message});
 }
 
-class SpecimenModelInit extends SpecimenModelBase {}
 
 class SpecimenModelLoading extends SpecimenModelBase {}
 
@@ -31,9 +30,9 @@ class SpecimenModel extends SpecimenModelBase {
 @JsonSerializable()
 class SpecimenPrimaryModel {
   final String ordDt;
-  final List<SpecimenExmTypeModel>? data;
+  final List<SpecimenExmTypeModel>? exmType;
 
-  SpecimenPrimaryModel({required this.ordDt, required this.data});
+  SpecimenPrimaryModel({required this.ordDt, required this.exmType});
 
   factory SpecimenPrimaryModel.fromJson(Map<String, dynamic> json) =>
       _$SpecimenPrimaryModelFromJson(json);
@@ -45,13 +44,13 @@ class SpecimenExmTypeModel {
   final String exrmExmCtgCd;
   final String exmCtgAbbrNm;
 
-  final List<SpecimenGeneralModel>? data;
+  final List<SpecimenGeneralModel>? general;
 
   SpecimenExmTypeModel({
     required this.ordDt,
     required this.exrmExmCtgCd,
     required this.exmCtgAbbrNm,
-    required this.data,
+    required this.general,
   });
 
   factory SpecimenExmTypeModel.fromJson(Map<String,dynamic> json)

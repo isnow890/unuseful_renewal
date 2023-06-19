@@ -4,11 +4,11 @@ part 'specimen_params.g.dart';
 
 @JsonSerializable()
 class SpecimenParams {
-  final String hspTpCd;
-  final String searchValue;
-  final String strDt;
-  final String endDt;
-  final String orderBy;
+  final String? hspTpCd;
+  final String? searchValue;
+  final String? strDt;
+  final String? endDt;
+  final String? orderBy;
 
   const SpecimenParams( {
     required this.hspTpCd,

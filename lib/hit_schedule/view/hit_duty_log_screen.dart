@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/common/component/custom_error_widget.dart';
 
-import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/component/custom_loading_indicator_widget.dart';
 import '../../common/const/colors.dart';
+import '../../specimen/model/specimen_params.dart';
+import '../../specimen/provider/specimen_provider.dart';
 import '../model/hit_schedule_log_model.dart';
 import '../provider/hit_duty_log_provider.dart';
 
@@ -21,7 +22,17 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(hitDutyLogNotifierProvider);
+    // final state3 = ref.watch(specimenNotifierProvider);
+
+
+
+
+     Map<String,dynamic> fi2 = {'hspTpCd' : '01', 'searchValue': '10884537','strDt': '20220522',
+      'endDt': '20230619' ,'orderBy': 'desc'};
+
+    final state2 = ref.watch(specimenFamilyProvider(fi2));
+
+     final state = ref.watch(hitDutyLogNotifierProvider);
 
     if (state is HitDutyLogModelLoading) {
       return const CustomLoadingIndicatorWidget();
@@ -65,7 +76,9 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
                           : '신규\n일정',
                       style: TextStyle(
                           fontSize: 18,
-                          color: state.data[index].changeInfo.contains('<->') ? PRIMARY_COLOR: Colors.black,
+                          color: state.data[index].changeInfo.contains('<->')
+                              ? PRIMARY_COLOR
+                              : Colors.black,
                           fontWeight: FontWeight.w600),
                     ),
                   ],

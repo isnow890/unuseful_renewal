@@ -4,14 +4,15 @@ import 'package:retrofit/http.dart';
 import 'package:unuseful/common/dio/dio.dart';
 import 'package:unuseful/specimen/model/specimen_detail_model.dart';
 import 'package:unuseful/specimen/model/specimen_detail_params.dart';
-import 'package:unuseful/specimen/model/specimen_params.dart';
+
 import '../../common/const/data.dart';
 import '../model/specimen_model.dart';
+
 part 'specimen_repository.g.dart';
 
 final specimenRepositoryProvider = Provider<SpecimenRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  final repository = SpecimenRepository(dio, baseUrl: '$ip/specimen');
+  final repository = SpecimenRepository(dio, baseUrl: '$ip');
   return repository;
 });
 
@@ -19,18 +20,36 @@ final specimenRepositoryProvider = Provider<SpecimenRepository>((ref) {
 abstract class SpecimenRepository {
   factory SpecimenRepository(Dio dio, {String baseUrl}) = _SpecimenRepository;
 
+  // @GET('/specimen')
+  // @Headers({'accessKey': 'true'})
+  // Future<List<SpecimenPrimaryModel>> getSpcmInformation({
+  //   @Query("searchValue") String searchValue,
+  //   @Query("strDt") String strDt,
+  //   @Query("endDt") String endDt,
+  //   @Query("orderBy") String orderBy,
+  //   @Query("hspTpCd") String hspTpCd,
+  // });
 
-  @GET('/')
+  @GET('/specimen')
   @Headers({'accessKey': 'true'})
-  Future<List<SpecimenPrimaryModel>> getSpcmInformation({
-    @Queries() SpecimenParams? specimenParams =
-    const SpecimenParams(searchValue: '', strDt: '', endDt: '', orderBy: '', hspTpCd: '')});
+  Future<List<SpecimenPrimaryModel>> getSpcmInformation(
+      // {@Queries() SpecimenParams? specimenParams = const SpecimenParams(
+      //   searchValue: null,
+      //   strDt: null,
+      //   endDt: null,
+      //   orderBy: null,
+      //   hspTpCd: null,
+      // )}
+      @Query("searchValue") final String searchValue,
+      @Query("strDt") final String strDt,
+      @Query("endDt") final String endDt,
+      @Query("orderBy") final String orderBy,
+      @Query("hspTpCd") final String hspTpCd);
 
-
-  @GET('/detail')
+  @GET('/specimen/detail')
   @Headers({'accessKey': 'true'})
-  Future<List<SpecimenDetailModel>> getSpcmDetailInformation({
-    @Queries() SpecimenDetailParams? specimenParams =
-    const SpecimenDetailParams(hspTpCd: '',exrmExmCtgCd: '',spcmNo: '')});
-
+  Future<List<SpecimenDetailModel>> getSpcmDetailInformation(
+      {@Queries() SpecimenDetailParams? specimenParams =
+          const SpecimenDetailParams(
+              hspTpCd: '', exrmExmCtgCd: '', spcmNo: '')});
 }

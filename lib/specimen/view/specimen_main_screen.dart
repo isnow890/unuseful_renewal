@@ -35,7 +35,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
   DateTime focusedDay = DateTime.now();
   int hspType = 0;
   int searchType = 0;
-  int textFormFieldMaxLength = 11;
+  int textFormFieldMaxLength = 8;
   String? textFormFieldText;
 
   RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOn;
@@ -62,6 +62,20 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> fi2 = {
+      'hspTpCd': _getHspTpCd(),
+      'searchValue': textFormFieldController.text,
+      'strDt': DateFormat('yyyyMMdd').format(rangeStart!),
+      'endDt': DateFormat('yyyyMMdd').format(rangeEnd!),
+      'orderBy': 'desc'
+    };
+
+    final state = ref.watch(
+      specimenFamilyProvider(
+          fi2
+      ),
+    );
+
     final TextStyle segmentTextStyle = const TextStyle(
       fontSize: 12.0,
     );
@@ -156,10 +170,28 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_validateBeforeSearch()) return;
+                            if (!_validateBeforeSearch()) return;
+
+                            print(_getHspTpCd());
+                            print(DateFormat('yyyy-MM-dd').format(rangeStart!));
+                            print(DateFormat('yyyy-MM-dd').format(rangeEnd!));
+                            //
+                            //
+                            // ref.read(specimenFamilyProvider(SpecimenParams(
+                            //     hspTpCd: _getHspTpCd(),
+                            //     searchValue: textFormFieldController.text,
+                            //     strDt: DateFormat('yyyyMMdd')
+                            //         .format(rangeStart!),
+                            //     endDt: DateFormat('yyyyMMdd')
+                            //         .format(rangeEnd!),
+                            //     orderBy: 'desc')));
+                            //
+                            // print('탐');
+
                             context.pushNamed(
                               SpecimenResultScreen.routeName,
                               queryParameters: {
+                                'searchValue': textFormFieldController.text,
                                 'hspTpCd': _getHspTpCd(),
                                 'strDt': DateFormat('yyyy-MM-dd')
                                     .format(rangeStart!),
@@ -221,12 +253,14 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
       return;
     }
 
-    ref.read(specimenFamilyProvider(SpecimenParams(
-        searchValue: barcodeScanRes,
-        strDt: DateFormat('yyyyMMdd').format(rangeStart!),
-        endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
-        orderBy: 'desc',
-        hspTpCd: _getHspTpCd() )));
+
+
+    // ref.read(specimenFamilyProvider(SpecimenParams(
+    //     searchValue: barcodeScanRes,
+    //     strDt: DateFormat('yyyyMMdd').format(rangeStart!),
+    //     endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
+    //     orderBy: 'desc',
+    //     hspTpCd: _getHspTpCd())));
   }
 
   _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle) {
@@ -255,7 +289,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
               setState(() {
                 textFormFieldController.text = '';
                 print('실행됨');
-                textFormFieldMaxLength = index == 0 ? 11 : 8;
+                textFormFieldMaxLength = index == 0 ? 8 : 11;
                 searchType = index;
               });
             },

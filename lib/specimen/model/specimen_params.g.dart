@@ -8,11 +8,11 @@ part of 'specimen_params.dart';
 
 SpecimenParams _$SpecimenParamsFromJson(Map<String, dynamic> json) =>
     SpecimenParams(
-      hspTpCd: json['hspTpCd'] as String,
-      searchValue: json['searchValue'] as String,
-      strDt: json['strDt'] as String,
-      endDt: json['endDt'] as String,
-      orderBy: json['orderBy'] as String,
+      hspTpCd: json['hspTpCd'] as String?,
+      searchValue: json['searchValue'] as String?,
+      strDt: json['strDt'] as String?,
+      endDt: json['endDt'] as String?,
+      orderBy: json['orderBy'] as String?,
     );
 
 Map<String, dynamic> _$SpecimenParamsToJson(SpecimenParams instance) =>
