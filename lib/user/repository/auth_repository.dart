@@ -19,7 +19,6 @@ class AuthRepository {
   final String baseUrl;
   final Dio dio;
 
-//http://wlkfjwe/auth
   AuthRepository({required this.baseUrl, required this.dio});
 
   Future<UserModel> login(

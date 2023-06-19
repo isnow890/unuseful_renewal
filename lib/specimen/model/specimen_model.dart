@@ -79,7 +79,6 @@ class SpecimenGeneralModel {
   final String exmCtgAbbrNm;
   final int orderSeq;
 
-  final List<SpecimenDetailModel>? data;
 
   SpecimenGeneralModel({
     required this.ordDt,
@@ -100,37 +99,8 @@ class SpecimenGeneralModel {
     required this.emrgYn,
     required this.exmCtgAbbrNm,
     required this.orderSeq,
-    required this.data,
   });
 
   factory SpecimenGeneralModel.fromJson(Map<String, dynamic> json) =>
       _$SpecimenGeneralModelFromJson(json);
-}
-
-@JsonSerializable()
-class SpecimenDetailModel {
-  final String exmCtgCd;
-  final String exmCtgAbbrNm;
-  final String spcmNo;
-  final String exrsCnte;
-  final String eitmAbbr;
-  final String exmCd;
-  final String exrsUnit;
-  final String srefval;
-  final int orderSeq;
-
-  SpecimenDetailModel({
-    required this.exmCtgCd,
-    required this.exmCtgAbbrNm,
-    required this.spcmNo,
-    required this.exrsCnte,
-    required this.eitmAbbr,
-    required this.exmCd,
-    required this.exrsUnit,
-    required this.srefval,
-    required this.orderSeq,
-  });
-
-  factory SpecimenDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$SpecimenDetailModelFromJson(json);
 }

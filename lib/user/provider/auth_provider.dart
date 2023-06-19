@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:unuseful/common/component/full_photo.dart';
 import 'package:unuseful/common/secure_storage/secure_storage.dart';
 import 'package:unuseful/common/view/root_tab.dart';
 import 'package:unuseful/hit_schedule/view/hit_schedule_main_screen.dart';
-import 'package:unuseful/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
+import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
 import '../../meal/model/meal_model.dart';
@@ -102,7 +103,7 @@ class AuthProvider extends ChangeNotifier {
           },
         ),
         GoRoute(
-          path: '/specimen',
+          path: '/specimenMain',
           name: SpecimenMainScreen.routeName,
           builder: (context, state) => SpecimenMainScreen(),
         ),
@@ -121,14 +122,11 @@ class AuthProvider extends ChangeNotifier {
           name: TelePhoneMainScreen.routeName,
           builder: (context, state) => TelePhoneMainScreen(),
         ),
-    GoRoute(
-      path: '/hitSchedule',
-      name: HitScheduleMainScreen.routeName,
-      builder: (context, state) => HitScheduleMainScreen(),
-    ),
-
-
-
+        GoRoute(
+          path: '/hitSchedule',
+          name: HitScheduleMainScreen.routeName,
+          builder: (context, state) => HitScheduleMainScreen(),
+        ),
         GoRoute(
           path: '/fullPhoto',
           name: FullPhoto.routeName,
@@ -141,6 +139,21 @@ class AuthProvider extends ChangeNotifier {
                 totalCount: int.parse(
                   state.queryParameters['totalCount']!,
                 ));
+          },
+        ),
+        GoRoute(
+          path: '/specimenResult',
+          name: SpecimenResultScreen.routeName,
+          builder: (context, state) {
+            return SpecimenResultScreen(
+              hspTpCd: state.queryParameters['hspTpCd']!,
+              searchValue: state.queryParameters['searchValue']!,
+              strDt: DateFormat('yyyy-MM-dd')
+                  .parse(state.queryParameters['strDt']!),
+              endDt: DateFormat('yyyy-MM-dd')
+                  .parse(state.queryParameters['endDt']!),
+              orderBy: 'desc',
+            );
           },
         ),
       ];

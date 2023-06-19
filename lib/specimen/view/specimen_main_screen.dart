@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:unuseful/common/component/custom_calendar.dart';
 import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
+import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 
 import '../../common/component/custom_text_form_field.dart';
-import '../../hit_schedule/provider/hit_schedule_selected_day_provider.dart';
+import '../../common/component/general_toast_message.dart';
+import '../component/specimen_main_screen_expansion_panel_list.dart';
+import '../model/specimen_params.dart';
+import '../provider/specimen_provider.dart';
 
 class SpecimenMainScreen extends ConsumerStatefulWidget {
-  static String get routeName => 'specimen';
+  static String get routeName => 'specimenMain';
 
   const SpecimenMainScreen({Key? key}) : super(key: key);
 
@@ -21,7 +26,6 @@ class SpecimenMainScreen extends ConsumerStatefulWidget {
 }
 
 class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
-  bool _isExpanded = false;
   DateTime? rangeStart = new DateTime(
       DateTime.now().year, DateTime.now().month - 6, DateTime.now().day);
   DateTime? rangeEnd = new DateTime(
@@ -32,7 +36,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
   int hspType = 0;
   int searchType = 0;
   int textFormFieldMaxLength = 11;
-
   String? textFormFieldText;
 
   RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOn;
@@ -59,7 +62,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle segmentTextStyle = TextStyle(
+    final TextStyle segmentTextStyle = const TextStyle(
       fontSize: 12.0,
     );
 
@@ -71,6 +74,14 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
 
     return DefaultLayout(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _barcodeOnpressed,
+        backgroundColor: PRIMARY_COLOR,
+        child: Icon(
+          Icons.barcode_reader,
+          size: 30,
+        ),
+      ),
       title: Text('specimen'),
       child: SingleChildScrollView(
         //드래그 하면 키보드 집어넣기.
@@ -110,7 +121,10 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                         child: Container(
                           height: 40,
                           child: CustomTextFormField(
-                            isSuffixDeleteButtonEnabled :true,
+                            hintText: searchType == 0
+                                ? '8자리의 등록번호를 입력하세요.'
+                                : '11자리의 검체번호를 입력하세요.',
+                            isSuffixDeleteButtonEnabled: true,
                             controller: textFormFieldController,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
@@ -129,7 +143,11 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     height: 30,
                   ),
                   _renderTitleTextHelper('choose date'),
-                  returnExpansionPanelList(),
+                  SpecimenMainScreenExpansionPanelList(
+                    searchType: searchType,
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -137,18 +155,23 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
-                          // onPressed: state is UserModelLoading
-                          //     ? null
-                          //     : () async {
-                          //         validateRequiredItem(
-                          //             radioTile, stfNo, password);
-                          //
-                          //         // ref.read(userMeProvider.notifier).login(username: username, password: password);
-                          //       },
+                          onPressed: () {
+                            if (_validateBeforeSearch()) return;
+                            context.pushNamed(
+                              SpecimenResultScreen.routeName,
+                              queryParameters: {
+                                'hspTpCd': _getHspTpCd(),
+                                'strDt': DateFormat('yyyy-MM-dd')
+                                    .format(rangeStart!),
+                                'endDt':
+                                    DateFormat('yyyy-MM-dd').format(rangeEnd!),
+                                'orderBy': 'desc'
+                              },
+                            );
+                          },
                           child: Text('조회'),
                           style: ElevatedButton.styleFrom(
-                            primary: PRIMARY_COLOR,
+                            backgroundColor: PRIMARY_COLOR,
                           ),
                         ),
                       ),
@@ -163,215 +186,47 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
   }
 
-  returnExpansionPanelList() {
-    final TextStyle chipTextStyle = TextStyle(fontSize: 12.0);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: ExpansionPanelList(
-        elevation: 0,
-        expandedHeaderPadding: EdgeInsets.all(0),
-        children: [
-          ExpansionPanel(
-            backgroundColor: searchType == 0 ? Colors.grey[400] : Colors.white,
-            canTapOnHeader: true,
-            headerBuilder: (context, isExpanded) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      rangeStart == null
-                          ? ''
-                          : DateFormat('yyyy년 MM월 dd일').format(rangeStart!),
-                      style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500,),
-                    ),
-                  ),
-                  Text(
-                    '-',
-                    style: TextStyle(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      DateFormat('yyyy년 MM월 dd일')
-                          .format(rangeEnd ?? rangeStart!),
-                      style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w500,),
-                    ),
-                  ),
-                ],
-              );
-            },
-            body: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(0),
-                        child: Chip(
-                          label: Text(
-                            '당일',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(12),
-                        child: Chip(
-                          label: Text(
-                            '1년',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(6),
-                        child: Chip(
-                          label: Text(
-                            '6개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(3),
-                        child: Chip(
-                          label: Text(
-                            '3개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(1),
-                        child: Chip(
-                          label: Text(
-                            '1개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                _rendercustomCalendarHelper(),
-                const SizedBox(
-                  height: 5,
-                ),
-              ],
-            ),
-            isExpanded: searchType == 0 ? false : _isExpanded,
-          ),
-        ],
-        expansionCallback: (int index, bool isExpanded) {
-          setState(() {
-            _isExpanded = searchType == 0 ? true : !isExpanded;
-          });
-        },
-      ),
-    );
+  String _getHspTpCd() {
+    switch (hspType) {
+      case 0:
+        return 'all';
+      default:
+        return '0$hspType';
+    }
   }
 
-  _setDateRange(int minusMonth) {
-    setState(() {
-      rangeStart = DateTime(DateTime.now().year,
-          DateTime.now().month - minusMonth, DateTime.now().day);
-      rangeEnd = DateTime(
-          DateTime.now().year, DateTime.now().month, DateTime.now().day);
-      focusedDay = DateTime(DateTime.now().year,
-          DateTime.now().month - minusMonth, DateTime.now().day);
-
-      rangeSelectionMode = RangeSelectionMode.toggledOn;
-    });
+  bool _validateBeforeSearch() {
+    if (searchType == 1) {
+      if (textFormFieldController.text.length != 11) {
+        showToast(msg: '11자리의 검체번호를 입력하세요.');
+        return false;
+      }
+    }
+    if (searchType == 0) {
+      if (textFormFieldController.text.length != 8) {
+        showToast(msg: '8자리의 등록번호를 입력하세요.');
+        return false;
+      }
+    }
+    return true;
   }
 
-  _rendercustomCalendarHelper() {
-    // final defaultBoxDeco = BoxDecoration(
-    //   color: Colors.grey[200],
-    //   //테두리 깍기
-    //   borderRadius: BorderRadius.circular(6.0),
-    // );
-    return Container(
-      height: 280,
-      child: CustomCalendar(
-        rangeStart: rangeStart,
-        rangeEnd: rangeEnd,
-        rangeSelected: rangeSelectionMode,
-        shouldFillViewport: true,
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: true,
-          isTodayHighlighted: false,
+  _barcodeOnpressed() async {
+    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666', '취소', true, ScanMode.BARCODE);
+    print(barcodeScanRes);
 
-          rangeHighlightColor: Colors.orange[100]!,
-          weekendTextStyle: TextStyle(color: Colors.red),
-          withinRangeTextStyle: TextStyle(color: PRIMARY_COLOR),
-          rangeStartDecoration: BoxDecoration(
-            color: PRIMARY_COLOR,
-            shape: BoxShape.circle,
-          ),
-          rangeEndDecoration: BoxDecoration(
-            color: PRIMARY_COLOR,
-            shape: BoxShape.circle,
-          ),
-          // final defaultBoxDeco = BoxDecoration(
-          //   color: Colors.grey[200],
-          //   //테두리 깍기
-          //   borderRadius: BorderRadius.circular(6.0),
-          // );
+    if (barcodeScanRes.length != 11) {
+      showToast(msg: '11자리의 검체번호를 스캔해주세요.');
+      return;
+    }
 
-          // defaultDecoration: defaultBoxDeco,
-        ),
-        onPageChanged: null,
-        events: null,
-        // selectedDay: selectedDay,
-        focusedDay: focusedDay,
-        onDaySelected: (_selectedDay, _focusedDay) {
-          print('clicked');
-
-          // if (!isSameDay(_selectedDay, selectedDay)) {
-          //   setState(() {
-          //     selectedDay = _selectedDay;
-          //     focusedDay = _focusedDay;
-          //     rangeStart = null; // Important to clean those
-          //     rangeEnd = null;
-          //     rangeSelectionMode = RangeSelectionMode.toggledOff;
-          //   });
-          // }
-        },
-        onRangeSelected: (_start, _end, _focusedDay) {
-          setState(() {
-            // selectedDay = null;
-            focusedDay = _focusedDay;
-            rangeStart = _start;
-            rangeEnd = _end;
-            rangeSelectionMode = RangeSelectionMode.toggledOn;
-          });
-        },
-      ),
-    );
+    ref.read(specimenFamilyProvider(SpecimenParams(
+        searchValue: barcodeScanRes,
+        strDt: DateFormat('yyyyMMdd').format(rangeStart!),
+        endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
+        orderBy: 'desc',
+        hspTpCd: _getHspTpCd() )));
   }
 
   _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle) {
@@ -380,9 +235,9 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
         Expanded(
           child: MaterialSegmentedControl(
             children: {
-              0: Text('검체번호', style: segmentTextStyle),
+              0: Text('등록번호', style: segmentTextStyle),
               1: Text(
-                '등록번호',
+                '검체번호',
                 style: segmentTextStyle,
               )
             },
@@ -466,47 +321,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           height: 10,
         ),
       ],
-    );
-  }
-}
-
-class _CalendarBuilders extends StatelessWidget {
-  final DateTime day;
-  final DateTime focusedDay;
-  final Decoration decoration;
-  final Color? textColor;
-
-  const _CalendarBuilders(
-      {Key? key,
-      required this.day,
-      required this.focusedDay,
-      required this.decoration,
-      this.textColor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(3),
-      child: Container(
-        padding: EdgeInsets.only(top: 1, bottom: 1),
-        width: MediaQuery.of(context).size.width,
-        decoration: decoration,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              day.day.toString(),
-              style: TextStyle(fontSize: 13, color: textColor ?? Colors.black),
-            ),
-            Expanded(child: Text("")),
-            // Text(moneyString,
-            //   textAlign: TextAlign.center,
-            //   style: TextStyle(fontSize: 12, color: nowIndexColor[900]),),
-          ],
-        ),
-      ),
     );
   }
 }

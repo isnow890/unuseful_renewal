@@ -1,33 +1,42 @@
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
-import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/model/specimen_model.dart';
+import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/provider/specimen_provider.dart';
 
 import '../../common/component/custom_error_widget.dart';
 import '../../common/component/custom_loading_indicator_widget.dart';
-import '../../common/component/custom_radio_tile.dart';
 import '../../common/component/custom_text_form_field.dart';
-import '../../common/component/main_drawer.dart';
 import '../../common/const/colors.dart';
-import '../../common/provider/drawer_selector_provider.dart';
-import '../../telephone/provider/telephone_order_radio_tile_provider.dart';
 import '../../telephone/provider/telephone_search_value_provider.dart';
 
-class SpecimenScreen extends ConsumerStatefulWidget {
+class SpecimenResultScreen extends ConsumerStatefulWidget {
+  static String get routeName => 'specimenResult';
 
-  const SpecimenScreen({Key? key}) : super(key: key);
+  final String hspTpCd;
+  final String searchValue;
+  final DateTime strDt;
+  final DateTime endDt;
+  final String orderBy;
+
+  const SpecimenResultScreen(
+      {required this.hspTpCd,
+      required this.searchValue,
+      required this.strDt,
+      required this.endDt,
+      required this.orderBy,
+      Key? key})
+      : super(key: key);
 
   @override
-  ConsumerState<SpecimenScreen> createState() => _SpecimenScreenState();
+  ConsumerState<SpecimenResultScreen> createState() => _SpecimenScreenState();
 }
 
-class _SpecimenScreenState extends ConsumerState<SpecimenScreen> {
+class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
   final searchValueController = TextEditingController();
-
-  final String searchValue = '';
 
   bool _isExpanded = false;
 
@@ -41,7 +50,16 @@ class _SpecimenScreenState extends ConsumerState<SpecimenScreen> {
   Widget build(BuildContext context) {
     final haha = List<String>.generate(1, (index) => 'test');
 
-    final state = ref.watch(specimenFamilyProvider(SpecimenParams()));
+    final state = ref.watch(
+      specimenFamilyProvider(
+        SpecimenParams(
+            hspTpCd: widget.hspTpCd,
+            searchValue: widget.searchValue,
+            strDt: DateFormat('yyyyMMdd').format(widget.strDt),
+            endDt: DateFormat('yyyyMMdd').format(widget.endDt),
+            orderBy: 'desc'),
+      ),
+    );
 
     if (state is SpecimenModelLoading) {
       return _renderDefaultLayout(widget: const CustomLoadingIndicatorWidget());
@@ -161,15 +179,18 @@ class _SpecimenScreenState extends ConsumerState<SpecimenScreen> {
 
     if (state is SpecimenModelError) {
       return _renderDefaultLayout(
-          widget: CustomErrorWidget(
-              message: state.message,
-              onPressed: () {
-                ref.read(specimenFamilyProvider(SpecimenParams(
-                    searchValue: searchValue,
-                    strDt: null,
-                    endDt: null,
-                    orderBy: 'desc')));
-              }));
+        widget: CustomErrorWidget(
+          message: state.message,
+          onPressed: () {
+            specimenFamilyProvider(SpecimenParams(
+                hspTpCd: widget.hspTpCd,
+                searchValue: widget.searchValue,
+                strDt: DateFormat('yyyyMMdd').format(widget.strDt),
+                endDt: DateFormat('yyyyMMdd').format(widget.endDt),
+                orderBy: 'desc'));
+          },
+        ),
+      );
     }
 
     return _renderDefaultLayout(
