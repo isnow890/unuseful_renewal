@@ -15,6 +15,9 @@ class SpecimenModelError extends SpecimenModelBase {
 
 class SpecimenModelLoading extends SpecimenModelBase {}
 
+
+class SpecimenInit extends SpecimenModelBase{}
+
 @JsonSerializable()
 class SpecimenModel extends SpecimenModelBase {
   final List<SpecimenPrimaryModel>? data;

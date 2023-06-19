@@ -14,13 +14,9 @@ import '../../common/const/colors.dart';
 class SpecimenResultScreen extends ConsumerStatefulWidget {
   static String get routeName => 'specimenResult';
 
-
   final SpecimenParams params;
 
-
-  const SpecimenResultScreen(
-      {required this.params,
-      Key? key})
+  const SpecimenResultScreen({required this.params, Key? key})
       : super(key: key);
 
   @override
@@ -62,11 +58,12 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
         widget: CustomErrorWidget(
           message: state.message,
           onPressed: () {
-
-print('실행');
-             ref.read(
-              specimenFamilyProvider(widget.params).notifier,
-            ).getSpcmInformation();
+            print('실행');
+            ref
+                .read(
+                  specimenFamilyProvider(widget.params).notifier,
+                )
+                .getSpcmInformation();
           },
         ),
       );

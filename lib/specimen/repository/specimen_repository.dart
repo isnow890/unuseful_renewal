@@ -41,11 +41,12 @@ abstract class SpecimenRepository {
         orderBy: null,
         hspTpCd: null,
       )});
-      // @Query("searchValue") final String searchValue,
-      // @Query("strDt") final String strDt,
-      // @Query("endDt") final String endDt,
-      // @Query("orderBy") final String orderBy,
-      // @Query("hspTpCd") final String hspTpCd);
+
+  // @Query("searchValue") final String searchValue,
+  // @Query("strDt") final String strDt,
+  // @Query("endDt") final String endDt,
+  // @Query("orderBy") final String orderBy,
+  // @Query("hspTpCd") final String hspTpCd);
 
   @GET('/specimen/detail')
   @Headers({'accessKey': 'true'})
