@@ -29,7 +29,7 @@ class SpecimenModel extends SpecimenModelBase {
 
 @JsonSerializable()
 class SpecimenPrimaryModel {
-  final String ordDt;
+  final String? ordDt;
   final List<SpecimenExmTypeModel>? exmType;
 
   SpecimenPrimaryModel({required this.ordDt, required this.exmType});
@@ -40,9 +40,9 @@ class SpecimenPrimaryModel {
 
 @JsonSerializable()
 class SpecimenExmTypeModel {
-  final String ordDt;
-  final String exrmExmCtgCd;
-  final String exmCtgAbbrNm;
+  final String? ordDt;
+  final String? exrmExmCtgCd;
+  final String? exmCtgAbbrNm;
 
   final List<SpecimenGeneralModel>? general;
 
@@ -59,24 +59,24 @@ class SpecimenExmTypeModel {
 
 @JsonSerializable()
 class SpecimenGeneralModel {
-  final DateTime ordDt;
-  final String spcmNo;
-  final String exmAcptNo;
-  final String ptNo;
+  final DateTime? ordDt;
+  final String? spcmNo;
+  final String? exmAcptNo;
+  final String? ptNo;
   final DateTime? blclDtm;
-  final String blclStfNo;
-  final String rcpnStfNo;
+  final String? blclStfNo;
+  final String? rcpnStfNo;
   final DateTime? brfgDtm;
   final DateTime? acptDtm;
-  final String exmPrgrStsNm;
-  final String exmPrgrStsCd;
-  final String exrmExmCtgCd;
-  final String hspTpCd;
-  final String hspTpNm;
-  final String rstCnsgYn;
-  final String emrgYn;
-  final String exmCtgAbbrNm;
-  final int orderSeq;
+  final String? exmPrgrStsNm;
+  final String? exmPrgrStsCd;
+  final String? exrmExmCtgCd;
+  final String? hspTpCd;
+  final String? hspTpNm;
+  final String? rstCnsgYn;
+  final String? emrgYn;
+  final String? exmCtgAbbrNm;
+  final int? orderSeq;
 
 
   SpecimenGeneralModel({

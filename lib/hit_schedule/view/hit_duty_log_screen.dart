@@ -19,18 +19,18 @@ class HitDutyLogScreen extends ConsumerStatefulWidget {
 
 class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
   final ScrollController controller = ScrollController();
+  // Map<String,dynamic> fi2 = {'hspTpCd' : '01', 'searchValue': '10884537','strDt': '20220522',
+  //   'endDt': '20230619' ,'orderBy': 'desc'};
 
   @override
   Widget build(BuildContext context) {
     // final state3 = ref.watch(specimenNotifierProvider);
 
 
-
-
-     Map<String,dynamic> fi2 = {'hspTpCd' : '01', 'searchValue': '10884537','strDt': '20220522',
-      'endDt': '20230619' ,'orderBy': 'desc'};
-
-    final state2 = ref.watch(specimenFamilyProvider(fi2));
+    //
+    //
+    //
+    // final state2 = ref.watch(specimenFamilyProvider(fi2));
 
      final state = ref.watch(hitDutyLogNotifierProvider);
 

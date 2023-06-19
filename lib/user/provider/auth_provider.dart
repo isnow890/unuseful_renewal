@@ -9,6 +9,7 @@ import 'package:unuseful/hit_schedule/view/hit_schedule_main_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
+import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
@@ -145,14 +146,10 @@ class AuthProvider extends ChangeNotifier {
           path: '/specimenResult',
           name: SpecimenResultScreen.routeName,
           builder: (context, state) {
+            final values = state.extra as SpecimenParams;
+
             return SpecimenResultScreen(
-              hspTpCd: state.queryParameters['hspTpCd']!,
-              searchValue: state.queryParameters['searchValue']!,
-              strDt: DateFormat('yyyy-MM-dd')
-                  .parse(state.queryParameters['strDt']!),
-              endDt: DateFormat('yyyy-MM-dd')
-                  .parse(state.queryParameters['endDt']!),
-              orderBy: 'desc',
+              params: values,
             );
           },
         ),

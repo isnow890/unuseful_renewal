@@ -21,7 +21,7 @@ Map<String, dynamic> _$SpecimenModelToJson(SpecimenModel instance) =>
 SpecimenPrimaryModel _$SpecimenPrimaryModelFromJson(
         Map<String, dynamic> json) =>
     SpecimenPrimaryModel(
-      ordDt: json['ordDt'] as String,
+      ordDt: json['ordDt'] as String?,
       exmType: (json['exmType'] as List<dynamic>?)
           ?.map((e) => SpecimenExmTypeModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -37,9 +37,9 @@ Map<String, dynamic> _$SpecimenPrimaryModelToJson(
 SpecimenExmTypeModel _$SpecimenExmTypeModelFromJson(
         Map<String, dynamic> json) =>
     SpecimenExmTypeModel(
-      ordDt: json['ordDt'] as String,
-      exrmExmCtgCd: json['exrmExmCtgCd'] as String,
-      exmCtgAbbrNm: json['exmCtgAbbrNm'] as String,
+      ordDt: json['ordDt'] as String?,
+      exrmExmCtgCd: json['exrmExmCtgCd'] as String?,
+      exmCtgAbbrNm: json['exmCtgAbbrNm'] as String?,
       general: (json['general'] as List<dynamic>?)
           ?.map((e) => SpecimenGeneralModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -57,36 +57,38 @@ Map<String, dynamic> _$SpecimenExmTypeModelToJson(
 SpecimenGeneralModel _$SpecimenGeneralModelFromJson(
         Map<String, dynamic> json) =>
     SpecimenGeneralModel(
-      ordDt: DateTime.parse(json['ordDt'] as String),
-      spcmNo: json['spcmNo'] as String,
-      exmAcptNo: json['exmAcptNo'] as String,
-      ptNo: json['ptNo'] as String,
+      ordDt: json['ordDt'] == null
+          ? null
+          : DateTime.parse(json['ordDt'] as String),
+      spcmNo: json['spcmNo'] as String?,
+      exmAcptNo: json['exmAcptNo'] as String?,
+      ptNo: json['ptNo'] as String?,
       blclDtm: json['blclDtm'] == null
           ? null
           : DateTime.parse(json['blclDtm'] as String),
-      blclStfNo: json['blclStfNo'] as String,
-      rcpnStfNo: json['rcpnStfNo'] as String,
+      blclStfNo: json['blclStfNo'] as String?,
+      rcpnStfNo: json['rcpnStfNo'] as String?,
       brfgDtm: json['brfgDtm'] == null
           ? null
           : DateTime.parse(json['brfgDtm'] as String),
       acptDtm: json['acptDtm'] == null
           ? null
           : DateTime.parse(json['acptDtm'] as String),
-      exmPrgrStsNm: json['exmPrgrStsNm'] as String,
-      exmPrgrStsCd: json['exmPrgrStsCd'] as String,
-      exrmExmCtgCd: json['exrmExmCtgCd'] as String,
-      hspTpCd: json['hspTpCd'] as String,
-      hspTpNm: json['hspTpNm'] as String,
-      rstCnsgYn: json['rstCnsgYn'] as String,
-      emrgYn: json['emrgYn'] as String,
-      exmCtgAbbrNm: json['exmCtgAbbrNm'] as String,
-      orderSeq: json['orderSeq'] as int,
+      exmPrgrStsNm: json['exmPrgrStsNm'] as String?,
+      exmPrgrStsCd: json['exmPrgrStsCd'] as String?,
+      exrmExmCtgCd: json['exrmExmCtgCd'] as String?,
+      hspTpCd: json['hspTpCd'] as String?,
+      hspTpNm: json['hspTpNm'] as String?,
+      rstCnsgYn: json['rstCnsgYn'] as String?,
+      emrgYn: json['emrgYn'] as String?,
+      exmCtgAbbrNm: json['exmCtgAbbrNm'] as String?,
+      orderSeq: json['orderSeq'] as int?,
     );
 
 Map<String, dynamic> _$SpecimenGeneralModelToJson(
         SpecimenGeneralModel instance) =>
     <String, dynamic>{
-      'ordDt': instance.ordDt.toIso8601String(),
+      'ordDt': instance.ordDt?.toIso8601String(),
       'spcmNo': instance.spcmNo,
       'exmAcptNo': instance.exmAcptNo,
       'ptNo': instance.ptNo,

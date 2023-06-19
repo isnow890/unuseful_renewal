@@ -14,18 +14,12 @@ import '../../common/const/colors.dart';
 class SpecimenResultScreen extends ConsumerStatefulWidget {
   static String get routeName => 'specimenResult';
 
-  final String hspTpCd;
-  final String searchValue;
-  final DateTime strDt;
-  final DateTime endDt;
-  final String orderBy;
+
+  final SpecimenParams params;
+
 
   const SpecimenResultScreen(
-      {required this.hspTpCd,
-      required this.searchValue,
-      required this.strDt,
-      required this.endDt,
-      required this.orderBy,
+      {required this.params,
       Key? key})
       : super(key: key);
 
@@ -47,17 +41,17 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
   @override
   Widget build(BuildContext context) {
     final haha = List<String>.generate(1, (index) => 'test');
-
-    final Map<String, dynamic> fi = {
-      'hspTpCd': widget.hspTpCd,
-      'searchValue': widget.searchValue,
-      'strDt': DateFormat('yyyyMMdd').format(widget.strDt),
-      'endDt': DateFormat('yyyyMMdd').format(widget.endDt),
-      'orderBy': 'desc'
-    };
+    //
+    // final Map<String, dynamic> fi = {
+    //   'hspTpCd': widget.hspTpCd,
+    //   'searchValue': widget.searchValue,
+    //   'strDt': DateFormat('yyyyMMdd').format(widget.strDt),
+    //   'endDt': DateFormat('yyyyMMdd').format(widget.endDt),
+    //   'orderBy': 'desc'
+    // };
 
     final state = ref.watch(
-      specimenFamilyProvider(fi),
+      specimenFamilyProvider(widget.params),
     );
 
     if (state is SpecimenModelLoading) {
@@ -69,14 +63,10 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
           message: state.message,
           onPressed: () {
 
-
-
-            // specimenFamilyProvider(SpecimenParams(
-            //     hspTpCd: widget.hspTpCd,
-            //     searchValue: widget.searchValue,
-            //     strDt: DateFormat('yyyyMMdd').format(widget.strDt),
-            //     endDt: DateFormat('yyyyMMdd').format(widget.endDt),
-            //     orderBy: 'desc'));
+print('실행');
+             ref.read(
+              specimenFamilyProvider(widget.params).notifier,
+            ).getSpcmInformation();
           },
         ),
       );

@@ -62,19 +62,19 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> fi2 = {
-      'hspTpCd': _getHspTpCd(),
-      'searchValue': textFormFieldController.text,
-      'strDt': DateFormat('yyyyMMdd').format(rangeStart!),
-      'endDt': DateFormat('yyyyMMdd').format(rangeEnd!),
-      'orderBy': 'desc'
-    };
-
-    final state = ref.watch(
-      specimenFamilyProvider(
-          fi2
-      ),
-    );
+    // final Map<String, dynamic> fi2 = {
+    //   'hspTpCd': _getHspTpCd(),
+    //   'searchValue': textFormFieldController.text,
+    //   'strDt': DateFormat('yyyyMMdd').format(rangeStart!),
+    //   'endDt': DateFormat('yyyyMMdd').format(rangeEnd!),
+    //   'orderBy': 'desc'
+    // };
+    //
+    // final state = ref.watch(
+    //   specimenFamilyProvider(
+    //       fi2
+    //   ),
+    // );
 
     final TextStyle segmentTextStyle = const TextStyle(
       fontSize: 12.0,
@@ -175,30 +175,13 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                             print(_getHspTpCd());
                             print(DateFormat('yyyy-MM-dd').format(rangeStart!));
                             print(DateFormat('yyyy-MM-dd').format(rangeEnd!));
-                            //
-                            //
-                            // ref.read(specimenFamilyProvider(SpecimenParams(
-                            //     hspTpCd: _getHspTpCd(),
-                            //     searchValue: textFormFieldController.text,
-                            //     strDt: DateFormat('yyyyMMdd')
-                            //         .format(rangeStart!),
-                            //     endDt: DateFormat('yyyyMMdd')
-                            //         .format(rangeEnd!),
-                            //     orderBy: 'desc')));
-                            //
-                            // print('탐');
 
                             context.pushNamed(
                               SpecimenResultScreen.routeName,
-                              queryParameters: {
-                                'searchValue': textFormFieldController.text,
-                                'hspTpCd': _getHspTpCd(),
-                                'strDt': DateFormat('yyyy-MM-dd')
-                                    .format(rangeStart!),
-                                'endDt':
-                                    DateFormat('yyyy-MM-dd').format(rangeEnd!),
-                                'orderBy': 'desc'
-                              },
+                              extra: SpecimenParams(hspTpCd: _getHspTpCd(), searchValue: textFormFieldController.text, strDt: DateFormat('yyyyMMdd')
+                                .format(rangeStart!), endDt: DateFormat('yyyyMMdd')
+                                .format(rangeEnd!), orderBy:
+                            'desc')
                             );
                           },
                           child: Text('조회'),

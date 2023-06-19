@@ -5,7 +5,7 @@ import '../model/specimen_params.dart';
 import '../repository/specimen_repository.dart';
 
 final specimenFamilyProvider = StateNotifierProvider.family<
-    SpecimenStateNotifier, SpecimenModelBase?, Map<String,dynamic>>(
+    SpecimenStateNotifier, SpecimenModelBase?, SpecimenParams>(
   (ref, paramsFrom) {
     final repository = ref.watch(specimenRepositoryProvider);
 
@@ -17,25 +17,11 @@ final specimenFamilyProvider = StateNotifierProvider.family<
   },
 );
 
-// final specimenNotifierProvider =
-//     StateNotifierProvider<SpecimenStateNotifier, SpecimenModelBase?>((ref) {
-//   final repository = ref.watch(specimenRepositoryProvider);
-//   final notifier = SpecimenStateNotifier(
-//     repository: repository,
-//     params: SpecimenParams(
-//         hspTpCd: '01',
-//         searchValue: '10884537',
-//         strDt: '20220522',
-//         endDt: '20230619',
-//         orderBy: 'desc'),
-//   );
-//   return notifier;
-// });
 
 class SpecimenStateNotifier extends StateNotifier<SpecimenModelBase?> {
   final SpecimenRepository repository;
-  final Map<String,dynamic> params;
-  // final SpecimenParams params;
+  // final Map<String,dynamic> params;
+  final SpecimenParams params;
 
   SpecimenStateNotifier({
     required this.params,
@@ -48,13 +34,14 @@ class SpecimenStateNotifier extends StateNotifier<SpecimenModelBase?> {
     try {
       state = SpecimenModelLoading();
       final List<SpecimenPrimaryModel> resp =
-          await repository.getSpcmInformation(params['searchValue'] as String,
-              params['strDt'] as String, params['endDt'] as String , params['orderBy'] as String, params['orderBy'] as String);
-      // await repository.getSpcmInformation();
+      await repository.getSpcmInformation(specimenParams: params);
 
+      print('resp');
+      print(resp.toString());
       state = SpecimenModel(data: resp);
       return SpecimenModel(data: resp);
     } catch (e) {
+      print(e);
       state = SpecimenModelError(message: '데이터를 가져오지 못했습니다.');
       return Future.value(state);
     }
