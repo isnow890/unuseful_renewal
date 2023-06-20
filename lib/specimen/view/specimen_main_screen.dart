@@ -139,12 +139,12 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    _renderTitleTextHelper('hospital'),
+                    _renderTitleTextHelper('병원구분'),
                     _renderHosiptalSegmentHelper(segmentTextStyle),
                     const Divider(
                       height: 30,
                     ),
-                    _renderTitleTextHelper('speciemnt no / patient no'),
+                    _renderTitleTextHelper('등록번호/검체번호'),
                     _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
                     const SizedBox(
                       height: 10,
@@ -176,7 +176,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     const Divider(
                       height: 30,
                     ),
-                    _renderTitleTextHelper('choose date'),
+                    _renderTitleTextHelper('조회 기간'),
                     SpecimenMainScreenExpansionPanelList(
                       searchType: searchType,
                       rangeStart: rangeStart,

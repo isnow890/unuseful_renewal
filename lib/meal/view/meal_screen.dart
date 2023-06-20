@@ -243,11 +243,17 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                                           ? ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10.0),
-                                              child: CachedMemoryImage(
-                                                uniqueKey: i.url,
-                                                base64: i.base64Encoded,
-                                                fit: BoxFit.fill,
-                                              ),
+
+                                        child:Image.memory(
+                                          DataUtils.base64Decoder(
+                                              i.base64Encoded),
+                                          fit: BoxFit.fill,
+                                        ),
+                                              // child: CachedMemoryImage(
+                                              //   uniqueKey: i.url,
+                                              //   base64: i.base64Encoded,
+                                              //   fit: BoxFit.fill,
+                                              // ),
                                             )
                                           : Icon(Icons.image),
                                     ),

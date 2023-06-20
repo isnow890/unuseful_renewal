@@ -32,6 +32,8 @@ class HitMyDutyListModel {
   final String hdyYn;
   final String dutyTypeNm;
   final String dutyTypeCode;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+   bool isNew = false;
 
   HitMyDutyListModel({
     required this.wkMonth,

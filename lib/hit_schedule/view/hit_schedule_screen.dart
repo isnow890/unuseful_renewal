@@ -73,7 +73,7 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
             shouldFillViewport: true,
             calendarStyle : CalendarStyle(
               outsideDaysVisible: false,
-              isTodayHighlighted: false,
+              isTodayHighlighted: true,
             ),
             onPageChanged: (DateTime month) {
               ref
@@ -93,6 +93,13 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
             },
 
             calendarBuilders: CalendarBuilders(
+              todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
+                decoration: defaultBoxDeco,
+
+            textColor: Colors.blue[600],
+            day: day,
+            focusedDay: focusedDay,
+          ),
               outsideBuilder: (context, day, focusedDay) => _CalendarBuilders(
                 decoration: defaultBoxDeco.copyWith(
                   color: Colors.white,
@@ -272,10 +279,9 @@ class _ScheduleList extends ConsumerWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: GestureDetector(
-              onTap: () {
+              onTap: () async{
                 if (state.data[index].scheduleType == 'duty') {
-                  ref.refresh(hitMyDutySelectedScheduleProvider);
-                  ref
+                  await ref
                       .read(hitMyDutyFamilyProvider(stfNum!).notifier)
                       .getDutyOfMine();
 

@@ -7,9 +7,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
 import 'package:unuseful/common/provider/full_photo_title_provider.dart';
 
-
 import '../../meal/model/meal_model.dart';
 import '../provider/full_photo_start_index_provider.dart';
+import '../utils/data_utils.dart';
 
 class FullPhoto extends ConsumerStatefulWidget {
   final int currentIndex;
@@ -23,7 +23,7 @@ class FullPhoto extends ConsumerStatefulWidget {
       {required this.currentIndex,
       required this.totalCount,
       required this.images,
-        required this.title,
+      required this.title,
       Key? key})
       : super(key: key);
 
@@ -51,7 +51,6 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultLayout(
       isDrawerVisible: false,
       // title: Text('FullPhoto ${state + 1}/${widget.images.length}'),
@@ -62,69 +61,84 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
           //
           // ref.read(titleVisiblityProvider.notifier).update((state) => checkTitleVisibility ? false:true);
         },
-        child: Stack(
-          children:[
-            Container(
-                child: PhotoViewGallery.builder(
-                  pageController: _pageController,
-                  itemCount: widget.images.length,
-                  onPageChanged: (int index) {
-                    ref.read(fullPhotoIndexProvider.notifier).update((state) => index);
-                  },
-                  builder: (context, index) {
-                    return PhotoViewGalleryPageOptions(
-                      imageProvider: CachedMemoryImageProvider(
-                        base64: widget.images[index].base64Encoded,
-                        widget.images[index].url,
-                      ),
-                      minScale: PhotoViewComputedScale.contained * 1,
-                      maxScale: PhotoViewComputedScale.covered * 1.8,
-                    );
-                  },
-                  // scrollPhysics: BouncingScrollPhysics(),
-                )
+        child: Stack(children: [
+          Container(
+              child: PhotoViewGallery.builder(
+            pageController: _pageController,
+            itemCount: widget.images.length,
+            onPageChanged: (int index) {
+              ref
+                  .read(fullPhotoIndexProvider.notifier)
+                  .update((state) => index);
+            },
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: CachedMemoryImageProvider(
+                  base64: widget.images[index].base64Encoded,
+                  widget.images[index].url,
+                ),
+                minScale: PhotoViewComputedScale.contained * 1,
+                maxScale: PhotoViewComputedScale.covered * 1.8,
+              );
+              // return PhotoViewGalleryPageOptions.customChild(
+              //   childSize: Size(
+              //       Image.memory(
+              //         DataUtils.base64Decoder(
+              //             widget.images[index].base64Encoded),
+              //         fit: BoxFit.fill,
+              //       ).low.width!,
+              //       Image.memory(
+              //         DataUtils.base64Decoder(
+              //             widget.images[index].base64Encoded),
+              //         fit: BoxFit.fill,
+              //       ).height!),
+              //   child: Image.memory(
+              //     DataUtils.base64Decoder(widget.images[index].base64Encoded),
+              //     fit: BoxFit.fill,
+              //   ),
+              // );
+            },
+            // scrollPhysics: BouncingScrollPhysics(),
+          )
               // PhotoView(
               //   imageProvider: AssetImage(url),
               // ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                _BottomPage(totalCount: widget.totalCount),
-              ],
-            ),
-          ]
-        ),
+              ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _BottomPage(totalCount: widget.totalCount),
+            ],
+          ),
+        ]),
       ),
     );
   }
 }
 
 class _BottomPage extends ConsumerWidget {
-  const _BottomPage( {required this.totalCount,Key? key}) : super(key: key);
+  const _BottomPage({required this.totalCount, Key? key}) : super(key: key);
   final int totalCount;
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(fullPhotoIndexProvider);
     final title = ref.watch(fullPhotoTitleProvider);
 
-    return  Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Padding(
+    return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+      Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: Center(child: Text('${index + 1}/$totalCount',style: TextStyle(
-            color: Colors.white,
-          )
-            ,),
-        )),
-      ]
-    );
+          child: Center(
+            child: Text(
+              '${index + 1}/$totalCount',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          )),
+    ]);
   }
 }
-
-
 
 //
 // class FullPhotoScreen extends StatefulWidget {

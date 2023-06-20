@@ -19,8 +19,6 @@ class RootTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-
     // final login = ref.watch(loginVariableStateProvider);
     //
     // ref.watch(hspTpCdProvider.notifier).update((state) => login.hspTpCd!);
@@ -33,25 +31,26 @@ class RootTab extends ConsumerWidget {
                   context: context,
                   builder: (context) {
                     return BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                        child: AlertDialog(
-                          // title: new Text(title),
-                          content: new Text('are you sure to logout?'),
-                          actions: <Widget>[
-                            TextButton(
-                              child: new Text("Continue"),
-                              onPressed: () {
-                                ref.read(authProvider.notifier).logout();
-                              },
-                            ),
-                            TextButton(
-                              child: Text("Cancel"),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ));
+                      filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                      child: AlertDialog(
+                        // title: new Text(title),
+                        content: new Text('are you sure to logout?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: new Text("Continue"),
+                            onPressed: () {
+                              ref.read(authProvider.notifier).logout();
+                            },
+                          ),
+                          TextButton(
+                            child: Text("Cancel"),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 );
               },

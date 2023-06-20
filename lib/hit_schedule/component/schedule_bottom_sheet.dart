@@ -1,11 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/common/const/colors.dart';
+import 'package:unuseful/user/model/user_model.dart';
 
 import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/component/general_toast_message.dart';
+import '../../user/provider/login_variable_provider.dart';
+import '../../user/provider/user_me_provider.dart';
 import '../model/hit_my_duty_model.dart';
 import '../provider/hit_my_duty_provider.dart';
 import '../provider/hit_my_duty_selected_schedule_provider.dart';
@@ -56,10 +61,23 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     borderRadius: BorderRadius.circular(6.0),
   );
 
+  HitMyDutyListModel selectedDuty = HitMyDutyListModel(
+    wkMonth: '',
+    wkDate: '',
+    day: '',
+    stfNo: '',
+    stfNm: '',
+    wkSeq: '',
+    hdyYn: '',
+    dutyTypeNm: '',
+    dutyTypeCode: '',
+  );
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(hitMyDutyFamilyProvider(widget.stfNum));
-    final selectedDuty = ref.watch(hitMyDutySelectedScheduleProvider);
+    final userMe = ref.watch(userMeProvider.notifier).state;
+    final user = userMe as UserModel;
 
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
@@ -87,7 +105,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                 height: 5,
               ),
               Text(
-                DateFormat('yyyy년 MM월 dd일 EEEE').format(widget.dutyDate),
+                '${DateFormat('yyyy년 MM월 dd일').format(widget.dutyDate)} ${DateFormat.EEEE('ko_KR').format(widget.dutyDate)}',
                 style: TextStyle(
                   fontSize: 20.0,
                   fontWeight: FontWeight.w500,
@@ -119,7 +137,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                     width: 5,
                   ),
                   Text(
-                    'schedule has been chosen.',
+                    '일정이 선택되었습니다.',
                     style: TextStyle(
                       fontSize: 15.0,
                       fontWeight: FontWeight.w500,
@@ -128,10 +146,10 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 15,
               ),
               Text(
-                'choose your duty schedule',
+                '변경하려는 나의 일정을 선택해주세요.',
                 style: TextStyle(
                   fontSize: 15.0,
                   color: BODY_TEXT_COLOR,
@@ -139,80 +157,174 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                 ),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
               Container(
-                height: 40,
+                height: 35,
                 child: ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return ChoiceChip(
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shadowColor: Colors.teal,
-                      pressElevation: 5,
-                      // avatar: Text(cp.data[index] == selectedDuty ?'v':''),
-                      label: Container(
-                        height: 40,
-                        child: Row(
-                          children: [
-                            // Text('✔',style: TextStyle(color: cp.data[index] == selectedDuty ? Colors.black:Colors.transparent),),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              cp.data[index].wkDate,
-                              style: defaultTextStyle,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              '(${cp.data[index].day})',
-                              style: defaultTextStyle,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(cp.data[index].dutyTypeNm,
-                                style: defaultTextStyle),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                          ],
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ChoiceChip(
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          shadowColor: Colors.teal,
+                          pressElevation: 5,
+                          // avatar: Text(cp.data[index] == selectedDuty ?'v':''),
+                          label: Container(
+                            child: index == 0
+                                ? Text('신규 일정 추가',
+                                    style: selectedDuty.isNew
+                                        ? defaultTextStyle.copyWith(
+                                            color: Colors.white)
+                                        : defaultTextStyle)
+                                : Row(
+                                    children: [
+                                      // Text('✔',style: TextStyle(color: cp.data[index] == selectedDuty ? Colors.black:Colors.transparent),),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        cp.data[index - 1].wkDate,
+                                        style:
+                                            cp.data[index - 1] == selectedDuty
+                                                ? defaultTextStyle.copyWith(
+                                                    color: Colors.white)
+                                                : defaultTextStyle,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        '(${cp.data[index - 1].day})',
+                                        style:
+                                            cp.data[index - 1] == selectedDuty
+                                                ? defaultTextStyle.copyWith(
+                                                    color: Colors.white)
+                                                : defaultTextStyle,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(cp.data[index - 1].dutyTypeNm,
+                                          style:
+                                              cp.data[index - 1] == selectedDuty
+                                                  ? defaultTextStyle.copyWith(
+                                                      color: Colors.white)
+                                                  : defaultTextStyle),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                          selected: index == 0
+                              ? selectedDuty.isNew
+                              : (cp.data[index - 1] == selectedDuty),
+                          selectedColor: PRIMARY_COLOR,
+                          backgroundColor: Colors.grey[200],
+                          onSelected: (bool selected) {
+                            setState(() {
+                              if (index == 0) {
+                                selectedDuty = HitMyDutyListModel(
+                                  wkMonth: '',
+                                  wkDate: '',
+                                  day: '',
+                                  stfNo: '',
+                                  stfNm: '',
+                                  wkSeq: '',
+                                  hdyYn: '',
+                                  dutyTypeNm: '',
+                                  dutyTypeCode: '',
+                                );
+                                selectedDuty.isNew = true;
+                              } else {
+                                cp.data[index - 1].isNew = false;
+                                selectedDuty = cp.data[index - 1];
+                                selectedDuty.isNew = false;
+                              }
+                            });
+                          },
                         ),
-                      ),
-                      selected: cp.data[index] == selectedDuty,
-                      selectedColor: PRIMARY_COLOR,
-                      backgroundColor: Colors.grey[200],
-
-                      onSelected: (bool selected) {
-                        ref
-                            .read(hitMyDutySelectedScheduleProvider.notifier)
-                            .update((state) => cp.data[index]);
-                      },
+                      ],
                     );
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(width: 10);
                   },
-                  itemCount: cp.data.length,
+                  itemCount: cp.data.length + 1,
                   scrollDirection: Axis.horizontal,
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      print(selectedDuty.day);
 
+                      if (selectedDuty.day.isEmpty) {
+                        if (!selectedDuty.isNew) {
+                          showToast(
+                              msg: '스케쥴을 선택해주세요.',
+                              toastLength: Toast.LENGTH_SHORT);
+                          return;
+                        }
+                      }
 
-                      if (selectedDuty.day.isEmpty)
-                        showToast(
-                            msg: 'please select one of your schedule',
-                            toastLength: Toast.LENGTH_SHORT);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            // title: new Text(title),
+                            content: new Text(
+                              _returnConfirmMessage(
+                                widget.dutyTypeCode,
+                                widget.stfNm,
+                                widget.dutyDate,
+                                selectedDuty.dutyTypeCode,
+                                user.stfNm.toString(),
+                                DateFormat('yyyy-MM-dd').parse(
+                                  selectedDuty.wkDate == ''
+                                      ? '2023-06-20'
+                                      : selectedDuty.wkDate,
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 14.0),
+                            ),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  primary: PRIMARY_COLOR,
+                                ),
+                                child: Text('확인'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: const BorderSide(
+                                    width: 1.0,
+                                    color: PRIMARY_COLOR,
+                                  ),
+                                ),
+                                child: Text('취소',
+                                    style: TextStyle(
+                                      color: PRIMARY_COLOR,
+                                    )),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
-                    child: Text('change schedule'),
+                    child: Text('일정 변경'),
                     style: ElevatedButton.styleFrom(
                       primary: PRIMARY_COLOR,
                     ),
@@ -225,4 +337,46 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
       ),
     );
   }
+
+  _returnConfirmMessage(
+      String dutyTypeCodeOriginal,
+      String stfNmOriginal,
+      DateTime dutyDateOriginal,
+      String dutyTypeCodeUpdate,
+      String stfNmUpdate,
+      DateTime? dutyDateUpdate) {
+    var returnString =
+        '${DateFormat('yyyy-MM-dd').format(dutyDateOriginal)} (${DateFormat.E('ko_KR').format(dutyDateOriginal)}) ${_returnDutyTypeName(dutyTypeCodeOriginal)} $stfNmOriginal님의 일정을\n';
+
+    if (selectedDuty.isNew) {
+      return returnString + ' ${stfNmUpdate}님의 신규 일정으로 변경하시겠습니까?';
+    } else {
+      return returnString +
+          ' ${DateFormat('yyyy-MM-dd').format(dutyDateUpdate!)} (${DateFormat.E('ko_KR').format(dutyDateUpdate!)}) ${_returnDutyTypeName(dutyTypeCodeUpdate)} ${stfNmUpdate}님으로 일정 변경 하시겠습니까?';
+    }
+  }
+
+  _returnDutyTypeName(String dutyTypeCode) {
+    //평일 오후 2, 휴일 오전3, 휴일 오후 4
+    switch (dutyTypeCode) {
+      case '2':
+        return '평일 오후';
+      case '3':
+        return '휴일 오전';
+      case '4':
+        return '휴일 오후';
+    }
+  }
 }
+
+// onPressed: () async {
+// final resp = await ref
+//     .read(orderProvider.notifier)
+//     .postOrder();
+// if (resp) {
+// context.goNamed(OrderDoneScreen.routeName);
+// } else {
+// ScaffoldMessenger.of(context).showSnackBar(
+// SnackBar(content: Text('결제 실패!')));
+// }
+// },
