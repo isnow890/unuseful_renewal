@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/const/colors.dart';
+import 'package:unuseful/common/dio/dio.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
 import 'package:unuseful/specimen/model/specimen_model.dart';
 import 'package:unuseful/specimen/provider/specimen_variable_provider.dart';
@@ -16,10 +16,11 @@ import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 import '../../common/component/custom_error_widget.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/component/general_toast_message.dart';
+import '../../common/const/data.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
 import '../model/specimen_params.dart';
-import '../provider/specimen_check_provider.dart';
 import '../provider/specimen_provider.dart';
+import '../repository/specimen_repository.dart';
 
 class SpecimenMainScreen extends ConsumerStatefulWidget {
   static String get routeName => 'specimenMain';
@@ -67,24 +68,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final Map<String, dynamic> fi2 = {
-    //   'hspTpCd': _getHspTpCd(),
-    //   'searchValue': textFormFieldController.text,
-    //   'strDt': DateFormat('yyyyMMdd').format(rangeStart!),
-    //   'endDt': DateFormat('yyyyMMdd').format(rangeEnd!),
-    //   'orderBy': 'desc'
-    // };
-    //
-    // final state = ref.watch(
-    //   specimenFamilyProvider(
-    //       fi2
-    //   ),
-    // );
-
-    // ref.watch(specimenVariableProvider);
-    final state = ref.watch(specimenNotifierProvider);
-
-    print('ok');
+    final state = ref.watch(specimenStateProvider);
 
     final TextStyle segmentTextStyle = const TextStyle(
       fontSize: 12.0,
@@ -98,36 +82,30 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
 
     if (state is SpecimenModelError) {
-      return  CustomErrorWidget(
+      return DefaultLayout(
+        child: CustomErrorWidget(
           message: state.message,
           onPressed: () {
-
             print('실행');
-            ref
-                .read(specimenVariableProvider.notifier)
-                .update((state) => SpecimenParams(
-                hspTpCd: _getHspTpCd(),
-                searchValue:
-                textFormFieldController.text,
-                strDt: DateFormat('yyyyMMdd')
-                    .format(rangeStart!),
-                endDt: DateFormat('yyyyMMdd')
-                    .format(rangeEnd!),
-                orderBy: 'desc'));
+            ref.read(specimenVariableProvider.notifier).update((state) =>
+                SpecimenParams(
+                    hspTpCd: _getHspTpCd(),
+                    searchValue: textFormFieldController.text,
+                    strDt: DateFormat('yyyyMMdd').format(rangeStart!),
+                    endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
+                    orderBy: 'desc'));
           },
-        );
+        ),
+        title: Text('specimen'),
+      );
     }
 
-
-    if (state is SpecimenModel) {
-      print('yes');
-      if (state.data!.length == 0) {
-        showToast(msg: '데이터가 없습니다.');
-      }
-      else{
-        // showToast(msg: '데이터가 있어요...');
-      }
-    }
+    // if (state is SpecimenModel) {
+    //   print('yes');
+    //   if (state.data!.length == 0) {
+    //     showToast(msg: '데이터가 없습니다.');
+    //   } else {}
+    // }
 
     return DefaultLayout(
       floatingActionButton: FloatingActionButton(
@@ -139,160 +117,166 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
         ),
       ),
       title: Text('specimen'),
-      child: SingleChildScrollView(
-        //드래그 하면 키보드 집어넣기.
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: SingleChildScrollView(
+          //드래그 하면 키보드 집어넣기.
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
 
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Card(
-            color: Colors.grey[200],
-            shape: RoundedRectangleBorder(
-              //모서리를 둥글게 하기 위해 사용
-              borderRadius: BorderRadius.circular(16.0),
-            ),
-            elevation: 6.0, //그림자 깊이
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  _renderTitleTextHelper('hospital'),
-                  _renderHosiptalSegmentHelper(segmentTextStyle),
-                  const Divider(
-                    height: 30,
-                  ),
-                  _renderTitleTextHelper('speciemnt no / patient no'),
-                  _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 40,
-                          child: CustomTextFormField(
-                            hintText: searchType == 0
-                                ? '8자리의 등록번호를 입력하세요.'
-                                : '11자리의 검체번호를 입력하세요.',
-                            isSuffixDeleteButtonEnabled: true,
-                            controller: textFormFieldController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                              LengthLimitingTextInputFormatter(
-                                  textFormFieldMaxLength),
-                            ],
-                            contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
-                            onChanged: (value) {},
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Card(
+              color: Colors.grey[200],
+              shape: RoundedRectangleBorder(
+                //모서리를 둥글게 하기 위해 사용
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              elevation: 6.0, //그림자 깊이
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    _renderTitleTextHelper('hospital'),
+                    _renderHosiptalSegmentHelper(segmentTextStyle),
+                    const Divider(
+                      height: 30,
+                    ),
+                    _renderTitleTextHelper('speciemnt no / patient no'),
+                    _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 40,
+                            child: CustomTextFormField(
+                              hintText: searchType == 0
+                                  ? '8자리의 등록번호를 입력하세요.'
+                                  : '11자리의 검체번호를 입력하세요.',
+                              isSuffixDeleteButtonEnabled: true,
+                              controller: textFormFieldController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(
+                                    textFormFieldMaxLength),
+                              ],
+                              contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
+                              onChanged: (value) {},
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    height: 30,
-                  ),
-                  _renderTitleTextHelper('choose date'),
-                  SpecimenMainScreenExpansionPanelList(
-                    searchType: searchType,
-                    rangeStart: rangeStart,
-                    rangeEnd: rangeEnd,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed:
-
-                          // state is SpecimenModelLoading
-                          //     ? null
-                          //     :
-                              () async {
-                                  if (!_validateBeforeSearch()) return;
-
-                                    ref
-                                        .read(specimenVariableProvider.notifier)
-                                        .update((state) => SpecimenParams(
-                                        hspTpCd: _getHspTpCd(),
-                                        searchValue:
-                                        textFormFieldController.text,
-                                        strDt: DateFormat('yyyyMMdd')
-                                            .format(rangeStart!),
-                                        endDt: DateFormat('yyyyMMdd')
-                                            .format(rangeEnd!),
-                                        orderBy: 'desc'));
-
-
-
-                                  // final tmpState = ref
-                                  //     .read(specimenNotifierProvider.notifier)
-                                  //     .getSpcmInformation();
-                                  //
-                                  // final state = ref
-                                  //     .read(specimenFamilyProvider(
-                                  //       SpecimenParams(
-                                  //           hspTpCd: _getHspTpCd(),
-                                  //           searchValue:
-                                  //               textFormFieldController.text,
-                                  //           strDt: DateFormat('yyyyMMdd')
-                                  //               .format(rangeStart!),
-                                  //           endDt: DateFormat('yyyyMMdd')
-                                  //               .format(rangeEnd!),
-                                  //           orderBy: 'desc'),
-                                  //     ).notifier)
-                                  //     .getSpcmInformation();
-
-                                  // context.pushNamed(SpecimenResultScreen.routeName,
-                                  //     extra: SpecimenParams(
-                                  //         hspTpCd: _getHspTpCd(),
-                                  //         searchValue: textFormFieldController.text,
-                                  //         strDt: DateFormat('yyyyMMdd')
-                                  //             .format(rangeStart!),
-                                  //         endDt: DateFormat('yyyyMMdd')
-                                  //             .format(rangeEnd!),
-                                  //         orderBy: 'desc'));
-                                },
-                          child: !(state is SpecimenModelLoading)
-                              ? Text('조회')
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                      SizedBox(
-                                        width: 12,
-                                        height: 12,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
+                      ],
+                    ),
+                    const Divider(
+                      height: 30,
+                    ),
+                    _renderTitleTextHelper('choose date'),
+                    SpecimenMainScreenExpansionPanelList(
+                      searchType: searchType,
+                      rangeStart: rangeStart,
+                      rangeEnd: rangeEnd,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: state is SpecimenModelLoading
+                                ? null
+                                : () async {
+                                    if (!_validateBeforeSearch()) return;
+                                    final data = await _getDataAndPushNamed();
+                                    if (data!.isEmpty) {
+                                      showToast(msg: '데이터가 없습니다.');
+                                    } else {
+                                      print('데이터 있음');
+                                      context.pushNamed(SpecimenResultScreen.routeName);
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: PRIMARY_COLOR,
+                            ),
+                            child: state is! SpecimenModelLoading
+                                ? const Text('조회')
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                        SizedBox(
+                                          width: 12,
+                                          height: 12,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text('조회')
-                                    ]),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: PRIMARY_COLOR,
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('조회')
+                                      ]),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  _renderDefaultLayOut({required Widget widget}) {
+    return DefaultLayout(
+      centerTitle: false,
+      title: Text('specimen'),
+      child: widget,
+    );
+  }
+
+  Future<List<SpecimenPrimaryModel>?> _getDataAndPushNamed() async {
+    ref
+        .read(specimenStateProvider.notifier)
+        .update((state) => SpecimenModelLoading());
+
+    try {
+      final repository = SpecimenRepository(ref.read(dioProvider), baseUrl: ip);
+      final result = await repository.getSpcmInformation(
+          specimenParams: SpecimenParams(
+              hspTpCd: _getHspTpCd(),
+              searchValue: textFormFieldController.text,
+              strDt: DateFormat('yyyyMMdd').format(rangeStart!),
+              endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
+              orderBy: 'desc'));
+
+      ref
+          .read(specimenStateProvider.notifier)
+          .update((state) => SpecimenModel(data: result));
+
+
+      return result;
+
+
+    } catch (e) {
+      print(e.toString());
+      ref
+          .read(specimenStateProvider.notifier)
+          .update((state) => SpecimenModelError(message: '에러가 발생하였습니다.'));
+    }
   }
 
   String _getHspTpCd() {

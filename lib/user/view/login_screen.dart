@@ -56,10 +56,7 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
 
     final state = ref.watch(userMeProvider);
-
-
     final loginValue = ref.watch(loginVariableStateProvider);
-
     // print(loginValue.STF_NO);
     // stfNoController.value = (TextEditingValue(text: loginValue.STF_NO ?? ''));
 
