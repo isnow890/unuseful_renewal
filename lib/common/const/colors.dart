@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 
+final LIGHT_PRIMARY_COLOR = Colors.green[200];
+
 //주 색상
 const PRIMARY_COLOR = Color(0xFF22A45D);
 //글자색상

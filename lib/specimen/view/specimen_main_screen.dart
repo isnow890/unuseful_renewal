@@ -20,6 +20,7 @@ import '../../common/const/data.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
 import '../model/specimen_params.dart';
 import '../provider/specimen_provider.dart';
+import '../provider/specimen_state_provider.dart';
 import '../repository/specimen_repository.dart';
 
 class SpecimenMainScreen extends ConsumerStatefulWidget {
@@ -87,13 +88,8 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           message: state.message,
           onPressed: () {
             print('실행');
-            ref.read(specimenVariableProvider.notifier).update((state) =>
-                SpecimenParams(
-                    hspTpCd: _getHspTpCd(),
-                    searchValue: textFormFieldController.text,
-                    strDt: DateFormat('yyyyMMdd').format(rangeStart!),
-                    endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
-                    orderBy: 'desc'));
+
+
           },
         ),
         title: Text('specimen'),
@@ -197,12 +193,21 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                                 ? null
                                 : () async {
                                     if (!_validateBeforeSearch()) return;
-                                    final data = await _getDataAndPushNamed();
+                                    final data = await _getData();
                                     if (data!.isEmpty) {
                                       showToast(msg: '데이터가 없습니다.');
                                     } else {
-                                      print('데이터 있음');
-                                      context.pushNamed(SpecimenResultScreen.routeName);
+                                      context.pushNamed(
+                                          SpecimenResultScreen.routeName,
+                                          extra: SpecimenParams(
+                                              hspTpCd: _getHspTpCd(),
+                                              searchValue:
+                                                  textFormFieldController.text,
+                                              strDt: DateFormat('yyyyMMdd')
+                                                  .format(rangeStart!),
+                                              endDt: DateFormat('yyyyMMdd')
+                                                  .format(rangeEnd!),
+                                              orderBy: 'desc'));
                                     }
                                   },
                             style: ElevatedButton.styleFrom(
@@ -248,7 +253,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
   }
 
-  Future<List<SpecimenPrimaryModel>?> _getDataAndPushNamed() async {
+  Future<List<SpecimenPrimaryModel>?> _getData() async {
     ref
         .read(specimenStateProvider.notifier)
         .update((state) => SpecimenModelLoading());
@@ -267,10 +272,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           .read(specimenStateProvider.notifier)
           .update((state) => SpecimenModel(data: result));
 
-
       return result;
-
-
     } catch (e) {
       print(e.toString());
       ref

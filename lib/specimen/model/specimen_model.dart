@@ -1,7 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../common/model/base_meta.dart';
-
 part 'specimen_model.g.dart';
 
 abstract class SpecimenModelBase {}
@@ -11,10 +9,10 @@ class SpecimenModelError extends SpecimenModelBase {
 
   SpecimenModelError({required this.message});
 }
+
 class SpecimenModelLoading extends SpecimenModelBase {}
 
-
-class SpecimenInit extends SpecimenModelBase{}
+class SpecimenInit extends SpecimenModelBase {}
 
 @JsonSerializable()
 class SpecimenModel extends SpecimenModelBase {
@@ -32,9 +30,15 @@ class SpecimenModel extends SpecimenModelBase {
 class SpecimenPrimaryModel {
   final String? ordDt;
   final List<SpecimenExmTypeModel>? exmType;
+  final String? ptNm;
+  final String? ptNo;
 
-
-  SpecimenPrimaryModel({required this.ordDt, required this.exmType});
+  SpecimenPrimaryModel({
+    required this.ptNo,
+    required this.ptNm,
+    required this.ordDt,
+    required this.exmType,
+  });
 
   factory SpecimenPrimaryModel.fromJson(Map<String, dynamic> json) =>
       _$SpecimenPrimaryModelFromJson(json);
@@ -57,8 +61,8 @@ class SpecimenExmTypeModel {
     required this.general,
   });
 
-  factory SpecimenExmTypeModel.fromJson(Map<String,dynamic> json)
-  =>_$SpecimenExmTypeModelFromJson(json);
+  factory SpecimenExmTypeModel.fromJson(Map<String, dynamic> json) =>
+      _$SpecimenExmTypeModelFromJson(json);
 }
 
 @JsonSerializable()
@@ -81,7 +85,7 @@ class SpecimenGeneralModel {
   final String? emrgYn;
   final String? exmCtgAbbrNm;
   final int? orderSeq;
-
+  final String? ptNm;
 
   SpecimenGeneralModel({
     required this.ordDt,
@@ -102,6 +106,7 @@ class SpecimenGeneralModel {
     required this.emrgYn,
     required this.exmCtgAbbrNm,
     required this.orderSeq,
+    required this.ptNm,
   });
 
   factory SpecimenGeneralModel.fromJson(Map<String, dynamic> json) =>

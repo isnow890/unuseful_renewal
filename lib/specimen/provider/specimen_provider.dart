@@ -1,20 +1,47 @@
-import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unuseful/specimen/model/specimen_model.dart';
-import 'package:unuseful/specimen/provider/specimen_check_provider.dart';
-import 'package:unuseful/specimen/provider/specimen_variable_provider.dart';
+import 'package:unuseful/specimen/model/specimen_detail_params.dart';
+import 'package:unuseful/specimen/provider/specimen_detail_params_provider.dart';
 
-import '../model/specimen_params.dart';
+import '../model/specimen_detail_model.dart';
 import '../repository/specimen_repository.dart';
 
+final specimenNotifierProvider = StateNotifierProvider<
+    SpecimenDetailStateNotifier, SpecimenDetailModelBase?>((ref) {
+  final paramsDetail = ref.watch(specimenDetailParamsProvider);
+  final repository = ref.watch(specimenRepositoryProvider);
 
-final specimenStateProvider = StateProvider<SpecimenModelBase>((ref) {
-  return SpecimenInit();
+  final notifier = SpecimenDetailStateNotifier(
+      repository: repository, paramsDetail: paramsDetail);
+  return notifier;
 });
 
+class SpecimenDetailStateNotifier
+    extends StateNotifier<SpecimenDetailModelBase?> {
+  final SpecimenRepository repository;
+  final SpecimenDetailParams? paramsDetail;
 
+  SpecimenDetailStateNotifier({
+    required this.paramsDetail,
+    required this.repository,
+  }) : super(SpecimenDetailModelLoading()) {
+    getSpcmDetailInformation();
+  }
 
+  Future<SpecimenDetailModelBase> getSpcmDetailInformation() async {
+    try {
+      state = SpecimenDetailModelLoading();
+      final List<SpecimenDetailListModel> resp = await repository
+          .getSpcmDetailInformation(specimenParams: paramsDetail);
+      state = SpecimenDetailModel(data: resp);
 
+      return SpecimenDetailModel(data: resp);
+    } catch (e) {
+      print(e);
+      state = SpecimenDetailModelError(message: '데이터를 가져오지 못했습니다.');
+      return Future.value(state);
+    }
+  }
+}
 
 // final specimenFamilyProvider = StateNotifierProvider.family<
 //     SpecimenStateNotifier, SpecimenModelBase?, SpecimenParams>(

@@ -17,6 +17,11 @@ final specimenRepositoryProvider = Provider<SpecimenRepository>((ref) {
   return repository;
 });
 
+
+
+
+
+
 @RestApi()
 abstract class SpecimenRepository {
   factory SpecimenRepository(Dio dio, {String baseUrl}) = _SpecimenRepository;
@@ -42,15 +47,10 @@ abstract class SpecimenRepository {
         hspTpCd: null,
       )});
 
-  // @Query("searchValue") final String searchValue,
-  // @Query("strDt") final String strDt,
-  // @Query("endDt") final String endDt,
-  // @Query("orderBy") final String orderBy,
-  // @Query("hspTpCd") final String hspTpCd);
 
   @GET('/specimen/detail')
   @Headers({'accessKey': 'true'})
-  Future<List<SpecimenDetailModel>> getSpcmDetailInformation(
+  Future<List<SpecimenDetailListModel>> getSpcmDetailInformation(
       {@Queries() SpecimenDetailParams? specimenParams =
           const SpecimenDetailParams(
               hspTpCd: '', exrmExmCtgCd: '', spcmNo: '')});

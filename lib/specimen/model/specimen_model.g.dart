@@ -21,6 +21,8 @@ Map<String, dynamic> _$SpecimenModelToJson(SpecimenModel instance) =>
 SpecimenPrimaryModel _$SpecimenPrimaryModelFromJson(
         Map<String, dynamic> json) =>
     SpecimenPrimaryModel(
+      ptNo: json['ptNo'] as String?,
+      ptNm: json['ptNm'] as String?,
       ordDt: json['ordDt'] as String?,
       exmType: (json['exmType'] as List<dynamic>?)
           ?.map((e) => SpecimenExmTypeModel.fromJson(e as Map<String, dynamic>))
@@ -32,6 +34,8 @@ Map<String, dynamic> _$SpecimenPrimaryModelToJson(
     <String, dynamic>{
       'ordDt': instance.ordDt,
       'exmType': instance.exmType,
+      'ptNm': instance.ptNm,
+      'ptNo': instance.ptNo,
     };
 
 SpecimenExmTypeModel _$SpecimenExmTypeModelFromJson(
@@ -83,6 +87,7 @@ SpecimenGeneralModel _$SpecimenGeneralModelFromJson(
       emrgYn: json['emrgYn'] as String?,
       exmCtgAbbrNm: json['exmCtgAbbrNm'] as String?,
       orderSeq: json['orderSeq'] as int?,
+      ptNm: json['ptNm'] as String?,
     );
 
 Map<String, dynamic> _$SpecimenGeneralModelToJson(
@@ -106,4 +111,5 @@ Map<String, dynamic> _$SpecimenGeneralModelToJson(
       'emrgYn': instance.emrgYn,
       'exmCtgAbbrNm': instance.exmCtgAbbrNm,
       'orderSeq': instance.orderSeq,
+      'ptNm': instance.ptNm,
     };

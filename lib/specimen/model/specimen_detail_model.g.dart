@@ -8,6 +8,21 @@ part of 'specimen_detail_model.dart';
 
 SpecimenDetailModel _$SpecimenDetailModelFromJson(Map<String, dynamic> json) =>
     SpecimenDetailModel(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) =>
+              SpecimenDetailListModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$SpecimenDetailModelToJson(
+        SpecimenDetailModel instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+    };
+
+SpecimenDetailListModel _$SpecimenDetailListModelFromJson(
+        Map<String, dynamic> json) =>
+    SpecimenDetailListModel(
       exmCtgCd: json['exmCtgCd'] as String,
       exmCtgAbbrNm: json['exmCtgAbbrNm'] as String,
       spcmNo: json['spcmNo'] as String,
@@ -19,8 +34,8 @@ SpecimenDetailModel _$SpecimenDetailModelFromJson(Map<String, dynamic> json) =>
       orderSeq: json['orderSeq'] as int,
     );
 
-Map<String, dynamic> _$SpecimenDetailModelToJson(
-        SpecimenDetailModel instance) =>
+Map<String, dynamic> _$SpecimenDetailListModelToJson(
+        SpecimenDetailListModel instance) =>
     <String, dynamic>{
       'exmCtgCd': instance.exmCtgCd,
       'exmCtgAbbrNm': instance.exmCtgAbbrNm,

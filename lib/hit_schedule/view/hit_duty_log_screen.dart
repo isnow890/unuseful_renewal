@@ -58,9 +58,11 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
           thumbVisibility: true,
           controller: controller,
           child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+
             controller: controller,
             separatorBuilder: (context, index) {
-              return Divider(
+              return const Divider(
                 height: 20.0,
               );
             },

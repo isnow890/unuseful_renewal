@@ -8,11 +8,13 @@ import 'package:unuseful/hit_schedule/view/hit_schedule_main_screen.dart';
 import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
+import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
 import '../../meal/model/meal_model.dart';
 import '../../specimen/view/specimen_main_screen.dart';
+import '../../specimen/view/specimen_result_detail_screen.dart';
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
 import '../view/login_screen.dart';
@@ -145,9 +147,21 @@ class AuthProvider extends ChangeNotifier {
           name: SpecimenResultScreen.routeName,
           builder: (context, state) {
             // final values = state.extra as SpecimenParams;
+            final values = state.extra as SpecimenParams;
 
             return SpecimenResultScreen(
-              // params: values,
+              params: values,
+            );
+          },
+        ),
+        GoRoute(
+          path: '/specimenResultDetail',
+          name: SpecimenResultDetailScreen.routeName,
+          builder: (context, state) {
+            // final values = state.extra as SpecimenParams;
+            final values = state.extra as SpecimenParams;
+            return SpecimenResultDetailScreen(
+              params: values,
             );
           },
         ),
