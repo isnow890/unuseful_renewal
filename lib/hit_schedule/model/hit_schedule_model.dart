@@ -34,6 +34,7 @@ class HitScheduleListModel {
   final String? scheduleType;
   final String? dutyTypeCode;
   final String? hdyYn;
+  final String? wkSeq;
 
   HitScheduleListModel({
     required this.startDate,
@@ -46,6 +47,7 @@ class HitScheduleListModel {
     required this.scheduleType,
     required this.dutyTypeCode,
     required this.hdyYn,
+    required this.wkSeq,
   });
 
   factory HitScheduleListModel.fromJson(Map<String, dynamic> json) =>

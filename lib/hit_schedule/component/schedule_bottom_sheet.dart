@@ -1,19 +1,22 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/common/const/colors.dart';
+import 'package:unuseful/hit_schedule/model/hit_duty_schedule_update_model.dart';
 import 'package:unuseful/user/model/user_model.dart';
 
+import '../../common/component/custom_alert.dart';
 import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/component/general_toast_message.dart';
-import '../../user/provider/login_variable_provider.dart';
+import '../../common/model/response_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../model/hit_my_duty_model.dart';
+import '../provider/hit_duty_schedule_update_provider.dart';
 import '../provider/hit_my_duty_provider.dart';
-import '../provider/hit_my_duty_selected_schedule_provider.dart';
+import '../provider/hit_schedule_for_event_provider.dart';
+import '../provider/hit_schedule_provider.dart';
+import '../provider/hit_schedule_selected_day_provider.dart';
 
 class ScheduleBottomSheet extends ConsumerStatefulWidget {
   final String dutyTypeCode;
@@ -21,6 +24,7 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
   final String dutyName;
   final String stfNm;
   final String stfNum;
+  final String wkSeq;
 
   // required this.dutyTypeCode,
   // required this.workMonthOriginal,
@@ -41,6 +45,7 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
     required this.dutyName,
     required this.stfNm,
     required this.stfNum,
+    required this.wkSeq,
   }) : super(key: key);
 
   @override
@@ -276,52 +281,63 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                           return;
                         }
                       }
-
-                      showDialog(
+                      CustomAlert(
                         context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            // title: new Text(title),
-                            content: new Text(
-                              _returnConfirmMessage(
-                                widget.dutyTypeCode,
-                                widget.stfNm,
-                                widget.dutyDate,
-                                selectedDuty.dutyTypeCode,
-                                user.stfNm.toString(),
-                                DateFormat('yyyy-MM-dd').parse(
-                                  selectedDuty.wkDate == ''
-                                      ? '2023-06-20'
-                                      : selectedDuty.wkDate,
-                                ),
-                              ),
-                              style: TextStyle(fontSize: 14.0),
-                            ),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  primary: PRIMARY_COLOR,
-                                ),
-                                child: Text('확인'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  side: const BorderSide(
-                                    width: 1.0,
-                                    color: PRIMARY_COLOR,
-                                  ),
-                                ),
-                                child: Text('취소',
-                                    style: TextStyle(
-                                      color: PRIMARY_COLOR,
-                                    )),
-                              ),
-                            ],
-                          );
+                        contents: _returnConfirmMessage(
+                          widget.dutyTypeCode,
+                          widget.stfNm,
+                          widget.dutyDate,
+                          selectedDuty.dutyTypeCode,
+                          user.stfNm.toString(),
+                          DateFormat('yyyy-MM-dd').parse(
+                            selectedDuty.wkDate == ''
+                                ? '2023-06-20'
+                                : selectedDuty.wkDate,
+                          ),
+                        ),
+                        yesTitle: '확인',
+                        yesAction: () async {
+                          //2022-09-02
+                          //DateFormat('yyyy년 MM월 dd일').format(widget.dutyDate)
+                          final param = HitDutyScheduleUpdateModel(
+                              dutyTypeCodeOriginal: widget.dutyTypeCode,
+                              workMonthOriginal:
+                                  DateFormat('yyyyMM').format(widget.dutyDate),
+                              workDateOriginal: DateFormat('yyyy-MM-dd')
+                                  .format(widget.dutyDate),
+                              workMonthUpdate: selectedDuty.wkMonth,
+                              workDateUpdate: selectedDuty.wkDate,
+                              originalName: widget.stfNm,
+                              updateName: user.stfNm,
+                              wkSeqOriginal: widget.wkSeq,
+                              wkSeqUpdate: selectedDuty.wkSeq,
+                              workType: selectedDuty.isNew ? 'new' : '',
+                              dutyTypeCodeUpdate: selectedDuty.dutyTypeCode);
+
+                          await ref
+                              .read(hitDutyScheduleUpdateFamilyProvider(param));
+
+
+                          if (result.isSuccess) {
+                            showToast(msg: '일정이 변경되었습니다.');
+                          } else {
+                            CustomAlert(
+                                context: context,
+                                contents: result.message!,
+                                yesAction: () {});
+                          }
+
+                          ref
+                              .read(hitScheduleNotifierProvider.notifier)
+                              .getHitSchedule(false);
+                          ref
+                              .read(hitSheduleForEventNotifierProvider.notifier)
+                              .getHitScheduleForEvent();
+
+                          Navigator.of(context).pop();
                         },
+                        noTitle: '취소',
+                        noAction: () => Navigator.of(context).pop(),
                       );
                     },
                     child: Text('일정 변경'),

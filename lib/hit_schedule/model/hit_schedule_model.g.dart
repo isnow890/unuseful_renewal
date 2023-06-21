@@ -31,6 +31,7 @@ HitScheduleListModel _$HitScheduleListModelFromJson(
       scheduleType: json['scheduleType'] as String?,
       dutyTypeCode: json['dutyTypeCode'] as String?,
       hdyYn: json['hdyYn'] as String?,
+      wkSeq: json['wkSeq'] as String?,
     );
 
 Map<String, dynamic> _$HitScheduleListModelToJson(
@@ -46,4 +47,5 @@ Map<String, dynamic> _$HitScheduleListModelToJson(
       'scheduleType': instance.scheduleType,
       'dutyTypeCode': instance.dutyTypeCode,
       'hdyYn': instance.hdyYn,
+      'wkSeq': instance.wkSeq,
     };

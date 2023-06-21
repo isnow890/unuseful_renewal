@@ -15,16 +15,13 @@ import 'package:unuseful/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_for_event_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
-import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../common/const/colors.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../provider/hit_duty_calendar_change_month_provider.dart';
-import '../provider/hit_my_duty_selected_schedule_provider.dart';
 
 class HitScheduleScreen extends ConsumerStatefulWidget {
-
   const HitScheduleScreen({Key? key}) : super(key: key);
 
   @override
@@ -34,9 +31,6 @@ class HitScheduleScreen extends ConsumerStatefulWidget {
 class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   @override
   Widget build(BuildContext context) {
-
-
-
     final defaultBoxDeco = BoxDecoration(
       color: Colors.grey[200],
       //테두리 깍기
@@ -69,9 +63,8 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
           flex: 2,
           fit: FlexFit.tight,
           child: CustomCalendar(
-
             shouldFillViewport: true,
-            calendarStyle : CalendarStyle(
+            calendarStyle: CalendarStyle(
               outsideDaysVisible: false,
               isTodayHighlighted: true,
             ),
@@ -91,15 +84,13 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => selectedDay);
             },
-
             calendarBuilders: CalendarBuilders(
               todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
                 decoration: defaultBoxDeco,
-
-            textColor: Colors.blue[600],
-            day: day,
-            focusedDay: focusedDay,
-          ),
+                textColor: Colors.blue[600],
+                day: day,
+                focusedDay: focusedDay,
+              ),
               outsideBuilder: (context, day, focusedDay) => _CalendarBuilders(
                 decoration: defaultBoxDeco.copyWith(
                   color: Colors.white,
@@ -121,10 +112,9 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                   day: day,
                   focusedDay: focusedDay,
                   textColor: day.weekday == DateTime.sunday ||
-                      day.weekday == DateTime.saturday
+                          day.weekday == DateTime.saturday
                       ? Colors.red
                       : Colors.black),
-
               holidayBuilder: (context, day, focusedDay) {
                 return _CalendarBuilders(
                   decoration: defaultBoxDeco,
@@ -132,18 +122,20 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                   focusedDay: focusedDay,
                 );
               },
-
               markerBuilder: (context, date, eventss) {
                 DateTime _date = DateTime(date.year, date.month, date.day);
 
                 if (eventsLinkedHashMap[_date] != null) {
                   if (isSameDay(
-                      _date, eventsLinkedHashMap[_date]!.scheduleDate ?? DateTime(2023))) {
+                      _date,
+                      eventsLinkedHashMap[_date]!.scheduleDate ??
+                          DateTime(2023))) {
                     return Stack(children: [
                       Positioned(
                           right: -1,
                           bottom: -1,
-                          child: _buildEventsMarker(eventsLinkedHashMap[_date]!.count)),
+                          child: _buildEventsMarker(
+                              eventsLinkedHashMap[_date]!.count)),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         child: Column(
@@ -155,14 +147,18 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                               eventsLinkedHashMap[_date]!.morningNm ?? '',
                               style: TextStyle(
                                   fontSize: 10.0,
-                                  color: eventsLinkedHashMap[_date]!.morningNm == user.stfNm
-                                      ? Colors.orange
-                                      : Colors.black),
+                                  color:
+                                      eventsLinkedHashMap[_date]!.morningNm ==
+                                              user.stfNm
+                                          ? Colors.orange
+                                          : Colors.black),
                             ),
                             Text(eventsLinkedHashMap[_date]!.afternoonNm ?? '',
                                 style: TextStyle(
                                     fontSize: 10.0,
-                                    color: eventsLinkedHashMap[_date]!.afternoonNm == user.stfNm
+                                    color: eventsLinkedHashMap[_date]!
+                                                .afternoonNm ==
+                                            user.stfNm
                                         ? Colors.orange
                                         : Colors.black)),
                             // Text(
@@ -174,19 +170,19 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
                         ),
                       ),
                     ]
-                      // Stack(children: [
-                      //   Container(
-                      //     width: 10,
-                      //     padding: const EdgeInsets.only(bottom: 4),
-                      //     decoration: const BoxDecoration(
-                      //       color: PRIMARY_COLOR,
-                      //       shape: BoxShape.circle,
-                      //     ),
-                      //   ),
-                      //   // Text(events[_date]!.count.toString()),
-                      // ]),
+                        // Stack(children: [
+                        //   Container(
+                        //     width: 10,
+                        //     padding: const EdgeInsets.only(bottom: 4),
+                        //     decoration: const BoxDecoration(
+                        //       color: PRIMARY_COLOR,
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //   ),
+                        //   // Text(events[_date]!.count.toString()),
+                        // ]),
 
-                    );
+                        );
                   }
                 }
               },
@@ -209,23 +205,22 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
     return count == 0
         ? Text('')
         : AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration:
-      BoxDecoration(shape: BoxShape.rectangle, color: PRIMARY_COLOR),
-      width: 13.0,
-      height: 13.0,
-      child: Center(
-        child: Text(
-          '${count}',
-          style: TextStyle().copyWith(
-            color: Colors.white,
-            fontSize: 9.0,
-          ),
-        ),
-      ),
-    );
+            duration: const Duration(milliseconds: 300),
+            decoration:
+                BoxDecoration(shape: BoxShape.rectangle, color: PRIMARY_COLOR),
+            width: 13.0,
+            height: 13.0,
+            child: Center(
+              child: Text(
+                '${count}',
+                style: TextStyle().copyWith(
+                  color: Colors.white,
+                  fontSize: 9.0,
+                ),
+              ),
+            ),
+          );
   }
-
 }
 
 class _ScheduleList extends ConsumerWidget {
@@ -279,7 +274,7 @@ class _ScheduleList extends ConsumerWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: GestureDetector(
-              onTap: () async{
+              onTap: () async {
                 if (state.data[index].scheduleType == 'duty') {
                   await ref
                       .read(hitMyDutyFamilyProvider(stfNum!).notifier)
@@ -290,11 +285,13 @@ class _ScheduleList extends ConsumerWidget {
                       isScrollControlled: true,
                       builder: (_) {
                         return ScheduleBottomSheet(
-                            dutyTypeCode: state.data[index].dutyTypeCode!,
-                            dutyDate: state.data[index].startDate,
-                            dutyName: state.data[index].scheduleName!,
-                            stfNm: state.data[index].stfNm!,
-                            stfNum: stfNum!);
+                          dutyTypeCode: state.data[index].dutyTypeCode!,
+                          dutyDate: state.data[index].startDate,
+                          dutyName: state.data[index].scheduleName!,
+                          stfNm: state.data[index].stfNm!,
+                          stfNum: stfNum!,
+                          wkSeq: state.data[index].wkSeq!,
+                        );
                       });
                 }
               },
@@ -317,10 +314,7 @@ class _ScheduleList extends ConsumerWidget {
         },
         itemCount: cp.data.length + 1);
   }
-
-
 }
-
 
 class _CalendarBuilders extends StatelessWidget {
   final DateTime day;
@@ -330,10 +324,10 @@ class _CalendarBuilders extends StatelessWidget {
 
   const _CalendarBuilders(
       {Key? key,
-        required this.day,
-        required this.focusedDay,
-        required this.decoration,
-        this.textColor})
+      required this.day,
+      required this.focusedDay,
+      required this.decoration,
+      this.textColor})
       : super(key: key);
 
   @override

@@ -155,15 +155,15 @@ class _HitScheduleRepository implements HitScheduleRepository {
   }
 
   @override
-  Future<List<HitScheduleListModel>> updateDuty({required body}) async {
+  Future<ResponseModel> updateDuty({required body}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'accessKey': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<HitScheduleListModel>>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ResponseModel>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
@@ -175,10 +175,7 @@ class _HitScheduleRepository implements HitScheduleRepository {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            HitScheduleListModel.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ResponseModel.fromJson(_result.data!);
     return value;
   }
 

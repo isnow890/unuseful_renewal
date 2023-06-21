@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
 import 'package:unuseful/common/const/data.dart';
 import 'package:unuseful/common/dio/dio.dart';
+import 'package:unuseful/common/model/response_model.dart';
 import 'package:unuseful/hit_schedule/model/hit_duty_schedule_update_model.dart';
 import 'package:unuseful/hit_schedule/model/hit_duty_statistics_model.dart';
 import 'package:unuseful/hit_schedule/model/hit_my_duty_model.dart';
@@ -49,7 +50,7 @@ abstract class HitScheduleRepository {
 
   @PUT('/hitSchedule/updateDuty')
   @Headers({'accessKey': 'true'})
-  Future<List<HitScheduleListModel>> updateDuty({
+  Future<ResponseModel> updateDuty({
     @Body() required HitDutyScheduleUpdateModel body,
   });
 }
