@@ -21,6 +21,7 @@ Map<String, dynamic> _$HitScheduleModelToJson(HitScheduleModel instance) =>
 HitScheduleListModel _$HitScheduleListModelFromJson(
         Map<String, dynamic> json) =>
     HitScheduleListModel(
+      stfNmOriginal: json['stfNmOriginal'] as String?,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
       stfNm: json['stfNm'] as String?,
@@ -48,4 +49,5 @@ Map<String, dynamic> _$HitScheduleListModelToJson(
       'dutyTypeCode': instance.dutyTypeCode,
       'hdyYn': instance.hdyYn,
       'wkSeq': instance.wkSeq,
+      'stfNmOriginal': instance.stfNmOriginal,
     };

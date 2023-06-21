@@ -5,35 +5,24 @@ import 'package:unuseful/hit_schedule/repository/hit_schedule_repository.dart';
 
 import 'hit_schedule_selected_day_provider.dart';
 
-final hitScheduleFamilyProvider = Provider.family<HitScheduleModel?, DateTime>(
-  (ref, selectedDay) {
-    final state = ref.watch(hitScheduleNotifierProvider);
-
-    if (state is! HitScheduleModel) return null;
-    var returnedList = state.data
-        .where((element) =>
-            element.startDate.compareTo(selectedDay) >= 0 &&
-            element.endDate.compareTo(selectedDay) <= 0)
-        .toList();
-  },
-);
 
 final hitScheduleNotifierProvider =
     StateNotifierProvider<HitScheduleNotifier, HitScheduleModelBase?>(
   (ref) {
-    final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
+    // final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final repository = ref.watch(hitScheduleRepositoryProvider);
     final notifier =
-        HitScheduleNotifier(repository: repository, selectedDay: selectedDay);
+        HitScheduleNotifier(repository: repository, ref:ref);
     return notifier;
   },
 );
 
 class HitScheduleNotifier extends StateNotifier<HitScheduleModelBase?> {
   final HitScheduleRepository repository;
-  final DateTime selectedDay;
+  final Ref ref;
+  // final DateTime selectedDay;
 
-  HitScheduleNotifier({required this.selectedDay, required this.repository})
+  HitScheduleNotifier({required this.ref, required this.repository})
       : super(HitScheduleModelLoading()) {
     getHitSchedule(false);
   }
@@ -41,6 +30,7 @@ class HitScheduleNotifier extends StateNotifier<HitScheduleModelBase?> {
   Future<HitScheduleModelBase> getHitSchedule(bool isAll) async {
     try {
 
+      final selectedDay = ref.read(hitScheduleSelectedDayProvider);
       state = HitScheduleModelLoading();
       List<HitScheduleListModel> resp = await repository.getHitSchedule(DateFormat('yyyyMM').format(selectedDay));
 

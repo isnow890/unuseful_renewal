@@ -5,6 +5,9 @@ part 'response_model.g.dart';
 
 abstract class ResponseModelBase {}
 
+
+class ResponseModelInit extends ResponseModelBase {}
+
 class ResponseModelLoading extends ResponseModelBase {}
 
 class ResponseModelError extends ResponseModelBase {

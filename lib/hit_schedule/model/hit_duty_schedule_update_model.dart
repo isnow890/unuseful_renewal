@@ -15,8 +15,10 @@ class HitDutyScheduleUpdateModel {
   final String? wkSeqOriginal;
   final String? wkSeqUpdate;
   final String? workType;
+  final String? stfNo;
 
-  HitDutyScheduleUpdateModel({
+  HitDutyScheduleUpdateModel( {
+    required this.stfNo,
     required this.dutyTypeCodeOriginal,
     required this.workMonthOriginal,
     required this.workDateOriginal,

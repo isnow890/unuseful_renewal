@@ -34,6 +34,9 @@ class FullPhoto extends ConsumerStatefulWidget {
 class _FullPhotoState extends ConsumerState<FullPhoto> {
   late PageController _pageController;
 
+  int currentIndex = 0;
+  bool titleVisibility = true;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -45,21 +48,21 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
     // TODO: implement initState
     super.initState();
     _pageController = PageController(initialPage: widget.currentIndex);
-    print('currentIndex');
-    print(widget.currentIndex);
+    currentIndex = widget.currentIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
+      titleVisibility: titleVisibility,
       isDrawerVisible: false,
       // title: Text('FullPhoto ${state + 1}/${widget.images.length}'),
       title: Text(widget.title),
       child: GestureDetector(
         onTap: () {
-          // final checkTitleVisibility = ref.read(titleVisiblityProvider);
-          //
-          // ref.read(titleVisiblityProvider.notifier).update((state) => checkTitleVisibility ? false:true);
+          setState(() {
+            titleVisibility = !titleVisibility;
+          });
         },
         child: Stack(children: [
           Container(
@@ -67,9 +70,13 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
             pageController: _pageController,
             itemCount: widget.images.length,
             onPageChanged: (int index) {
-              ref
-                  .read(fullPhotoIndexProvider.notifier)
-                  .update((state) => index);
+              setState(() {
+                currentIndex = index;
+              });
+
+              // ref
+              //     .read(fullPhotoIndexProvider.notifier)
+              //     .update((state) => index);
             },
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
@@ -77,8 +84,8 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
                   base64: widget.images[index].base64Encoded,
                   widget.images[index].url,
                 ),
-                minScale: PhotoViewComputedScale.contained * 1,
-                maxScale: PhotoViewComputedScale.covered * 1.8,
+                minScale: PhotoViewComputedScale.contained * 0.9,
+                maxScale: PhotoViewComputedScale.covered * 1.5,
               );
               // return PhotoViewGalleryPageOptions.customChild(
               //   childSize: Size(
@@ -107,7 +114,10 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _BottomPage(totalCount: widget.totalCount),
+              _BottomPage(
+                totalCount: widget.totalCount,
+                currentIndex: currentIndex,
+              ),
             ],
           ),
         ]),
@@ -117,20 +127,23 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
 }
 
 class _BottomPage extends ConsumerWidget {
-  const _BottomPage({required this.totalCount, Key? key}) : super(key: key);
+  const _BottomPage(
+      {required this.currentIndex, required this.totalCount, Key? key})
+      : super(key: key);
   final int totalCount;
+  final int currentIndex;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final index = ref.watch(fullPhotoIndexProvider);
-    final title = ref.watch(fullPhotoTitleProvider);
+    // final index = ref.watch(fullPhotoIndexProvider);
+    // final title = ref.watch(fullPhotoTitleProvider);
 
     return Column(mainAxisAlignment: MainAxisAlignment.end, children: [
       Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: Center(
             child: Text(
-              '${index + 1}/$totalCount',
+              '${currentIndex + 1}/$totalCount',
               style: TextStyle(
                 color: Colors.white,
               ),

@@ -34,6 +34,7 @@ class CustomInterceptor extends Interceptor {
       RequestOptions options, RequestInterceptorHandler handler) async {
     print('[REQ] [${options.method}] ${options.uri}');
 
+    print('[REQ] ${options.data}');
     //acessToken
     print(options.headers['accessKey']);
     if (options.headers['accessKey'] == 'true') {

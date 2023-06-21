@@ -20,6 +20,7 @@ import '../../common/const/colors.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../provider/hit_duty_calendar_change_month_provider.dart';
+import '../provider/hit_duty_schedule_update_provider.dart';
 
 class HitScheduleScreen extends ConsumerStatefulWidget {
   const HitScheduleScreen({Key? key}) : super(key: key);
@@ -68,21 +69,31 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
               outsideDaysVisible: false,
               isTodayHighlighted: true,
             ),
-            onPageChanged: (DateTime month) {
-              ref
+            onPageChanged: (DateTime month) async{
+               ref
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => month);
-              ref
+               ref
                   .read(hitDutyCalendarChangeMonthProvider.notifier)
                   .update((state) => DateFormat('yyyyMM').format(month));
+
+                ref.read(hitSheduleForEventNotifierProvider.notifier).getHitScheduleForEvent();
+
+
+               ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
+
             },
             events: eventsLinkedHashMap,
             selectedDay: selectedDay,
             focusedDay: selectedDay,
-            onDaySelected: (selectedDay, focusedDay) {
-              ref
+            onDaySelected: (selectedDay, focusedDay) async{
+               ref
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => selectedDay);
+
+
+              await ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
+
             },
             calendarBuilders: CalendarBuilders(
               todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
@@ -231,6 +242,7 @@ class _ScheduleList extends ConsumerWidget {
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final state = ref.watch(hitScheduleNotifierProvider);
     final user = ref.watch(userMeProvider.notifier).state;
+    // final event = ref.watch(hitSheduleForEventNotifierProvider);
     var stfNum = (user as UserModel).hitDutyYn;
     if (state is HitScheduleModelError) {
       return Column(
@@ -279,6 +291,8 @@ class _ScheduleList extends ConsumerWidget {
                   await ref
                       .read(hitMyDutyFamilyProvider(stfNum!).notifier)
                       .getDutyOfMine();
+
+                  ref.refresh(hitDutyScheduleUpdateNotifierProvider);
 
                   showModalBottomSheet(
                       context: context,

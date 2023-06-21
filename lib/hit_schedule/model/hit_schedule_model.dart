@@ -35,8 +35,10 @@ class HitScheduleListModel {
   final String? dutyTypeCode;
   final String? hdyYn;
   final String? wkSeq;
+  final String? stfNmOriginal;
 
   HitScheduleListModel({
+    required this.stfNmOriginal,
     required this.startDate,
     required this.endDate,
     required this.stfNm,

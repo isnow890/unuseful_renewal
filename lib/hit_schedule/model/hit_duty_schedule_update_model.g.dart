@@ -9,6 +9,7 @@ part of 'hit_duty_schedule_update_model.dart';
 HitDutyScheduleUpdateModel _$HitDutyScheduleUpdateModelFromJson(
         Map<String, dynamic> json) =>
     HitDutyScheduleUpdateModel(
+      stfNo: json['stfNo'] as String?,
       dutyTypeCodeOriginal: json['dutyTypeCodeOriginal'] as String?,
       workMonthOriginal: json['workMonthOriginal'] as String?,
       workDateOriginal: json['workDateOriginal'] as String?,
@@ -36,4 +37,5 @@ Map<String, dynamic> _$HitDutyScheduleUpdateModelToJson(
       'wkSeqOriginal': instance.wkSeqOriginal,
       'wkSeqUpdate': instance.wkSeqUpdate,
       'workType': instance.workType,
+      'stfNo': instance.stfNo,
     };

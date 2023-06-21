@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/const/colors.dart';
-import 'package:unuseful/common/provider/title_visiblity_provider.dart';
 
 import '../component/main_drawer.dart';
 import '../provider/drawer_selector_provider.dart';
@@ -16,6 +15,7 @@ class DefaultLayout extends ConsumerWidget {
   final bool? centerTitle;
   final bool? isDrawerVisible;
   final List<Widget>? actions;
+  final bool? titleVisibility;
 
   const DefaultLayout({
     Key? key,
@@ -27,12 +27,12 @@ class DefaultLayout extends ConsumerWidget {
     this.centerTitle,
     this.actions,
     this.isDrawerVisible,
+    this.titleVisibility,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final select = ref.watch(drawerSelectProvider);
-    final titleVisibility = ref.watch(titleVisiblityProvider);
     return SafeArea(
       child: Scaffold(
         drawer: isDrawerVisible ?? true
@@ -45,7 +45,7 @@ class DefaultLayout extends ConsumerWidget {
               )
             : null,
         backgroundColor: backgroundColor ?? Colors.white,
-        appBar: _renderAppbar(titleVisibility),
+        appBar: _renderAppbar(titleVisibility??true),
         body: child,
         bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton,

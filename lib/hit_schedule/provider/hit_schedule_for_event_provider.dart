@@ -9,8 +9,8 @@ final hitSheduleForEventNotifierProvider = StateNotifierProvider<
   (ref) {
     final repository = ref.watch(hitScheduleRepositoryProvider);
 
-    final changeMonth = ref.watch(hitDutyCalendarChangeMonthProvider);
-    final notifier = HitSheduleForEventNotifier(repository: repository, changeMonth: changeMonth);
+    // final changeMonth = ref.watch(hitDutyCalendarChangeMonthProvider);
+    final notifier = HitSheduleForEventNotifier(repository: repository, ref: ref);
     return notifier;
   },
 );
@@ -18,10 +18,10 @@ final hitSheduleForEventNotifierProvider = StateNotifierProvider<
 class HitSheduleForEventNotifier
     extends StateNotifier<HitScheduleForEventModelBase?> {
   final HitScheduleRepository repository;
-  final String changeMonth;
+  final Ref ref;
 
   HitSheduleForEventNotifier(
-      {required this.changeMonth, required this.repository})
+      {required this.ref, required this.repository})
       : super(HitScheduleForEventModelLoading()) {
     getHitScheduleForEvent();
   }
@@ -29,6 +29,7 @@ class HitSheduleForEventNotifier
   Future<HitScheduleForEventModelBase> getHitScheduleForEvent() async {
     try {
 
+    final changeMonth = ref.read(hitDutyCalendarChangeMonthProvider);
       List<HitScheduleForEventListModel> resp =
           await repository.getHitScheduleForEvent(changeMonth);
       state = HitScheduleForEventModel(data: resp);

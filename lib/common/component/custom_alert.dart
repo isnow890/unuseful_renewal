@@ -5,7 +5,7 @@ import '../const/colors.dart';
 void CustomAlert({
   required BuildContext context,
   required String contents,
-  String? yesTitle,
+  required yesTitle,
   required VoidCallback yesAction,
   String? noTitle,
   VoidCallback? noAction,
