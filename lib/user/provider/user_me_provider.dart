@@ -36,13 +36,8 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
     try {
       final resp = await repository.getMe();
       print('getMe 실행됨');
-
       if (resp.message == null) {
         state = resp;
-          // await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);
-          // await storage.write(key: CONST_STF_NO, value: resp.stfNo);
-          // await storage.write(key: CONST_HSP_TP_CD, value: '01');
-
         } else {
         showToast(msg: resp.message!, toastLength: Toast.LENGTH_LONG);
       }
@@ -51,7 +46,6 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       print(e.toString());
       state = UserModelError(message: '로그인에 실패했습니다.');
       // showToast(msg: '로그인에 실패했습니다.');
-
       return Future.value(state);
     }
   }
@@ -63,21 +57,9 @@ class UserMeStateNotifier extends StateNotifier<UserModelBase?> {
       required String password}) async {
     try {
       state = UserModelLoading();
-      //
-      // print('login 시작');
-      // print('hspTpCd is $hspTpCd');
-      // print('stfNo is $stfNo');
-      // print('password is $password');
-
-      print('시작');
-
-
-
       //실제
       final resp = await authRepository.login(
           hspTpCd: hspTpCd, stfNo: stfNo, password: password);
-
-
 
       if (resp.message == null) {
         await storage.write(key: CONST_ACCESS_KEY, value: resp.accessKey);

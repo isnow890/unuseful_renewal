@@ -24,7 +24,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LogInScreenState extends ConsumerState<LoginScreen> {
   String? hspTpCd;
   String? stfNo;
-  String? password = '1111';
+  String? password ;
 
 
 
@@ -136,7 +136,6 @@ class _LogInScreenState extends ConsumerState<LoginScreen> {
                   height: 16,
                 ),
                 CustomTextFormField(
-                  initValue: '1111',
                   hintText: '비밀번호를 입력해주세요.',
                   obscureText: true,
                   onChanged: (value) {

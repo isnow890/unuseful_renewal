@@ -8,9 +8,12 @@ import 'package:unuseful/meal/provider/hsp_tp_cd_provider.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../user/provider/auth_provider.dart';
+import '../../user/provider/user_me_provider.dart';
 import '../component/text_title.dart';
 import '../layout/default_layout.dart';
+import '../model/fcm_registration_params.dart';
 import '../provider/drawer_selector_provider.dart';
+import '../utils/firebase_module.dart';
 
 class RootTab extends ConsumerWidget {
   static String get routeName => 'home';
@@ -19,6 +22,14 @@ class RootTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final loginValue = ref.read(loginVariableStateProvider);
+
+
+
+    firebaseMessagingGetMyDeviceTokenAndSave(ref: ref);
+
+
     // final login = ref.watch(loginVariableStateProvider);
     //
     // ref.watch(hspTpCdProvider.notifier).update((state) => login.hspTpCd!);
