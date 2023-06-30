@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../common/utils/data_utils.dart';
 
 part 'user_model.g.dart';
@@ -42,6 +43,7 @@ class UserModel extends UserModelBase {
   @JsonKey(fromJson: DataUtils.findAdvanceTypeEnum)
   final AdvancedType? advancedType;
   final String? accessKey;
+  final String? sid;
 
   UserModel({
     required this.stfNo,
@@ -53,6 +55,7 @@ class UserModel extends UserModelBase {
     required this.hitDutyYn,
     required this.advancedType,
     required this.accessKey,
+    required this.sid,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>

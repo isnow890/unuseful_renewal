@@ -17,6 +17,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       advancedType:
           DataUtils.findAdvanceTypeEnum(json['advancedType'] as String?),
       accessKey: json['accessKey'] as String?,
+      sid: json['sid'] as String?,
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
@@ -29,6 +30,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'hitDutyYn': instance.hitDutyYn,
       'advancedType': _$AdvancedTypeEnumMap[instance.advancedType],
       'accessKey': instance.accessKey,
+      'sid': instance.sid,
     };
 
 const _$AdvancedTypeEnumMap = {

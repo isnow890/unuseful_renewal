@@ -8,15 +8,13 @@ import 'package:unuseful/user/provider/login_variable_provider.dart';
 
 import '../../telephone/provider/telephone_search_value_provider.dart';
 import '../../user/provider/user_me_provider.dart';
+import '../provider/drawer_selector_provider.dart';
 
 typedef OnSelectedTap = void Function(String menu);
 
 class MainDrawer extends ConsumerWidget {
-  MainDrawer(
-      {Key? key, required this.onSelectedTap, required this.selectedMenu})
-      : super(key: key);
+  MainDrawer({Key? key, required this.onSelectedTap}) : super(key: key);
   final OnSelectedTap onSelectedTap;
-  final String selectedMenu;
 
   final ts = TextStyle(
     color: Colors.white,
@@ -25,10 +23,9 @@ class MainDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final select = ref.watch(drawerSelectProvider);
     final user = ref.watch(userMeProvider.notifier).state;
-     final hspTpCd = ref.watch(loginVariableStateProvider).hspTpCd;
-
-
+    final hspTpCd = ref.watch(loginVariableStateProvider).hspTpCd;
     final convertedUser = user as UserModel;
 
     List<String> tmpList = [
@@ -59,7 +56,7 @@ class MainDrawer extends ConsumerWidget {
                           width: 10,
                         ),
                         Text(
-                          hspTpCd == "01"? 'se':'md',
+                          hspTpCd == "01" ? 'se' : 'md',
                           style: ts,
                         ),
                       ],
@@ -96,15 +93,17 @@ class MainDrawer extends ConsumerWidget {
                 ),
               ),
             ),
-            ...tmpList.map((e) => renderListTile(e, context,ref)).toList(),
-
-    ],
+            ...tmpList
+                .map((e) => renderListTile(select, e, context, ref))
+                .toList(),
+          ],
         ),
       ),
     );
   }
 
-  Widget renderListTile(String value, BuildContext context, WidgetRef ref) {
+  Widget renderListTile(
+      String selectedMenu, String value, BuildContext context, WidgetRef ref) {
     return ListTile(
       //누르는 공간 전체
       tileColor: Colors.transparent,
@@ -120,7 +119,7 @@ class MainDrawer extends ConsumerWidget {
         onSelectedTap(value);
         // context.goNamed(value);
 
-        if(value =='home')
+        if (value == 'home')
           context.goNamed(value);
         else
           context.pushNamed(value);

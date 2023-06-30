@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
 import 'package:unuseful/common/const/data.dart';
 import 'package:unuseful/common/dio/dio.dart';
-import 'package:unuseful/common/model/fcm_registration_params.dart';
+import 'package:unuseful/common/model/fcm_registration_model.dart';
 
 import '../model/response_model.dart';
 
@@ -23,14 +23,6 @@ abstract class FirestorageRepository {
   @POST('/firestore/save')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveFcmToken({
-    @Queries() FcmRegistrationParams? fcmRegistrationParams =
-        const FcmRegistrationParams(
-      lastUsedDate: null,
-      fcmToken: '',
-      isHitDutyAlarm: null,
-      isMealAlarm: null,
-      sid: '',
-      id: '',
-    ),
+    @Body() required FcmRegistrationModel body,
   });
 }

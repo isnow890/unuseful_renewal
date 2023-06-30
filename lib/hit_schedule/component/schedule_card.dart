@@ -43,55 +43,41 @@ class ScheduleCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(7.0),
         child: IntrinsicHeight(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: 5,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _Date(
-                    startDate: startDate,
-                    endDate: endDate,
-                    endTime: endTime,
-                    startTime: startTime,
-                    color: tmpColor,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  _Content(
-                    content: content,
-                    scheduleType: scheduleType,
-                    stfNm: stfNm,
-                  ),
-                ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _Date(
+                      startDate: startDate,
+                      endDate: endDate,
+                      endTime: endTime,
+                      startTime: startTime,
+                      color: tmpColor,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    _Content(
+                      content: content,
+                      scheduleType: scheduleType,
+                      stfNm: stfNm,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: _RightInfo(
-                scheduleType: scheduleType,
-                color: tmpColor,
-              ),
-            )
-          ],
-        )
-
-            // Row(
-            //   crossAxisAlignment: CrossAxisAlignment.stretch,
-            //   children: [
-            //     _Date(startDate: startDate, endDate: endDate),
-            //     SizedBox(
-            //       width: 16.0,
-            //     ),
-            //     _Content(
-            //       content: content,
-            //     ),
-            //     // Category(color: color),
-            //   ],
-            // ),
-            ),
+              Expanded(
+                child: _RightInfo(
+                  scheduleType: scheduleType,
+                  color: tmpColor,
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

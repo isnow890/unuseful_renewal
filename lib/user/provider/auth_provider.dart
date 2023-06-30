@@ -12,6 +12,8 @@ import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/view/specimen_result_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
+import '../../common/utils/firebase_module.dart';
+import '../../common/utils/push_redirection_logic.dart';
 import '../../meal/model/meal_model.dart';
 import '../../specimen/view/specimen_main_screen.dart';
 import '../../specimen/view/specimen_result_detail_screen.dart';
@@ -64,11 +66,18 @@ class AuthProvider extends ChangeNotifier {
     print(user);
 
     if (user is UserModel) {
-      return logginIn || state.location == '/splash'
-          ?
-          //null은 원래의 위치를 의미함.
-          '/'
-          : null;
+      if (logginIn || state.location == '/splash')
+        {
+          //fcm messaging 토큰 발급 및 저장
+          firebaseMessagingGetMyDeviceTokenAndSave(ref: ref);
+
+          routerLogicForegroundHitDutyAlarmRef1(ref);
+
+
+    //null은 원래의 위치를 의미함.
+          return '/';
+        }
+      return null;
     }
 
     //UserModelError
@@ -126,7 +135,9 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/hitSchedule',
           name: HitScheduleMainScreen.routeName,
-          builder: (context, state) => HitScheduleMainScreen(),
+          builder: (context, state) {
+            return HitScheduleMainScreen(baseIndex: int.parse(state.queryParameters['baseIndex']??'0'));
+          },
         ),
         GoRoute(
           path: '/fullPhoto',

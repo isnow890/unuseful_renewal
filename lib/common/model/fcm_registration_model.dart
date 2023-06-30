@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'fcm_registration_params.g.dart';
+part 'fcm_registration_model.g.dart';
 
 @JsonSerializable()
-class FcmRegistrationParams {
+class FcmRegistrationModel {
   final DateTime? lastUsedDate;
   final String? fcmToken;
   final bool? isHitDutyAlarm;
@@ -11,7 +11,7 @@ class FcmRegistrationParams {
   final String? sid;
   final String? id;
 
-  const FcmRegistrationParams({
+  const FcmRegistrationModel({
     required this.lastUsedDate,
     required this.fcmToken,
     required this.isHitDutyAlarm,
@@ -20,10 +20,10 @@ class FcmRegistrationParams {
     required this.id,
   });
 
-  factory FcmRegistrationParams.fromJson(Map<String,dynamic> json)
-  =>_$FcmRegistrationParamsFromJson(json);
+  factory FcmRegistrationModel.fromJson(Map<String,dynamic> json)
+  =>_$FcmRegistrationModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FcmRegistrationParamsToJson(this);
+  Map<String, dynamic> toJson() => _$FcmRegistrationModelToJson(this);
 
 
 }

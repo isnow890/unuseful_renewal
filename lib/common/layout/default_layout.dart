@@ -41,7 +41,6 @@ class DefaultLayout extends ConsumerWidget {
                   ref.read(drawerSelectProvider.notifier).update((state) => menu);
                   Navigator.of(context).pop();
                 },
-                selectedMenu: select,
               )
             : null,
         backgroundColor: backgroundColor ?? Colors.white,
@@ -63,7 +62,7 @@ class DefaultLayout extends ConsumerWidget {
         child: AppBar(
 
           centerTitle: centerTitle ?? true,
-          backgroundColor: titleVisibility ? PRIMARY_COLOR : Colors.black,
+          backgroundColor: titleVisibility ? Colors.white : Colors.black,
           //앱바가 튀어나오도록 보이게끔
           elevation: 0,
           title: title,

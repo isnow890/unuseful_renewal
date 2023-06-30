@@ -40,10 +40,13 @@ class _App extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     //나머지 fcm 초기화 여기서
-    initializeflutterLocalNotificationsPlugin(context, ref);
+    initializeflutterLocalNotificationsPlugin(ref);
+
+
 
     return MaterialApp.router(
       routerConfig: router,
+
       theme: ThemeData(
         fontFamily: 'NotoSans',
       ),

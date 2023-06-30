@@ -5,13 +5,14 @@ import 'package:unuseful/hit_schedule/view/hit_duty_log_screen.dart';
 import 'package:unuseful/hit_schedule/view/hit_duty_statistics_screen.dart';
 import 'package:unuseful/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/hit_schedule/view/hit_schedule_setting_screen.dart';
-import 'package:unuseful/user/view/login_screen.dart';
 
 import '../../common/const/colors.dart';
 
 class HitScheduleMainScreen extends ConsumerStatefulWidget {
-  const HitScheduleMainScreen({Key? key}) : super(key: key);
+  const HitScheduleMainScreen({required this.baseIndex, Key? key})
+      : super(key: key);
 
+  final int? baseIndex;
   static String get routeName => 'hitSchedule';
 
   @override
@@ -23,7 +24,7 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
     with SingleTickerProviderStateMixin {
   //나중에 입력이 됨. 그러므로 late 사용
   late TabController controller;
-  int index = 0;
+  int index =  0;
 
   @override
   void initState() {
@@ -36,6 +37,9 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
     //설정
     // TODO: implement initState
     super.initState();
+    index = widget.baseIndex ?? 0;
+
+
   }
 
   void tabListener() {
@@ -62,8 +66,7 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
               icon: Icon(Icons.calendar_month), label: 'schedule'),
           BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph_outlined), label: 'statistics'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.find_in_page), label: 'log'),
+          BottomNavigationBarItem(icon: Icon(Icons.find_in_page), label: 'log'),
           BottomNavigationBarItem(
               icon: Icon(Icons.settings), label: 'settings'),
         ],
@@ -78,7 +81,6 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
           HitScheduleSettingScreen(),
         ],
       ),
-
     );
   }
 }
