@@ -8,4 +8,6 @@ part 'root_tab_hit_schedule_repository.g.dart';
 abstract class RootTabHitScheduleRepository {
   factory RootTabHitScheduleRepository(Dio dio, {String baseUrl}) =
       _RootTabHitScheduleRepository;
+
+
 }
