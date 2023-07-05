@@ -17,25 +17,30 @@ class HitScheduleAtHomeModelError extends HitScheduleAtHomeModelBase {
 
 @JsonSerializable()
 class HitScheduleAtHomeModel extends HitScheduleAtHomeModelBase {
-  final List<HitScheduleAtHomeMineModel> scheduleOfMineList;
-  final List<HitScheduleAtHomeThreeDaysModel> threeDaysList;
+  final List<HitScheduleAtHomeMineModel>? scheduleOfMineList;
+  final List<HitScheduleAtHomeThreeDaysModel>? threeDaysList;
 
-  final List<HitScheduleModel> scheduleList;
+  final List<HitScheduleListModel>? scheduleList;
 
   HitScheduleAtHomeModel({
-    required this.scheduleOfMineList,
-    required this.threeDaysList,
-    required this.scheduleList,
+    this.scheduleOfMineList,
+    this.threeDaysList,
+    this.scheduleList,
   });
+  
+  
+  factory HitScheduleAtHomeModel.fromJson(Map<String,dynamic> json)
+  =>_$HitScheduleAtHomeModelFromJson(json);
+  
 }
 
 @JsonSerializable()
 class HitScheduleAtHomeThreeDaysModel {
-  final String morningNm;
-  final String afternoonNm;
-  final String nightNm;
-  final String workDate;
-  final String hdyYn;
+  final String? morningNm;
+  final String? afternoonNm;
+  final String? nightNm;
+  final String? workDate;
+  final String? hdyYn;
 
   HitScheduleAtHomeThreeDaysModel(
       {required this.morningNm,
@@ -43,15 +48,18 @@ class HitScheduleAtHomeThreeDaysModel {
       required this.nightNm,
       required this.workDate,
       required this.hdyYn});
+  
+  factory HitScheduleAtHomeThreeDaysModel.fromJson(Map<String,dynamic> json)
+  =>_$HitScheduleAtHomeThreeDaysModelFromJson(json);
 }
 
 @JsonSerializable()
 class HitScheduleAtHomeMineModel {
-  final String workDate;
-  final String dutyTypeCode;
-  final String hdyYn;
-  final String dutyName;
-  final bool prediction;
+  final String? workDate;
+  final String? dutyTypeCode;
+  final String? hdyYn;
+  final String? dutyName;
+  final bool? prediction;
 
   HitScheduleAtHomeMineModel({
     required this.workDate,
@@ -60,4 +68,7 @@ class HitScheduleAtHomeMineModel {
     required this.dutyName,
     required this.prediction,
   });
+  
+  factory HitScheduleAtHomeMineModel.fromJson(Map<String,dynamic> json)
+  =>_$HitScheduleAtHomeMineModelFromJson(json);
 }

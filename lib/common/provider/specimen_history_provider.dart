@@ -45,7 +45,14 @@ class SpecimenHistoryNotifier
   Future<ResponseModel> saveSpecimenHistory(
       {required SearchHistorySpecimenModel body}) async {
     try {
-      final resp = await repository.saveSpecimenHistory(body: body);
+
+      final user = ref.read(userMeProvider.notifier).state;
+      final convertedUser = user as UserModel;
+
+
+
+      final resp = await repository.saveSpecimenHistory(body: body,sid:convertedUser.sid
+      !);
       await getSpecimenHistory();
 
       return resp;

@@ -143,7 +143,7 @@ class AuthProvider extends ChangeNotifier {
           path: '/fullPhoto',
           name: FullPhoto.routeName,
           builder: (context, state) {
-            final values = state.extra as List<MealImageModel>;
+            final values = state.extra as List<String>;
             return FullPhoto(
                 images: values,
                 title: state.queryParameters['title']!,

@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart' hide Headers;
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
-import 'package:unuseful/common/const/data.dart';
-import 'package:unuseful/common/dio/dio.dart';
-import 'package:unuseful/common/model/fcm_registration_model.dart';
-import 'package:unuseful/common/model/search_history_specimen_model.dart';
-import 'package:unuseful/common/model/search_history_telephone_model.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../const/data.dart';
+import '../dio/dio.dart';
+import '../model/fcm_registration_model.dart';
 import '../model/response_model.dart';
+import '../model/search_history_specimen_model.dart';
+import '../model/search_history_telephone_model.dart';
 
 part 'firestore_repository.g.dart';
 
@@ -27,17 +28,18 @@ abstract class FirestoreRepository {
     @Body() required FcmRegistrationModel body,
   });
 
+
   @POST('/firestore/saveTelephoneHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveTelephoneHistory(
-      {@Query("sid") String sid,
+      {@Query("sid") required String sid,
         @Body() required SearchHistoryTelephoneModel body});
 
   @POST('/firestore/saveSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveSpecimenHistory(
       {
-        @Query("sid") String sid,
+        @Query("sid") required String sid,
         @Body() required SearchHistorySpecimenModel body});
 
   @GET('firestore/getTelephoneHistory')
@@ -53,12 +55,13 @@ abstract class FirestoreRepository {
   @DELETE('firestore/delTelephoneHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delTelephoneHistory(
-      {@Query("sid") String sid,
+      {@Query("sid") required String sid,
       @Body() required SearchHistoryTelephoneModel body});
 
   @DELETE('firestore/delSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delSpecimenHistory(
-      {@Query("sid") String sid,
+      {@Query("sid") required String sid,
       @Body() required SearchHistorySpecimenModel body});
 }
+

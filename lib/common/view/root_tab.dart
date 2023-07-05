@@ -3,34 +3,34 @@ import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/common/model/hit_schedule_at_home_model.dart';
+import 'package:unuseful/hit_schedule/model/hit_duty_statistics_model.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
+import 'package:unuseful/user/provider/user_me_provider.dart';
 
+import '../../user/model/user_model.dart';
 import '../../user/provider/auth_provider.dart';
+import '../component/custom_error_widget.dart';
 import '../component/text_title.dart';
 import '../layout/default_layout.dart';
-
-
-
+import '../provider/home_provider.dart';
 
 class RootTab extends ConsumerStatefulWidget {
   static String get routeName => 'home';
 
   RootTab({Key? key}) : super(key: key);
 
-
   @override
   ConsumerState<RootTab> createState() => _RootTabState();
-
 }
-class _RootTabState extends ConsumerState<RootTab>{
-  
 
-
+class _RootTabState extends ConsumerState<RootTab> {
   @override
   Widget build(BuildContext context) {
     // final loginValue = ref.read(loginVariableStateProvider);
-  
-  int _current = 0;
+
+    int _current = 0;
 
     // final login = ref.watch(loginVariableStateProvider);
     //
@@ -81,96 +81,14 @@ class _RootTabState extends ConsumerState<RootTab>{
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _renderSection(section: '일정'),
-                CarouselSlider(
-                  items: [
-                    _renderCard(
-                      context: context,
-                      contentWidget: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '오늘의 전산정보팀 일정',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Divider(
-                            height: 15,
-                          ),
-                          Row(
-                            children: [
-                              Text('(서울)외래진료위원회\n이효정-목동)구두처방 회의'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    _renderCard(
-                      context: context,
-                      contentWidget: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '양찬우님의 당직 일정',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Divider(
-                            height: 15,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                  '- 2023-06-13(화) 평일 오후\n- 2023-07-22(토) 휴일 오후\n- 2023-07-26(수) 평일 오후\n- 2023-09-11(월) 평일 오후 (예상)\n- 2023-09-17(일) 휴일 오전 (예상)'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    _renderCard(
-                      context: context,
-                      contentWidget: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '3일간의 당직 일정',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Divider(
-                            height: 15,
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                  '- 2023-06-29(목) 평일\n오후 : 이영균, 야간 : 이종태\n- 2023-06-30(금) 평일\n오후 : 윤배홍, 야간 : 김귀광\n- 2023-07-01(토) 휴일\n오전 : 김진환, 오후 : 홍승민, 야간 : 이종태\n- 2023-06-29(목) 평일\n오후 : 이영균, 야간 : 이종태\n- 2023-06-30(금) 평일\n오후 : 윤배홍, 야간 : 김귀광\n- 2023-07-01(토) 휴일\n오전 : 김진환, 오후 : 홍승민, 야간 : 이종태'),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  options: CarouselOptions(
-                    enableInfiniteScroll: false,
-                    onPageChanged: (index2, reason) {},
-                    // aspectRatio: 3.0,
-                    enlargeCenterPage: true,
-                    viewportFraction: 1,
-                    height: 180,
-                  ),
-                ),
+                _HitScheduleSection(),
                 SizedBox(
                   height: 8,
                 ),
                 _renderSection(section: '식단'),
-                _renderCard(
+                renderCard(
                   context: context,
-                  contentWidget: const Column(
+                  contentWidget: Column(
                     children: [
                       Row(
                         children: [
@@ -184,9 +102,9 @@ class _RootTabState extends ConsumerState<RootTab>{
                   height: 20,
                 ),
                 _renderSection(section: 'telephone'),
-                _renderCard(
+                renderCard(
                   context: context,
-                  contentWidget: const Column(
+                  contentWidget: Column(
                     children: [
                       Row(
                         children: [
@@ -200,9 +118,9 @@ class _RootTabState extends ConsumerState<RootTab>{
                   height: 20,
                 ),
                 _renderSection(section: 'specimen'),
-                _renderCard(
+                renderCard(
                   context: context,
-                  contentWidget: const Column(
+                  contentWidget: Column(
                     children: [
                       Row(
                         children: [
@@ -243,56 +161,168 @@ class _RootTabState extends ConsumerState<RootTab>{
       ),
     );
   }
+}
 
-  _renderCard({required BuildContext context, required Widget contentWidget}) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          //모서리를 둥글게 하기 위해 사용
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        color: Colors.grey[200],
-        elevation: 6.0, //그림자 깊이`
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          child: SingleChildScrollView(child: contentWidget),
-        ),
-      ),
-    );
-  }
+class _HitScheduleSection extends ConsumerStatefulWidget {
+  const _HitScheduleSection({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      __HitScheduleStateSection();
+}
 
-  Widget _sliderIndicator() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: imageList.asMap().entries.map((entry) {
-          return GestureDetector(
-            onTap: () => _controller.animateToPage(entry.key),
-            child: Container(
-              width: 12,
-              height: 12,
-              margin:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color:
-                    Colors.white.withOpacity(_current == entry.key ? 0.9 : 0.4),
-              ),
+class __HitScheduleStateSection extends ConsumerState<_HitScheduleSection> {
+  @override
+  Widget build(BuildContext context) {
+    final schedule = ref.watch(homeNotifierProvider);
+
+    final user = ref.read(userMeProvider.notifier).state;
+    final convertedUser = user as UserModel;
+
+    if (schedule is HitScheduleAtHomeModelError) {
+      return CustomErrorWidget(
+          message: schedule.message,
+          onPressed: () async =>
+              ref.read(homeNotifierProvider.notifier).getHitScheduleAtHome());
+    }
+
+    var cp = HitScheduleAtHomeModel();
+
+    if (schedule is HitScheduleAtHomeModel) {
+      cp = schedule;
+    }
+
+    return CarouselSlider(
+      items: [
+        renderCard(
+          context: context,
+          contentWidget:
+
+          schedule is HitScheduleAtHomeModelLoading ? Center(child: CustomCircularProgressIndicator()) :
+              SingleChildScrollView(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const Text(
+                '오늘의 전산정보팀 일정',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
             ),
-          );
-        }).toList(),
+            Divider(
+                height: 15,
+            ),
+
+                   (cp.scheduleList!.length== 0 ? Text('일정이 없습니다.'): Column(children:    cp.scheduleList!
+                  .map((e) => Text(e.scheduleName!)).toList(),)),
+          ]),
+              ),
+        ),
+        renderCard(
+          context: context,
+          contentWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${user.stfNm}님의 당직 일정',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Divider(
+                height: 15,
+              ),
+              schedule is HitScheduleAtHomeModelLoading
+                  ? CustomCircularProgressIndicator()
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                      children: cp.scheduleOfMineList!
+                          .map((e) => Text('${e.workDate!} ${e.dutyName} ${e.prediction! ? '예상':''}'))
+                          .toList(),
+                    ),
+            ],
+          ),
+        ),
+        renderCard(
+          context: context,
+          contentWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                '3일간의 당직 일정',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Divider(
+                height: 15,
+              ),
+              schedule is HitScheduleAtHomeModelLoading
+                  ? CustomCircularProgressIndicator()
+                  : Column(
+                      children: cp.threeDaysList!
+                          .map((e) => Text('${e.afternoonNm!}'))
+                          .toList(),
+                    ),
+            ],
+          ),
+        ),
+      ],
+      options: CarouselOptions(
+        enableInfiniteScroll: false,
+        onPageChanged: (index2, reason) {},
+        // aspectRatio: 3.0,
+        enlargeCenterPage: true,
+        viewportFraction: 1,
+        height: 180,
       ),
     );
   }
-
 }
 
-
-
+renderCard({required BuildContext context, required Widget contentWidget}) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width,
+    child: Card(
+      shape: RoundedRectangleBorder(
+        //모서리를 둥글게 하기 위해 사용
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+      color: Colors.grey[200],
+      elevation: 6.0, //그림자 깊이`
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: contentWidget,
+      ),
+    ),
+  );
 }
 
-
-
+//
+//
+//   Widget _sliderIndicator() {
+//     return Align(
+//       alignment: Alignment.bottomCenter,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: imageList.asMap().entries.map((entry) {
+//           return GestureDetector(
+//             onTap: () => _controller.animateToPage(entry.key),
+//             child: Container(
+//               width: 12,
+//               height: 12,
+//               margin:
+//               const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+//               decoration: BoxDecoration(
+//                 shape: BoxShape.circle,
+//                 color:
+//                 Colors.white.withOpacity(_current == entry.key ? 0.9 : 0.4),
+//               ),
+//             ),
+//           );
+//         }).toList(),
+//       ),
+//     );
+//   }
+// }

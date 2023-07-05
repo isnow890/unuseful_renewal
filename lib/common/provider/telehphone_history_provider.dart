@@ -45,7 +45,10 @@ class TelephoneHistoryNotifier
   Future<ResponseModel> saveTelephoneHistory(
       {required SearchHistoryTelephoneModel body}) async {
     try {
-      final resp = await repository.saveTelephoneHistory(body: body);
+      final user = ref.read(userMeProvider.notifier).state;
+      final convertedUser = user as UserModel;
+
+      final resp = await repository.saveTelephoneHistory(body: body,sid:convertedUser.sid!);
       await getTelephoneHistory();
 
       return resp;

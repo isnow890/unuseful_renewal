@@ -23,7 +23,7 @@ class HitScheduleAtHomeNotifier
       state = HitScheduleAtHomeModelLoading();
 
       HitScheduleAtHomeModel resp =
-          await repository.getHitScheduleAtHome(sid: convertedUser.sid!);
+          await repository.getHitScheduleAtHome(stfNm: convertedUser.sid!);
       state = resp;
       return resp;
     } catch (e) {

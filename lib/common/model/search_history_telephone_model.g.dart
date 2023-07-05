@@ -6,6 +6,21 @@ part of 'search_history_telephone_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SearchHistoryTelephoneMainModel _$SearchHistoryTelephoneMainModelFromJson(
+        Map<String, dynamic> json) =>
+    SearchHistoryTelephoneMainModel(
+      telephoneHistory: (json['telephoneHistory'] as List<dynamic>)
+          .map((e) =>
+              SearchHistoryTelephoneModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$SearchHistoryTelephoneMainModelToJson(
+        SearchHistoryTelephoneMainModel instance) =>
+    <String, dynamic>{
+      'telephoneHistory': instance.telephoneHistory,
+    };
+
 SearchHistoryTelephoneModel _$SearchHistoryTelephoneModelFromJson(
         Map<String, dynamic> json) =>
     SearchHistoryTelephoneModel(

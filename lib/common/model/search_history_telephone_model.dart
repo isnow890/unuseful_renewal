@@ -12,10 +12,13 @@ class SearchHistoryTelephoneModelError extends SearchHistoryTelephoneModelBase {
 class SearchHistoryTelephoneModelLoading
     extends SearchHistoryTelephoneModelBase {}
 
+@JsonSerializable()
 class SearchHistoryTelephoneMainModel extends SearchHistoryTelephoneModelBase {
   final List<SearchHistoryTelephoneModel> telephoneHistory;
 
   SearchHistoryTelephoneMainModel({required this.telephoneHistory});
+  factory SearchHistoryTelephoneMainModel.fromJson(Map<String,dynamic> json)
+  =>_$SearchHistoryTelephoneMainModelFromJson(json);
 }
 
 @JsonSerializable()

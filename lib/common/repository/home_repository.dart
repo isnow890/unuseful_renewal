@@ -22,12 +22,8 @@ final homeRepositoryProvider = Provider<HomeRepository>(
 abstract class HomeRepository {
   factory HomeRepository(Dio dio, {String baseUrl}) = _HomeRepository;
 
-  @GET('home/getSearchHistory')
-  @Headers({'accessKey': 'true'})
-  Future<FirestorePropsModel> getSearchHistory(@Query("sid") String sid);
-
-  @GET('home/getHitScheduleAtHome')
+  @GET('/home/getHitScheduleAtHome')
   @Headers({'accessKey': 'true'})
   Future<HitScheduleAtHomeModel> getHitScheduleAtHome(
-      {@Query("stfNm") required String sid});
+      {@Query("stfNm") required String stfNm});
 }
