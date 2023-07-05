@@ -23,28 +23,14 @@ class MealModel extends MealModelBase {
 class MealModelList {
   final int mealSeq;
   final String title;
-  final List<MealImageModel> images;
+  final List<String> imgUrls;
 
   MealModelList({
     required this.mealSeq,
     required this.title,
-    required this.images,
+    required this.imgUrls,
   });
 
   factory MealModelList.fromJson(Map<String, dynamic> json) =>
       _$MealModelListFromJson(json);
-}
-
-@JsonSerializable()
-class MealImageModel {
-  final String url;
-  final String base64Encoded;
-
-  MealImageModel({
-    required this.url,
-    required this.base64Encoded,
-  });
-
-  factory MealImageModel.fromJson(Map<String, dynamic> json) =>
-      _$MealImageModelFromJson(json);
 }

@@ -20,7 +20,7 @@ abstract class FirestorageRepository {
   factory FirestorageRepository(Dio dio, {String baseUrl}) =
       _FirestorageRepository;
 
-  @POST('/firestore/save')
+  @POST('/firestore/savePushAlarmList')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveFcmToken({
     @Body() required FcmRegistrationModel body,

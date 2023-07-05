@@ -162,8 +162,8 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                     borderRadius: BorderRadius.circular(16.0),
                   ),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
                     child: Column(
                       children: [
                         Row(
@@ -206,7 +206,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                             enlargeCenterPage: true,
                             viewportFraction: 1,
                           ),
-                          items: cp.data[index].images.map((i) {
+                          items: cp.data[index].imgUrls.map((i) {
                             return Builder(
                               builder: (BuildContext context) {
                                 return Column(children: [
@@ -236,39 +236,25 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                                                       cp.data[index].mealSeq)
                                                   .toString(),
                                               'totalCount': cp
-                                                  .data[index].images.length
+                                                  .data[index].imgUrls.length
                                                   .toString(),
                                               'title': cp.data[index].title,
                                             },
-                                            extra: cp.data[index].images);
+                                            extra: cp.data[index].imgUrls);
                                       },
                                       child: Center(
                                         child: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 5.0),
-                                          child: DataUtils.base64Decoder(
-                                                      i.base64Encoded) !=
-                                                  null
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-
-                                                  child: Image.memory(
-                                                    DataUtils.base64Decoder(
-                                                        i.base64Encoded),
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                  // child: CachedMemoryImage(
-                                                  //   uniqueKey: i.url,
-                                                  //   base64: i.base64Encoded,
-                                                  //   fit: BoxFit.fill,
-                                                  // ),
-                                                )
-                                              : Icon(Icons.image),
-                                        ),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            margin: EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                              child: Image.network(i!,
+                                                  fit: BoxFit.fill),
+                                            )),
                                       ),
                                     ),
                                   ),
@@ -282,7 +268,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                           currentIndex: ref
                               .read(mealCurrentIndexProvider.notifier)
                               .getCurrentIndex(cp.data[index].mealSeq),
-                          totalCount: cp.data[index].images.length,
+                          totalCount: cp.data[index].imgUrls.length,
                         ),
                       ],
                     ),

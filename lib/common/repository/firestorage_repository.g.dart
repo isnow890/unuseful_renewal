@@ -34,7 +34,7 @@ class _FirestorageRepository implements FirestorageRepository {
     )
             .compose(
               _dio.options,
-              '/firestore/save',
+              '/firestore/savePushAlarmList',
               queryParameters: queryParameters,
               data: _data,
             )

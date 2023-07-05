@@ -1,5 +1,6 @@
 import 'package:cached_memory_image/cached_memory_image.dart';
 import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_view/photo_view.dart';
@@ -15,7 +16,7 @@ class FullPhoto extends ConsumerStatefulWidget {
   final int currentIndex;
   final int totalCount;
   final String title;
-  final List<MealImageModel> images;
+  final List<String> images;
 
   static String get routeName => 'fullPhoto';
 
@@ -80,10 +81,7 @@ class _FullPhotoState extends ConsumerState<FullPhoto> {
             },
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: CachedMemoryImageProvider(
-                  base64: widget.images[index].base64Encoded,
-                  widget.images[index].url,
-                ),
+                imageProvider: CachedNetworkImageProvider(widget.images[index]),
                 minScale: PhotoViewComputedScale.contained * 0.9,
                 maxScale: PhotoViewComputedScale.covered * 1.5,
               );

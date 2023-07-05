@@ -20,26 +20,13 @@ MealModelList _$MealModelListFromJson(Map<String, dynamic> json) =>
     MealModelList(
       mealSeq: json['mealSeq'] as int,
       title: json['title'] as String,
-      images: (json['images'] as List<dynamic>)
-          .map((e) => MealImageModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      imgUrls:
+          (json['imgUrls'] as List<dynamic>).map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$MealModelListToJson(MealModelList instance) =>
     <String, dynamic>{
       'mealSeq': instance.mealSeq,
       'title': instance.title,
-      'images': instance.images,
-    };
-
-MealImageModel _$MealImageModelFromJson(Map<String, dynamic> json) =>
-    MealImageModel(
-      url: json['url'] as String,
-      base64Encoded: json['base64Encoded'] as String,
-    );
-
-Map<String, dynamic> _$MealImageModelToJson(MealImageModel instance) =>
-    <String, dynamic>{
-      'url': instance.url,
-      'base64Encoded': instance.base64Encoded,
+      'imgUrls': instance.imgUrls,
     };
