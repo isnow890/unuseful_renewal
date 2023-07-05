@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'firestorage_repository.dart';
+part of 'firestore_repository.dart';
 
 // **************************************************************************
 // RetrofitGenerator

@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/general_toast_message.dart';
 import 'package:unuseful/common/provider/fcm_router_provider.dart';
-import 'package:unuseful/common/repository/firestorage_repository.dart';
+import 'package:unuseful/common/repository/firestore_repository.dart';
 import 'package:unuseful/common/utils/push_redirection_logic.dart';
 import 'package:unuseful/common/view/test_screen.dart';
 import 'package:unuseful/hit_schedule/view/hit_schedule_main_screen.dart';
@@ -26,9 +26,7 @@ import '../provider/go_router.dart';
 void firebaseMessagingGetMyDeviceTokenAndSave({required Ref ref}) async {
   final token = await FirebaseMessaging.instance.getToken();
 
-  final user = ref
-      .read(userMeProvider.notifier)
-      .state;
+  final user = ref.read(userMeProvider.notifier).state;
   final convertedUser = user as UserModel;
 
   print("내 디바이스 토큰: $token");
@@ -36,7 +34,7 @@ void firebaseMessagingGetMyDeviceTokenAndSave({required Ref ref}) async {
     //9002831
     //convertedUser.sid,
     await ref.read(firestorageRepositoryProvider).saveFcmToken(
-        body: FcmRegistrationModel(
+            body: FcmRegistrationModel(
           lastUsedDate: DateTime.now(),
           fcmToken: token,
           isHitDutyAlarm: true,
@@ -90,10 +88,10 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
 //안드로이드 설정
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(const AndroidNotificationChannel(
-      'high_importance_channel', 'High Importance Notifications',
-      importance: Importance.max));
+          'high_importance_channel', 'High Importance Notifications',
+          importance: Importance.max));
 
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(
@@ -103,9 +101,7 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
 
     //forground2 -> foreground1에서의 payload 데이터가 나오게 됨.
     onDidReceiveNotificationResponse: (details) {
-
       routerLogicForegroundHitDutyAlarmWidgetRef1(ref);
-
     },
     onDidReceiveBackgroundNotificationResponse: backgroundHandler,
   );
@@ -121,11 +117,10 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
     if (notification != null) {
       print('되나요.');
 
-      ref!.read(fcmRouterProvider.notifier).update((state) =>
-          FcmRouterModel(
-              page: message.data['page'],
-              action: message.data['action'],
-              param: message.data['param']));
+      ref!.read(fcmRouterProvider.notifier).update((state) => FcmRouterModel(
+          page: message.data['page'],
+          action: message.data['action'],
+          param: message.data['param']));
 
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
@@ -148,11 +143,10 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
   //iOS Background (iOS 앱 백그라운드 상태 -> 앱이 완전히 닫혀진 상태는 아니지만 백그라운드에서 작동중...)
   if (Platform.isIOS) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      ref!.read(fcmRouterProvider.notifier).update((state) =>
-          FcmRouterModel(
-              page: message.data['page'],
-              action: message.data['action'],
-              param: message.data['param']));
+      ref!.read(fcmRouterProvider.notifier).update((state) => FcmRouterModel(
+          page: message.data['page'],
+          action: message.data['action'],
+          param: message.data['param']));
 
       // 액션 추가 ... 파라미터를 전송하는 경우는 message.data['test_parameter1'] 이런 방식...
     });
@@ -162,7 +156,7 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
   RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
   if (message != null) {
     _handleMessage(message);
-    
+
     print('여긴가요');
     // // 앱이 백그라운드 상태에서 푸시 알림 클릭 하여 열릴 경우 메세지 스트림을 통해 처리
   }
@@ -171,31 +165,24 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
 
 //백라운드 상태
 void _handleMessage(RemoteMessage message) {
-
   print('1여길까요');
   print('2여길까요');
   print('3여길까요');
 
-
-  ref!.read(fcmRouterProvider.notifier).update((state) =>
-      FcmRouterModel(
-          page: message.data['page'],
-          action: message.data['action'],
-          param: message.data['param']));
+  ref!.read(fcmRouterProvider.notifier).update((state) => FcmRouterModel(
+      page: message.data['page'],
+      action: message.data['action'],
+      param: message.data['param']));
 }
 
 @pragma('vm:entry-point')
 void backgroundHandler(NotificationResponse details) {
-
-
   routerLogicForegroundHitDutyAlarmWidgetRef1(ref);
   // 액션 추가... 파라미터는 details.payload 방식으로 전달
   print('여길까요');
   print('여길까요');
 
   print('여길까요');
-
-
 }
 
 @pragma('vm:entry-point')
@@ -219,9 +206,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   // routerLogicForegroundHitDutyAlarm1(ref);
 
-
   RemoteNotification? notification = message.notification;
   // 세부 내용이 필요한 경우 추가...
 }
-
-
