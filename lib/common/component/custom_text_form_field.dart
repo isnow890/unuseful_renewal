@@ -10,6 +10,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool autofocus;
   final ValueChanged<String>? onChanged;
 
+  final ValueChanged<String>? onFieldSubmitted;
   final bool? readOnly;
 
   final TextEditingController? controller;
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final bool? isSuffixDeleteButtonEnabled;
+
 
   const CustomTextFormField({
     Key? key,
@@ -36,6 +38,7 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.isSuffixDeleteButtonEnabled,
     this.readOnly,
+    this.onFieldSubmitted,
   }) : super(key: key);
 
   @override
@@ -43,12 +46,13 @@ class CustomTextFormField extends StatelessWidget {
     //텍스트 필드 Border를 모든 면에 적용함.
     final baseBorder = OutlineInputBorder(
         borderSide: BorderSide(
-      color: INPUT_BORDER_COLOR,
-      width: 1.0,
-    ));
+          color: INPUT_BORDER_COLOR,
+          width: 1.0,
+        ));
 
     return TextFormField(
-      readOnly: readOnly?? false,
+      onFieldSubmitted:onFieldSubmitted,
+      readOnly: readOnly ?? false,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       controller: controller,
@@ -83,15 +87,15 @@ class CustomTextFormField extends StatelessWidget {
           ),
           suffixIcon: isSuffixDeleteButtonEnabled ?? false
               ? IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(
-                    Icons.clear,
-                    color: PRIMARY_COLOR,
-                  ),
-                  onPressed: () {
-                    if (controller != null) controller!.clear();
-                  },
-                )
+            splashColor: Colors.transparent,
+            icon: Icon(
+              Icons.clear,
+              color: PRIMARY_COLOR,
+            ),
+            onPressed: () {
+              if (controller != null) controller!.clear();
+            },
+          )
               : null),
     );
   }

@@ -170,7 +170,6 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
     required Widget widget,
   }) {
     return DefaultLayout(
-        centerTitle: false,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

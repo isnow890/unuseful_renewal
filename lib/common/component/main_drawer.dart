@@ -118,11 +118,12 @@ class MainDrawer extends ConsumerWidget {
         ref.refresh(hitScheduleSelectedDayProvider);
         onSelectedTap(value);
         // context.goNamed(value);
+        context.goNamed(value);
 
-        if (value == 'home')
-          context.goNamed(value);
-        else
-          context.pushNamed(value);
+        // if (value == 'home')
+        //   context.goNamed(value);
+        // else
+        //   context.pushNamed(value);
         print(value);
       },
       title: Text(value),

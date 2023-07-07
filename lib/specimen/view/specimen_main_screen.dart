@@ -247,7 +247,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   _renderDefaultLayOut({required Widget widget}) {
     return DefaultLayout(
-      centerTitle: false,
       title: Text('specimen'),
       child: widget,
     );

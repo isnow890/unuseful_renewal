@@ -66,7 +66,7 @@ class _MealScreenState extends ConsumerState<MealScreen>
 
     return DefaultLayout(
       backgroundColor: Colors.grey[200],
-      centerTitle: false,
+
       title: Text('meal'),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,

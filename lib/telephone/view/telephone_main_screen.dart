@@ -37,6 +37,8 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
     super.initState();
     controller = TabController(length: 2, vsync: this);
     controller.addListener(tabListener);
+
+
     print('실행 테스트');
   }
 
@@ -57,58 +59,6 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
     final orderRadioTile = ref.watch(telephoneOrderRadioTileProvider);
     final searchValue = ref.watch(telephoneSearchValueProvider);
     return DefaultLayout(
-      centerTitle: false,
-      // actions: [
-      //   IconButton(
-      //       onPressed: () {
-      //         showDialog(
-      //           context: context,
-      //           builder: (context) {
-      //             return AlertDialog(
-      //               title: Text('Data Order'),
-      //               content: Container(
-      //                 width: 300,
-      //                 height: 100,
-      //                 child: Column(
-      //                   children: [
-      //                     Expanded(
-      //                       child: CustomRadioTile(
-      //                         groupValue: orderRadioTile,
-      //                         activeColor: PRIMARY_COLOR,
-      //                         onChanged: () {
-      //                           ref
-      //                               .read(telephoneOrderRadioTileProvider
-      //                                   .notifier)
-      //                               .update((state) => 'asc');
-      //                         },
-      //                         value: 'asc',
-      //                         title: 'Ascending',
-      //                       ),
-      //                     ),
-      //                     Expanded(
-      //                       child: CustomRadioTile(
-      //                         groupValue: orderRadioTile,
-      //                         activeColor: PRIMARY_COLOR,
-      //                         onChanged: () {
-      //                           ref
-      //                               .read(telephoneOrderRadioTileProvider
-      //                                   .notifier)
-      //                               .update((state) => 'desc');
-      //                         },
-      //                         value: 'desc',
-      //                         title: 'Descending',
-      //                       ),
-      //                     ),
-      //                   ],
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //         );
-      //       },
-      //       icon: Icon(Icons.more_vert)),
-      // ],
-
       title: Text('telephone'),
       // TextTitle(title:  'telephone',
       // ),

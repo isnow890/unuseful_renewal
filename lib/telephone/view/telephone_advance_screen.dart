@@ -8,6 +8,7 @@ import '../../common/component/custom_circular_progress_indicator.dart';
 import '../../common/const/colors.dart';
 import '../../common/utils/pagination_utils.dart';
 import '../../common/utils/url_launcher_utils.dart';
+import '../component/custom_telephone_text_field.dart';
 import '../provider/telephone_advance_provider.dart';
 import '../provider/telephone_search_value_provider.dart';
 
@@ -83,131 +84,139 @@ class _TelephoneAdvanceScreenState
                 .read(telephoneAdvanceNotifierProvider.notifier)
                 .paginate(forceRefetch: true);
           },
-          child: Scrollbar(
-            thumbVisibility: true,
-            controller: controller,
-            child: ListView.separated(
-              controller: controller,
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 20.0,
-                );
-              },
-              itemCount: state.data.length + 1,
-              itemBuilder: (context, index) {
-                if (index == cp.data.length) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 8.0,
-                    ),
-                    child: Center(
-                        child: cp is CursorPaginationFetchingMore
-                            ? CustomCircularProgressIndicator()
-                            : Text('마지막 데이터입니다.')),
-                  );
-                }
+          child: Column(
+            children: [
+              const CustomTelephoneTextField(),
 
-                return ListTile(
-                  horizontalTitleGap: 10,
-                  contentPadding: EdgeInsets.only(left: 0.0),
-                  leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        child: Column(
+              Expanded(
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  controller: controller,
+                  child: ListView.separated(
+                    controller: controller,
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        height: 20.0,
+                      );
+                    },
+                    itemCount: state.data.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == cp.data.length) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
+                          ),
+                          child: Center(
+                              child: cp is CursorPaginationFetchingMore
+                                  ? CustomCircularProgressIndicator()
+                                  : Text('마지막 데이터입니다.')),
+                        );
+                      }
+
+                      return ListTile(
+                        horizontalTitleGap: 10,
+                        contentPadding: EdgeInsets.only(left: 0.0),
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              state.data[index].korNm ?? '',
-                              overflow: TextOverflow.visible,
-                              softWrap: false,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: PRIMARY_COLOR,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              state.data[index].stfNo ?? '',
-                              overflow: TextOverflow.visible,
-                              softWrap: false,
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: BODY_TEXT_COLOR,
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    state.data[index].korNm ?? '',
+                                    overflow: TextOverflow.visible,
+                                    softWrap: false,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color: PRIMARY_COLOR,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    state.data[index].stfNo ?? '',
+                                    overflow: TextOverflow.visible,
+                                    softWrap: false,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: BODY_TEXT_COLOR,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (state.data[index].ugtTelNo != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Share.share(_shareInfo(
-                                      hspTpCd: state.data[index].hspTpCd,
-                                      korNm: state.data[index].korNm,
-                                      stfNo: state.data[index].stfNo,
-                                      deptCdNm: state.data[index].deptCdNm,
-                                      etntTelNo: state.data[index].etntTelNo,
-                                      ugtTelNo: state.data[index].ugtTelNo));
-                                },
-                                icon: Icon(
-                                  Icons.share_outlined,
-                                  size: 20,
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.data[index].ugtTelNo != null)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Share.share(_shareInfo(
+                                            hspTpCd: state.data[index].hspTpCd,
+                                            korNm: state.data[index].korNm,
+                                            stfNo: state.data[index].stfNo,
+                                            deptCdNm: state.data[index].deptCdNm,
+                                            etntTelNo: state.data[index].etntTelNo,
+                                            ugtTelNo: state.data[index].ugtTelNo));
+                                      },
+                                      icon: Icon(
+                                        Icons.share_outlined,
+                                        size: 20,
+                                      ),
+                                      color: Colors.blue,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        UrlLauncherUtils.makePhoneCall(
+                                            state.data[index].ugtTelNo!);
+                                      },
+                                      icon: Icon(Icons.phone_android_outlined),
+                                      color: Colors.blue,
+                                    ),
+                                  ],
                                 ),
-                                color: Colors.blue,
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  UrlLauncherUtils.makePhoneCall(
-                                      state.data[index].ugtTelNo!);
-                                },
-                                icon: Icon(Icons.phone_android_outlined),
-                                color: Colors.blue,
+                          ],
+                        ),
+                        title: Text('${state.data[index].deptCdNm ?? ''}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${state.data[index].hspTpCd ?? ''}'),
+                            Text(
+                              state.data[index].ugtTelNo ?? '',
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w500),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            if (state.data[index].etntTelNo != null)
+                              Text(
+                                state.data[index].etntTelNo ?? '',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: PRIMARY_COLOR),
                               ),
-                            ],
-                          ),
+                          ],
                         ),
-                    ],
+                        // isThreeLine: true,
+                      );
+                    },
                   ),
-                  title: Text('${state.data[index].deptCdNm ?? ''}'),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${state.data[index].hspTpCd ?? ''}'),
-                      Text(
-                        state.data[index].ugtTelNo ?? '',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      if (state.data[index].etntTelNo != null)
-                        Text(
-                          state.data[index].etntTelNo ?? '',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: PRIMARY_COLOR),
-                        ),
-                    ],
-                  ),
-                  // isThreeLine: true,
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
         ),
       );

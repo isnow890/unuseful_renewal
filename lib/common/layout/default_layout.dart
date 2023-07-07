@@ -37,11 +37,11 @@ class DefaultLayout extends ConsumerWidget {
       child: Scaffold(
         drawer: isDrawerVisible ?? true
             ? MainDrawer(
-                onSelectedTap: (String menu) {
-                  ref.read(drawerSelectProvider.notifier).update((state) => menu);
-                  Navigator.of(context).pop();
-                },
-              )
+          onSelectedTap: (String menu) {
+            ref.read(drawerSelectProvider.notifier).update((state) => menu);
+            Navigator.of(context).pop();
+          },
+        )
             : null,
         backgroundColor: backgroundColor ?? Colors.white,
         appBar: _renderAppbar(titleVisibility??true),

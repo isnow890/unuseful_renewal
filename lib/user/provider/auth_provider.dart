@@ -10,9 +10,10 @@ import 'package:unuseful/meal/view/meal_screen.dart';
 import 'package:unuseful/patient/view/patient_screen.dart';
 import 'package:unuseful/specimen/model/specimen_params.dart';
 import 'package:unuseful/specimen/view/specimen_result_screen.dart';
-import 'package:unuseful/telephone/component/telephone_search_screen.dart';
+import 'package:unuseful/telephone/view/telephone_search_screen.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
+import '../../common/provider/drawer_selector_provider.dart';
 import '../../common/utils/firebase_module.dart';
 import '../../common/utils/push_redirection_logic.dart';
 import '../../specimen/view/specimen_main_screen.dart';
@@ -113,27 +114,64 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/specimenMain',
           name: SpecimenMainScreen.routeName,
-          builder: (context, state) => SpecimenMainScreen(),
+          builder: (context, state) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              ref
+                  .read(drawerSelectProvider.notifier)
+                  .update((state) => SpecimenMainScreen.routeName);
+            });
+
+            return SpecimenMainScreen();
+          },
         ),
         GoRoute(
           path: '/meal',
           name: MealScreen.routeName,
-          builder: (context, state) => MealScreen(),
+          builder: (context, state) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              ref
+                  .read(drawerSelectProvider.notifier)
+                  .update((state) => MealScreen.routeName);
+            });
+
+            return MealScreen();
+          },
         ),
         GoRoute(
           path: '/patient',
           name: PatientScreen.routeName,
-          builder: (context, state) => PatientScreen(),
+          builder: (context, state) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              ref
+                  .read(drawerSelectProvider.notifier)
+                  .update((state) => PatientScreen.routeName);
+            });
+
+            return PatientScreen();
+          },
         ),
         GoRoute(
           path: '/telephone',
           name: TelePhoneMainScreen.routeName,
-          builder: (context, state) => TelePhoneMainScreen(),
+          builder: (context, state) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              ref
+                  .read(drawerSelectProvider.notifier)
+                  .update((state) => TelePhoneMainScreen.routeName);
+            });
+            return const TelePhoneMainScreen();
+          },
         ),
         GoRoute(
           path: '/hitSchedule',
           name: HitScheduleMainScreen.routeName,
           builder: (context, state) {
+            WidgetsBinding.instance!.addPostFrameCallback((_) {
+              ref
+                  .read(drawerSelectProvider.notifier)
+                  .update((state) => HitScheduleMainScreen.routeName);
+            });
+
             return HitScheduleMainScreen(
                 baseIndex:
                     int.parse(state.queryParameters['baseIndex'] ?? '0'));
@@ -157,6 +195,9 @@ class AuthProvider extends ChangeNotifier {
           path: '/specimenResult',
           name: SpecimenResultScreen.routeName,
           builder: (context, state) {
+            ref
+                .read(drawerSelectProvider.notifier)
+                .update((state) => SpecimenResultScreen.routeName);
             // final values = state.extra as SpecimenParams;
             final values = state.extra as SpecimenParams;
 
@@ -179,10 +220,35 @@ class AuthProvider extends ChangeNotifier {
         GoRoute(
           path: '/telephoneSearchScreen',
           name: TelephoneSearchScreen.routeName,
-          builder: (context, state) {
-            // final values = state.extra as SpecimenParams;
-            return TelephoneSearchScreen();
-          },
+          builder: (context, state) => TelephoneSearchScreen(),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: TelephoneSearchScreen(),
+          ),
         ),
       ];
+
+  CustomTransitionPage buildPageWithDefaultTransition<T>({
+    required BuildContext context,
+    required GoRouterState state,
+    required Widget child,
+  }) {
+    return CustomTransitionPage<T>(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
 }

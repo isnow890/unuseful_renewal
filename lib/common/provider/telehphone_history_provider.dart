@@ -49,7 +49,6 @@ class TelephoneHistoryNotifier
       final convertedUser = user as UserModel;
 
       final resp = await repository.saveTelephoneHistory(body: body,sid:convertedUser.sid!);
-      await getTelephoneHistory();
 
       return resp;
     } catch (e) {
