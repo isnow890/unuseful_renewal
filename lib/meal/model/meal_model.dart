@@ -14,9 +14,9 @@ class MealModelError extends MealModelBase {
 
 @JsonSerializable()
 class MealModel extends MealModelBase {
-  final List<MealModelList> data;
+  final List<MealModelList>? data;
 
-  MealModel({required this.data});
+  MealModel({this.data});
 }
 
 @JsonSerializable()

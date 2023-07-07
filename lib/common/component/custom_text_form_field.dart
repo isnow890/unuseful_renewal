@@ -10,6 +10,8 @@ class CustomTextFormField extends StatelessWidget {
   final bool autofocus;
   final ValueChanged<String>? onChanged;
 
+  final bool? readOnly;
+
   final TextEditingController? controller;
   final String? initValue;
 
@@ -19,21 +21,22 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool? isSuffixDeleteButtonEnabled;
 
-  const CustomTextFormField(
-      {Key? key,
-      this.hintText,
-      this.errorText,
-      this.obscureText = false,
-      this.autofocus = false,
-      required this.onChanged,
-      this.initValue,
-      this.controller,
-      this.contentPadding,
-      this.prefixIcon,
-      this.inputFormatters,
-      this.keyboardType,
-      this.isSuffixDeleteButtonEnabled})
-      : super(key: key);
+  const CustomTextFormField({
+    Key? key,
+    this.hintText,
+    this.errorText,
+    this.obscureText = false,
+    this.autofocus = false,
+    required this.onChanged,
+    this.initValue,
+    this.controller,
+    this.contentPadding,
+    this.prefixIcon,
+    this.inputFormatters,
+    this.keyboardType,
+    this.isSuffixDeleteButtonEnabled,
+    this.readOnly,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +48,8 @@ class CustomTextFormField extends StatelessWidget {
     ));
 
     return TextFormField(
+      readOnly: readOnly?? false,
       keyboardType: keyboardType,
-
       inputFormatters: inputFormatters,
       controller: controller,
       initialValue: initValue,

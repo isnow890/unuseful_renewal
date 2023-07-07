@@ -9,7 +9,9 @@ import 'package:unuseful/telephone/model/telephone_basic_model.dart';
 import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
 
+import '../../common/component/custom_text_form_field.dart';
 import '../../common/utils/pagination_utils.dart';
+import '../component/custom_telephone_text_field.dart';
 
 class TelephoneBasicScreen extends ConsumerStatefulWidget {
   const TelephoneBasicScreen({Key? key}) : super(key: key);
@@ -38,7 +40,6 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
   @override
   Widget build(BuildContext context) {
     //값이 바뀔때마다 재 빌드 하기 위하여.
-    final searchValue = ref.watch(telephoneSearchValueProvider);
     final state = ref.watch(telephoneBasicNotifierProvider);
 
     if (state is CursorPaginationLoading) {
@@ -86,118 +87,126 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
               .read(telephoneBasicNotifierProvider.notifier)
               .paginate(forceRefetch: true);
         },
-        child: Scrollbar(
-          thumbVisibility: true,
-          controller: controller,
-          child: ListView.separated(
-            controller: controller,
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 20.0,
-              );
-            },
-            itemCount: state.data.length + 1,
-            itemBuilder: (context, index) {
-              if (index == cp.data.length) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  child: Center(
-                      child: cp is CursorPaginationFetchingMore
-                          ? CustomCircularProgressIndicator()
-                          : Text('마지막 데이터입니다.')),
-                );
-              }
+        child: Column(
+          children: [
+            const CustomTelephoneTextField(),
+            Expanded(
+              child: Scrollbar(
+                thumbVisibility: true,
+                controller: controller,
+                child: ListView.separated(
+                  controller: controller,
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      height: 20.0,
+                    );
+                  },
+                  itemCount: state.data.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == cp.data.length) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        child: Center(
+                            child: cp is CursorPaginationFetchingMore
+                                ? CustomCircularProgressIndicator()
+                                : Text('마지막 데이터입니다.')),
+                      );
+                    }
 
-              return ListTile(
-                horizontalTitleGap: 10,
-                contentPadding: EdgeInsets.only(left: 0.0),
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      state.data[index].hspTpCd ?? '',
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: PRIMARY_COLOR,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                    return ListTile(
+                      horizontalTitleGap: 10,
+                      contentPadding: EdgeInsets.only(left: 0.0),
+                      leading: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              Share.share(shareInfo(
-                                  hspTpCd: state.data[index].hspTpCd,
-                                  deptNm: state.data[index].deptNm,
-                                  telNoNm: state.data[index].telNoNm,
-                                  etntTelNo: state.data[index].etntTelNo,
-                                  telNoAbbrNm: state.data[index].telNoAbbrNm,
-                                  purifiedTelNo:
-                                      state.data[index].purifiedTelNo));
-                            },
-                            icon: Icon(
-                              Icons.share_outlined,
-                              size: 20,
-                            ),
-                            color: Colors.red,
+                          Text(
+                            state.data[index].hspTpCd ?? '',
+                            style: TextStyle(
+                                fontSize: 22,
+                                color: PRIMARY_COLOR,
+                                fontWeight: FontWeight.w600),
                           ),
-                          if (state.data[index].purifiedTelNo != null)
-                            IconButton(
-                              onPressed: () {
-                                UrlLauncherUtils.makePhoneCall(
-                                    state.data[index].purifiedTelNo!);
-                              },
-                              icon: Icon(
-                                Icons.phone_rounded,
-                                size: 20,
-                              ),
-                              color: Colors.red,
-                            ),
                         ],
                       ),
-                    ),
-                  ],
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Share.share(shareInfo(
+                                        hspTpCd: state.data[index].hspTpCd,
+                                        deptNm: state.data[index].deptNm,
+                                        telNoNm: state.data[index].telNoNm,
+                                        etntTelNo: state.data[index].etntTelNo,
+                                        telNoAbbrNm:
+                                            state.data[index].telNoAbbrNm,
+                                        purifiedTelNo:
+                                            state.data[index].purifiedTelNo));
+                                  },
+                                  icon: Icon(
+                                    Icons.share_outlined,
+                                    size: 20,
+                                  ),
+                                  color: Colors.red,
+                                ),
+                                if (state.data[index].purifiedTelNo != null)
+                                  IconButton(
+                                    onPressed: () {
+                                      UrlLauncherUtils.makePhoneCall(
+                                          state.data[index].purifiedTelNo!);
+                                    },
+                                    icon: Icon(
+                                      Icons.phone_rounded,
+                                      size: 20,
+                                    ),
+                                    color: Colors.red,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      title: Text(state.data[index].deptNm ?? ''),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(state.data[index].telNoNm ?? ''),
+                          Row(
+                            children: [
+                              Text(
+                                state.data[index].etntTelNo ?? '',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: PRIMARY_COLOR),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                state.data[index].telNoAbbrNm ?? '',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      // isThreeLine: true,
+                    );
+                  },
                 ),
-                title: Text(state.data[index].deptNm ?? ''),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(state.data[index].telNoNm ?? ''),
-                    Row(
-                      children: [
-                        Text(
-                          state.data[index].etntTelNo ?? '',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: PRIMARY_COLOR),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          state.data[index].telNoAbbrNm ?? '',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                // isThreeLine: true,
-              );
-            },
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -214,7 +223,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     if (telNoNm != null) tmpTelNoAbbrNm = "이름:${telNoAbbrNm}\n";
 
     final String returnedText =
-        '병원:$hspTpCd\n부서:$deptNm\n실방:$telNoNm\n${tmpTelNoAbbrNm}TEL:${etntTelNo}${purifiedTelNo != null? "\n$purifiedTelNo" : ''}';
+        '병원:$hspTpCd\n부서:$deptNm\n실방:$telNoNm\n${tmpTelNoAbbrNm}TEL:${etntTelNo}${purifiedTelNo != null ? "\n$purifiedTelNo" : ''}';
     return returnedText;
   }
 }

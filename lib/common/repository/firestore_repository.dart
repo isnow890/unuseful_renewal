@@ -42,23 +42,23 @@ abstract class FirestoreRepository {
         @Query("sid") required String sid,
         @Body() required SearchHistorySpecimenModel body});
 
-  @GET('firestore/getTelephoneHistory')
+  @GET('/firestore/getTelephoneHistory')
   @Headers({'accessKey': 'true'})
   Future<List<SearchHistoryTelephoneModel>> getTelephoneHistory(
       @Query("sid") String sid);
 
-  @GET('firestore/getSpecimenHistory')
+  @GET('/firestore/getSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<List<SearchHistorySpecimenModel>> getSpecimenHistory(
       @Query("sid") String sid);
 
-  @DELETE('firestore/delTelephoneHistory')
+  @DELETE('/firestore/delTelephoneHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delTelephoneHistory(
       {@Query("sid") required String sid,
       @Body() required SearchHistoryTelephoneModel body});
 
-  @DELETE('firestore/delSpecimenHistory')
+  @DELETE('/firestore/delSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delSpecimenHistory(
       {@Query("sid") required String sid,

@@ -58,7 +58,6 @@ class _MealScreenState extends ConsumerState<MealScreen>
     // TODO: implement dispose
     controller.removeListener(tabListener);
     super.dispose();
-    ref.refresh(mealNotifierProvider);
   }
 
   @override
@@ -114,7 +113,6 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('초기화 실행');
     // ref.read(mealNotifierProvider.notifier).getMeal();
   }
 
@@ -122,7 +120,9 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
   Widget build(
     BuildContext context,
   ) {
-    final state = ref.watch(mealNotifierProvider);
+    final hspTpCd = ref.watch(hspTpCdProvider);
+    final state = ref.watch(mealFamilyProvider(hspTpCd));
+
     // final currentIndex = ref.watch(mealCurrentIndexProvider);
     if (state is MealModelLoading) {
       return Center(child: const CustomCircularProgressIndicator());
@@ -139,7 +139,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
           ),
           ElevatedButton(
               onPressed: () {
-                ref.read(mealNotifierProvider.notifier).getMeal();
+                ref.read(mealFamilyProvider(hspTpCd).notifier).getMeal();
               },
               child: Text('다시 시도')),
         ],
@@ -149,7 +149,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
     final cp = state as MealModel;
     return RefreshIndicator(
         onRefresh: () async {
-          ref.read(mealNotifierProvider.notifier).getMeal();
+          ref.read(mealFamilyProvider(hspTpCd).notifier).getMeal();
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 1),
@@ -173,7 +173,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                cp.data[index].title,
+                                cp.data![index].title,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -193,7 +193,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                               ref
                                   .read(mealCurrentIndexProvider.notifier)
                                   .updateAndGetCurrentIndex(
-                                      cp.data[index].mealSeq, index2);
+                                      cp.data![index].mealSeq, index2);
                               ref
                                   .read(mealCurrentIndexAlaramProvider.notifier)
                                   .update((state) =>
@@ -206,7 +206,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                             enlargeCenterPage: true,
                             viewportFraction: 1,
                           ),
-                          items: cp.data[index].imgUrls.map((i) {
+                          items: cp.data![index].imgUrls.map((i) {
                             return Builder(
                               builder: (BuildContext context) {
                                 return Column(children: [
@@ -233,28 +233,28 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                                                   .read(mealCurrentIndexProvider
                                                       .notifier)
                                                   .getCurrentIndex(
-                                                      cp.data[index].mealSeq)
+                                                      cp.data![index].mealSeq)
                                                   .toString(),
                                               'totalCount': cp
-                                                  .data[index].imgUrls.length
+                                                  .data![index].imgUrls.length
                                                   .toString(),
-                                              'title': cp.data[index].title,
+                                              'title': cp.data![index].title,
                                             },
-                                            extra: cp.data[index].imgUrls);
+                                            extra: cp.data![index].imgUrls);
                                       },
                                       child: Center(
                                         child: Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 5.0),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              child: Image.network(i!,
-                                                  fit: BoxFit.fill),
-                                            )),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 5.0),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: Image.network(i!,
+                                                fit: BoxFit.fill),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -264,11 +264,11 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                           }).toList(),
                         ),
                         _MealCurrentIndexIndicator(
-                          mealSeq: cp.data[index].mealSeq,
+                          mealSeq: cp.data![index].mealSeq,
                           currentIndex: ref
                               .read(mealCurrentIndexProvider.notifier)
-                              .getCurrentIndex(cp.data[index].mealSeq),
-                          totalCount: cp.data[index].imgUrls.length,
+                              .getCurrentIndex(cp.data![index].mealSeq),
+                          totalCount: cp.data![index].imgUrls.length,
                         ),
                       ],
                     ),
@@ -280,7 +280,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                   height: 20.0,
                 );
               },
-              itemCount: state.data.length),
+              itemCount: state.data!.length),
         ));
 
     ;
@@ -328,3 +328,6 @@ class _MealCurrentIndexIndicatorState
     );
   }
 }
+
+
+    // final state = ref.watch(mealFamilyProvider(hspTpCd));

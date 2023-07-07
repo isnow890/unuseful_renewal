@@ -30,8 +30,6 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   late TabController controller;
   int index = 0;
 
-  late final String searchText;
-  Timer? _timer;
 
   @override
   void initState() {
@@ -48,12 +46,10 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
 
   @override
   void dispose() {
-
     print('dispose 실행');
     // TODO: implement dispose
     controller.removeListener(tabListener);
     super.dispose();
-
   }
 
   @override
@@ -113,31 +109,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
       //       icon: Icon(Icons.more_vert)),
       // ],
 
-      title: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 30,
-          child: CustomTextFormField(
-            initValue: searchValue,
-            prefixIcon: Icon(Icons.search, color: PRIMARY_COLOR,),
-            contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
-            hintText: 'Enter some text to search.',
-            onChanged: (value) {
-              if (_timer?.isActive ?? false) _timer!.cancel();
-              _timer = Timer(
-                const Duration(milliseconds: 500),
-                () {
-                  ref
-                      .read(telephoneSearchValueProvider.notifier)
-                      .update((state) => value);
-                },
-              );
-
-
-            },
-          ),
-        ),
-      ),
+      title: Text('telephone'),
       // TextTitle(title:  'telephone',
       // ),
       bottomNavigationBar: BottomNavigationBar(

@@ -9,8 +9,8 @@ part of 'search_history_telephone_model.dart';
 SearchHistoryTelephoneMainModel _$SearchHistoryTelephoneMainModelFromJson(
         Map<String, dynamic> json) =>
     SearchHistoryTelephoneMainModel(
-      telephoneHistory: (json['telephoneHistory'] as List<dynamic>)
-          .map((e) =>
+      telephoneHistory: (json['telephoneHistory'] as List<dynamic>?)
+          ?.map((e) =>
               SearchHistoryTelephoneModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );

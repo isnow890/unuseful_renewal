@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -6,9 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/model/hit_schedule_at_home_model.dart';
 import 'package:unuseful/hit_schedule/model/hit_duty_statistics_model.dart';
+import 'package:unuseful/meal/model/meal_model.dart';
 import 'package:unuseful/user/provider/login_variable_provider.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
+import '../../meal/provider/meal_provider.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/auth_provider.dart';
 import '../component/custom_error_widget.dart';
@@ -80,24 +83,14 @@ class _RootTabState extends ConsumerState<RootTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _renderSection(section: '일정'),
+                _renderSection(section: 'schedule'),
                 _HitScheduleSection(),
                 SizedBox(
                   height: 8,
                 ),
-                _renderSection(section: '식단'),
-                renderCard(
-                  context: context,
-                  contentWidget: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text('새로운 식단이 등록되었습니다'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                _renderSection(section: 'meal'),
+                MealSection(),
+//glkwjgklwejglkwejgjklwe
                 SizedBox(
                   height: 20,
                 ),
@@ -163,6 +156,77 @@ class _RootTabState extends ConsumerState<RootTab> {
   }
 }
 
+class MealSection extends ConsumerStatefulWidget {
+  const MealSection({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MealSectionState();
+}
+
+class _MealSectionState extends ConsumerState<MealSection> {
+  @override
+  Widget build(BuildContext context) {
+    final seState = ref.watch(mealFamilyProvider('01'));
+    final mdState = ref.watch(mealFamilyProvider('02'));
+    var se = MealModel();
+    var md = MealModel();
+
+    if (seState is MealModelError || mdState is MealModelError) {
+      return renderCard(
+          context: context,
+          contentWidget: CustomErrorWidget(
+              message: '에러가 발생하였습니다',
+              onPressed: () async => ref
+                  .read(homeNotifierProvider.notifier)
+                  .getHitScheduleAtHome()));
+    }
+
+    if (seState is MealModel && mdState is MealModel) {
+      se = seState;
+      md = mdState;
+    }
+
+    return renderCard(
+      context: context,
+      contentWidget:
+          (seState is MealModelLoading || mdState is MealModelLoading)
+              ? const Center(child: CustomCircularProgressIndicator())
+              : Column(
+                  children: [
+                    renderCardInside('01', se),
+                    renderCardInside('02', md),
+                  ],
+                ),
+    );
+  }
+
+  renderCardInside(String hspTpCd, MealModel mealModel) {
+    if (mealModel.data!.isEmpty) {
+      return Text('No data found ${hspTpCd}');
+    }
+
+    return Column(
+      children: [
+        Text(mealModel.data![0].title),
+        Row(
+          children: mealModel.data![0].imgUrls
+              .map(
+                (e) => Container(
+                  width: 100,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(e!, fit: BoxFit.fill),
+                  ),
+                ),
+              )
+              .toList(),
+        )
+      ],
+    );
+  }
+}
+
 class _HitScheduleSection extends ConsumerStatefulWidget {
   const _HitScheduleSection({super.key});
 
@@ -196,26 +260,31 @@ class __HitScheduleStateSection extends ConsumerState<_HitScheduleSection> {
       items: [
         renderCard(
           context: context,
-          contentWidget:
-
-          schedule is HitScheduleAtHomeModelLoading ? Center(child: CustomCircularProgressIndicator()) :
-              SingleChildScrollView(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text(
-                '오늘의 전산정보팀 일정',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+          contentWidget: schedule is HitScheduleAtHomeModelLoading
+              ? Center(child: CustomCircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          '오늘의 전산정보팀 일정',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Divider(
+                          height: 15,
+                        ),
+                        (cp.scheduleList!.length == 0
+                            ? Text('일정이 없습니다.')
+                            : Column(
+                                children: cp.scheduleList!
+                                    .map((e) => Text(e.scheduleName!))
+                                    .toList(),
+                              )),
+                      ]),
                 ),
-            ),
-            Divider(
-                height: 15,
-            ),
-
-                   (cp.scheduleList!.length== 0 ? Text('일정이 없습니다.'): Column(children:    cp.scheduleList!
-                  .map((e) => Text(e.scheduleName!)).toList(),)),
-          ]),
-              ),
         ),
         renderCard(
           context: context,
@@ -235,9 +304,10 @@ class __HitScheduleStateSection extends ConsumerState<_HitScheduleSection> {
               schedule is HitScheduleAtHomeModelLoading
                   ? CustomCircularProgressIndicator()
                   : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: cp.scheduleOfMineList!
-                          .map((e) => Text('${e.workDate!} ${e.dutyName} ${e.prediction! ? '예상':''}'))
+                          .map((e) => Text(
+                              '${e.workDate!} ${e.dutyName} ${e.prediction! ? '예상' : ''}'))
                           .toList(),
                     ),
             ],

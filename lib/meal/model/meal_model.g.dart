@@ -7,8 +7,8 @@ part of 'meal_model.dart';
 // **************************************************************************
 
 MealModel _$MealModelFromJson(Map<String, dynamic> json) => MealModel(
-      data: (json['data'] as List<dynamic>)
-          .map((e) => MealModelList.fromJson(e as Map<String, dynamic>))
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => MealModelList.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

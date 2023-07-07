@@ -14,9 +14,9 @@ class SearchHistoryTelephoneModelLoading
 
 @JsonSerializable()
 class SearchHistoryTelephoneMainModel extends SearchHistoryTelephoneModelBase {
-  final List<SearchHistoryTelephoneModel> telephoneHistory;
+  final List<SearchHistoryTelephoneModel>? telephoneHistory;
 
-  SearchHistoryTelephoneMainModel({required this.telephoneHistory});
+  SearchHistoryTelephoneMainModel({this.telephoneHistory});
   factory SearchHistoryTelephoneMainModel.fromJson(Map<String,dynamic> json)
   =>_$SearchHistoryTelephoneMainModelFromJson(json);
 }

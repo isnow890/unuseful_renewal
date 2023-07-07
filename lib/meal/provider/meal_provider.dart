@@ -10,35 +10,37 @@ import '../../common/const/data.dart';
 import '../../user/provider/login_variable_provider.dart';
 import 'hsp_tp_cd_provider.dart';
 
-final mealNotifierProvider =
-    StateNotifierProvider<MealNotifier, MealModelBase?>((ref) {
-  final repository = ref.watch(mealRepositoryProvider);
-  final hspTpCd = ref.watch(hspTpCdProvider);
-  // final loginValue = ref.read(loginVariableStateProvider);
+final mealFamilyProvider =
+    StateNotifierProvider.family<MealNotifier, MealModelBase?, String>(
+  (ref, hspTpCd) {
+    final repository = ref.watch(mealRepositoryProvider);
+    final notifier = MealNotifier(repository: repository, hspTpCd: hspTpCd);
+    return notifier;
+  },
+);
 
-  final storage = ref.watch(secureStorageProvider);
+// final mealNotifierProvider =
+//     StateNotifierProvider<MealNotifier, MealModelBase?>((ref) {
+//   final repository = ref.watch(mealRepositoryProvider);
+//   // final loginValue = ref.read(loginVariableStateProvider);
 
-
-
-  final notifier = MealNotifier(hspTpCd:  hspTpCd, repository: repository,storage: storage);
-  return notifier;
-});
+//   final notifier = MealNotifier(repository: repository);
+//   return notifier;
+// });
 
 class MealNotifier extends StateNotifier<MealModelBase?> {
   final MealRepository repository;
   final String hspTpCd;
-  final FlutterSecureStorage storage;
 
-  MealNotifier({required this.hspTpCd, required this.repository,required this.storage})
+  MealNotifier({required this.repository, required this.hspTpCd})
       : super(MealModelLoading()) {
     getMeal();
   }
 
   Future<MealModelBase> getMeal() async {
     try {
-      final hspTpCd2 = await storage.read(key: CONST_HSP_TP_CD);
       state = MealModelLoading();
-      final List<MealModelList> resp = await repository.getMeal(hspTpCd == ''? hspTpCd2!:hspTpCd);
+      final List<MealModelList> resp = await repository.getMeal(hspTpCd);
       state = MealModel(data: resp);
 
       print(resp[0].title);
