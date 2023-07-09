@@ -8,10 +8,12 @@ import 'package:unuseful/common/utils/url_launcher_utils.dart';
 import 'package:unuseful/telephone/model/telephone_basic_model.dart';
 import 'package:unuseful/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/telephone/provider/telephone_search_value_provider.dart';
+import 'package:unuseful/telephone/view/telephone_search_screen.dart';
 
+import '../../common/component/custom_readonly_search_text_field.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/utils/pagination_utils.dart';
-import '../component/custom_telephone_text_field.dart';
+import '../component/custom_readonly_search_text_field.dart';
 
 class TelephoneBasicScreen extends ConsumerStatefulWidget {
   const TelephoneBasicScreen({Key? key}) : super(key: key);
@@ -89,7 +91,9 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
         },
         child: Column(
           children: [
-            const CustomTelephoneTextField(),
+            CustomReadOnlySearchTextField(
+                push: TelephoneSearchScreen.routeName,
+                provider: telephoneSearchValueProvider),
             Expanded(
               child: Scrollbar(
                 thumbVisibility: true,

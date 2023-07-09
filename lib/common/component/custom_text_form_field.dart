@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 import '../const/colors.dart';
 
+typedef Validation = String? Function(String?)?;
+
 class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final String? errorText;
@@ -21,7 +23,8 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
   final bool? isSuffixDeleteButtonEnabled;
-
+  final Validation? validator;
+  final String? labelText;
 
   const CustomTextFormField({
     Key? key,
@@ -29,7 +32,7 @@ class CustomTextFormField extends StatelessWidget {
     this.errorText,
     this.obscureText = false,
     this.autofocus = false,
-    required this.onChanged,
+    this.onChanged,
     this.initValue,
     this.controller,
     this.contentPadding,
@@ -39,6 +42,7 @@ class CustomTextFormField extends StatelessWidget {
     this.isSuffixDeleteButtonEnabled,
     this.readOnly,
     this.onFieldSubmitted,
+    this.validator, this.labelText,
   }) : super(key: key);
 
   @override
@@ -46,12 +50,13 @@ class CustomTextFormField extends StatelessWidget {
     //텍스트 필드 Border를 모든 면에 적용함.
     final baseBorder = OutlineInputBorder(
         borderSide: BorderSide(
-          color: INPUT_BORDER_COLOR,
-          width: 1.0,
-        ));
+      color: INPUT_BORDER_COLOR,
+      width: 1.0,
+    ));
 
     return TextFormField(
-      onFieldSubmitted:onFieldSubmitted,
+      validator: validator,
+      onFieldSubmitted: onFieldSubmitted,
       readOnly: readOnly ?? false,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
@@ -70,6 +75,12 @@ class CustomTextFormField extends StatelessWidget {
           prefixIcon: prefixIcon,
           hintText: hintText,
           errorText: errorText,
+          labelText: labelText,
+          labelStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: PRIMARY_COLOR,
+          ),
           //힌트 스타일
           hintStyle: TextStyle(
             color: BODY_TEXT_COLOR,
@@ -87,15 +98,15 @@ class CustomTextFormField extends StatelessWidget {
           ),
           suffixIcon: isSuffixDeleteButtonEnabled ?? false
               ? IconButton(
-            splashColor: Colors.transparent,
-            icon: Icon(
-              Icons.clear,
-              color: PRIMARY_COLOR,
-            ),
-            onPressed: () {
-              if (controller != null) controller!.clear();
-            },
-          )
+                  splashColor: Colors.transparent,
+                  icon: Icon(
+                    Icons.refresh,
+                    color: PRIMARY_COLOR,
+                  ),
+                  onPressed: () {
+                    if (controller != null) controller!.clear();
+                  },
+                )
               : null),
     );
   }

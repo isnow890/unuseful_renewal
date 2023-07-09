@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share/share.dart';
 import 'package:unuseful/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/telephone/model/telephone_advance_model.dart';
+import 'package:unuseful/telephone/view/telephone_search_screen.dart';
 
 import '../../common/component/custom_circular_progress_indicator.dart';
+import '../../common/component/custom_readonly_search_text_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/utils/pagination_utils.dart';
 import '../../common/utils/url_launcher_utils.dart';
-import '../component/custom_telephone_text_field.dart';
+import '../component/custom_readonly_search_text_field.dart';
 import '../provider/telephone_advance_provider.dart';
 import '../provider/telephone_search_value_provider.dart';
 
@@ -86,8 +88,10 @@ class _TelephoneAdvanceScreenState
           },
           child: Column(
             children: [
-              const CustomTelephoneTextField(),
-
+              CustomReadOnlySearchTextField(
+                push: TelephoneSearchScreen.routeName,
+                provider: telephoneSearchValueProvider,
+              ),
               Expanded(
                 child: Scrollbar(
                   thumbVisibility: true,
@@ -164,9 +168,12 @@ class _TelephoneAdvanceScreenState
                                             hspTpCd: state.data[index].hspTpCd,
                                             korNm: state.data[index].korNm,
                                             stfNo: state.data[index].stfNo,
-                                            deptCdNm: state.data[index].deptCdNm,
-                                            etntTelNo: state.data[index].etntTelNo,
-                                            ugtTelNo: state.data[index].ugtTelNo));
+                                            deptCdNm:
+                                                state.data[index].deptCdNm,
+                                            etntTelNo:
+                                                state.data[index].etntTelNo,
+                                            ugtTelNo:
+                                                state.data[index].ugtTelNo));
                                       },
                                       icon: Icon(
                                         Icons.share_outlined,

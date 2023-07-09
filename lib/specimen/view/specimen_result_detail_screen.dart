@@ -34,6 +34,8 @@ class _SpecimenResultDetailScreenState
 
     if (state is SpecimenDetailModelLoading)
       return DefaultLayout(
+        isDrawerVisible: false,
+
         backgroundColor: Colors.grey[200],
         title: Text('detailed'),
         child: CustomLoadingIndicatorWidget(),
@@ -41,6 +43,8 @@ class _SpecimenResultDetailScreenState
 
     if (state is SpecimenDetailModelError) {
       return DefaultLayout(
+          isDrawerVisible: false,
+
           backgroundColor: Colors.grey[200],
           title: Text('detailed'),
           child: CustomErrorWidget(
@@ -55,6 +59,8 @@ class _SpecimenResultDetailScreenState
     print(cp.data!.length);
 
     return DefaultLayout(
+        isDrawerVisible: false,
+
         backgroundColor: Colors.grey[200],
         title: Text('${cp.data![0].exmCtgCd} ${cp.data![0].exmCtgAbbrNm} '),
         child: Padding(

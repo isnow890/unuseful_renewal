@@ -8,10 +8,12 @@ import 'package:go_router/go_router.dart';
 import 'package:unuseful/common/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/model/hit_schedule_at_home_model.dart';
-import 'package:unuseful/hit_schedule/model/hit_duty_statistics_model.dart';
+import 'package:unuseful/common/model/search_history_specimen_model.dart';
+import 'package:unuseful/common/provider/specimen_history_provider.dart';
 import 'package:unuseful/meal/model/meal_model.dart';
+import 'package:unuseful/specimen/provider/specimenSearchValueProvider.dart';
+import 'package:unuseful/specimen/view/specimen_main_screen.dart';
 import 'package:unuseful/telephone/view/telephone_main_screen.dart';
-import 'package:unuseful/user/provider/login_variable_provider.dart';
 import 'package:unuseful/user/provider/user_me_provider.dart';
 
 import '../../meal/provider/meal_provider.dart';
@@ -107,18 +109,7 @@ class _RootTabState extends ConsumerState<RootTab> {
                   height: 20,
                 ),
                 _renderSection(section: 'specimen'),
-                renderCard(
-                  context: context,
-                  contentWidget: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text('새로운 식단이 등록되었습니다'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                SpecimenSection(),
                 SizedBox(
                   height: 20,
                 ),
@@ -152,6 +143,120 @@ class _RootTabState extends ConsumerState<RootTab> {
   }
 }
 
+
+class SpecimenSection extends ConsumerWidget {
+  const SpecimenSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final specimen = ref.watch(specimenHistoryNotfierProvider);
+
+    return renderCard(
+      context: context,
+      contentWidget: Column(
+        children: [
+          _renderBody(specimen, ref, context),
+        ],
+      ),
+    );
+  }
+
+  _renderBody(specimen, WidgetRef ref, BuildContext context) {
+    if (specimen is SearchHistorySpecimenModelLoading) {
+      return const CustomCircularProgressIndicator();
+    } else if (specimen is SearchHistorySpecimenModelError) {
+      return CustomErrorWidget(
+          message: specimen.message,
+          onPressed: () {
+            ref
+                .read(specimenHistoryNotfierProvider.notifier)
+                .getSpecimenHistory();
+          });
+    } else if (specimen is SearchHistorySpecimenMainModel) {
+      return specimen.specimenHistory!.length == 0
+          ? Row(
+        children: [
+          Text(
+            '최근 조회 내역이 없습니다.',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      )
+          : Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                '최근 조회 내역',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Divider(
+                height: 15,
+              ),
+            ],
+          ),
+          Wrap(
+            alignment: WrapAlignment.start,
+            children: specimen.specimenHistory!
+                .take(5)
+                .map((e) => _renderChip(
+                SearchHistoryTelephoneModel(
+                    searchValue: e.searchValue,
+                    mode: '',
+                    lastUpdated: DateTime.now()),
+                ref,
+                context))
+                .toList(),
+          )
+        ],
+      );
+    }
+  }
+
+  Widget _renderChip(
+      SearchHistoryTelephoneModel body, WidgetRef ref, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 9.0),
+      child: Chip(
+        label: GestureDetector(
+          child: Text(body.searchValue),
+          onTap: () {
+            ref
+                .read(specimenSearchValueProvider.notifier)
+                .update((state) => body.searchValue);
+
+            context.goNamed(
+              SpecimenMainScreen.routeName,
+            );
+          },
+        ),
+        backgroundColor: Colors.white,
+        deleteIcon: Icon(
+          Icons.close,
+          color: PRIMARY_COLOR,
+        ),
+        onDeleted: () async {
+          await ref
+              .read(telephoneHistoryNotfierProvider.notifier)
+              .delTelephoneHistory(body: body);
+
+          await ref
+              .read(telephoneHistoryNotfierProvider.notifier)
+              .getTelephoneHistory();
+        },
+      ),
+    );
+  }
+}
+
+
 class TelephoneSection extends ConsumerWidget {
   const TelephoneSection({Key? key}) : super(key: key);
 
@@ -181,54 +286,50 @@ class TelephoneSection extends ConsumerWidget {
                 .getTelephoneHistory();
           });
     } else if (telephone is SearchHistoryTelephoneMainModel) {
-      return
-        telephone.telephoneHistory!.length ==0 ? Row(
-          children: [
-            Text(
-              '최근 조회 내역이 없습니다.',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ) :
-
-
-        Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-
-              const Text(
-                '최근 조회 내역',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+      return telephone.telephoneHistory!.length == 0
+          ? Row(
+              children: [
+                Text(
+                  '최근 조회 내역이 없습니다.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              Divider(
-                height: 15,
-              ),
-
-            ],
-          ),
-          Wrap(
-            alignment: WrapAlignment.start,
-            children: telephone.telephoneHistory!
-                .take(5)
-                .map((e) => _renderChip(
-                    SearchHistoryTelephoneModel(
-                        searchValue: e.searchValue,
-                        mode: '',
-                        lastUpdated: DateTime.now()),
-                    ref,
-                    context))
-                .toList(),
-          )
-        ],
-      );
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      '최근 조회 내역',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Divider(
+                      height: 15,
+                    ),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  children: telephone.telephoneHistory!
+                      .take(5)
+                      .map((e) => _renderChip(
+                          SearchHistoryTelephoneModel(
+                              searchValue: e.searchValue,
+                              mode: '',
+                              lastUpdated: DateTime.now()),
+                          ref,
+                          context))
+                      .toList(),
+                )
+              ],
+            );
     }
   }
 

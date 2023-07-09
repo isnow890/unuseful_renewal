@@ -55,6 +55,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
 
     if (state is SpecimenModelLoading)
       return DefaultLayout(
+        isDrawerVisible: false,
         backgroundColor: Colors.grey[200],
         title: Text('text'),
         child: CustomLoadingIndicatorWidget(),
@@ -63,6 +64,8 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
     final cp = state as SpecimenModel;
 
     return DefaultLayout(
+        isDrawerVisible: false,
+
         backgroundColor: Colors.grey[200],
         title: Text('text'),
         child: RefreshIndicator(
@@ -157,7 +160,8 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                                   padding: const EdgeInsets.all(10),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -179,21 +183,24 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                                         height: 5,
                                       ),
                                       ExpansionPanelList(
-                                        expandedHeaderPadding: EdgeInsets.all(0),
+                                        expandedHeaderPadding:
+                                            EdgeInsets.all(0),
                                         animationDuration:
                                             Duration(milliseconds: 500),
                                         elevation: 0,
                                         children: cp.data![index - 1].exmType!
                                             .map<ExpansionPanel>((e) {
                                           return ExpansionPanel(
-                                              headerBuilder: (BuildContext context,
-                                                  bool isExpanded) {
+                                              headerBuilder:
+                                                  (BuildContext context,
+                                                      bool isExpanded) {
                                                 return ListTile(
                                                   title: Text(
                                                     '${e.exrmExmCtgCd ?? ''} ${e.exmCtgAbbrNm ?? ''}',
                                                     style: TextStyle(
                                                       fontSize: 14.0,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                     ),
                                                   ),
                                                 );
@@ -201,104 +208,103 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                                               body: Column(
                                                 children: [
                                                   ...e.general!
-                                                      .map((general) => Container(
-                                                          padding:
-                                                              EdgeInsets.fromLTRB(
-                                                                  10, 0, 10, 10),
-                                                          child: Container(
-                                                            decoration:
-                                                                new BoxDecoration(
-                                                              color: Colors.grey[200],
-                                                              borderRadius:
-                                                                  new BorderRadius
-                                                                      .all(
-                                                                const Radius.circular(
-                                                                    10.0),
-                                                              ),
-                                                            ),
-                                                            child: Padding(
+                                                      .map((general) =>
+                                                          Container(
                                                               padding:
-                                                                  const EdgeInsets
-                                                                      .all(15),
-                                                              child: Column(
-                                                                children: [
-                                                                  _renderSection(
-                                                                    '병원',
-                                                                    general.hspTpNm,
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          10,
+                                                                          0,
+                                                                          10,
+                                                                          10),
+                                                              child: Container(
+                                                                decoration:
+                                                                    new BoxDecoration(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      200],
+                                                                  borderRadius:
+                                                                      new BorderRadius
+                                                                          .all(
+                                                                    const Radius
+                                                                            .circular(
+                                                                        10.0),
                                                                   ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '검체번호',
-                                                                    general.spcmNo,
+                                                                ),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(15),
+                                                                  child: Column(
+                                                                    children: [
+                                                                      _renderSection(
+                                                                        '병원',
+                                                                        general
+                                                                            .hspTpNm,
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '검체번호',
+                                                                        general
+                                                                            .spcmNo,
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '접수번호',
+                                                                        general.exmAcptNo ==
+                                                                                '0'
+                                                                            ? ''
+                                                                            : general.exmAcptNo,
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '검사상태',
+                                                                        general
+                                                                            .exmPrgrStsNm,
+                                                                        hspTpCd:
+                                                                            general.hspTpCd,
+                                                                        exrmExmCtgCd:
+                                                                            general.exrmExmCtgCd,
+                                                                        spcmNo:
+                                                                            general.spcmNo,
+                                                                        buttonVisible:
+                                                                            _checkButtonVisibility(general.exmPrgrStsCd),
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '채혈일시',
+                                                                        general.blclDtm ==
+                                                                                null
+                                                                            ? ''
+                                                                            : DateFormat('yyyy-MM-dd HH:mm').format(general.blclDtm!),
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '채혈자',
+                                                                        general
+                                                                            .blclStfNo,
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '접수일시',
+                                                                        general.acptDtm ==
+                                                                                null
+                                                                            ? ''
+                                                                            : DateFormat('yyyy-MM-dd HH:mm').format(general.acptDtm!),
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                      _renderSection(
+                                                                        '결과보고일시',
+                                                                        general.brfgDtm ==
+                                                                                null
+                                                                            ? ''
+                                                                            : DateFormat('yyyy-MM-dd HH:mm').format(general.brfgDtm!),
+                                                                      ),
+                                                                      _renderSizedBox(),
+                                                                    ],
                                                                   ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '접수번호',
-                                                                    general.exmAcptNo ==
-                                                                            '0'
-                                                                        ? ''
-                                                                        : general
-                                                                            .exmAcptNo,
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '검사상태',
-                                                                    general
-                                                                        .exmPrgrStsNm,
-                                                                    hspTpCd: general
-                                                                        .hspTpCd,
-                                                                    exrmExmCtgCd: general
-                                                                        .exrmExmCtgCd,
-                                                                    spcmNo: general
-                                                                        .spcmNo,
-                                                                    buttonVisible:
-                                                                        _checkButtonVisibility(
-                                                                            general
-                                                                                .exrmExmCtgCd),
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '채혈일시',
-                                                                    general.blclDtm ==
-                                                                            null
-                                                                        ? ''
-                                                                        : DateFormat(
-                                                                                'yyyy-MM-dd HH:mm')
-                                                                            .format(general
-                                                                                .blclDtm!),
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '채혈자',
-                                                                    general.blclStfNo,
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '접수일시',
-                                                                    general.acptDtm ==
-                                                                            null
-                                                                        ? ''
-                                                                        : DateFormat(
-                                                                                'yyyy-MM-dd HH:mm')
-                                                                            .format(general
-                                                                                .acptDtm!),
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                  _renderSection(
-                                                                    '결과보고일시',
-                                                                    general.brfgDtm ==
-                                                                            null
-                                                                        ? ''
-                                                                        : DateFormat(
-                                                                                'yyyy-MM-dd HH:mm')
-                                                                            .format(general
-                                                                                .brfgDtm!),
-                                                                  ),
-                                                                  _renderSizedBox(),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          )))
+                                                                ),
+                                                              )))
                                                       .toList(),
                                                 ],
                                               ),
@@ -309,7 +315,9 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                                             (int index2, bool isExpanded) {
                                           setState(
                                             () {
-                                              cp.data![index - 1].exmType![index2]
+                                              cp
+                                                  .data![index - 1]
+                                                  .exmType![index2]
                                                   .isExpanded = !isExpanded;
                                               print(expansionExpandedindexList[
                                                   index - 1]);
@@ -323,7 +331,6 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                               ),
                             ),
                           ),
-
                         ],
                       );
                     },
@@ -336,10 +343,11 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0,),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
                   child: SizedBox(
-                    width: MediaQuery.of(context).size.width
-                    ,
+                    width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(
                       onPressed: () {
                         context.goNamed(SpecimenMainScreen.routeName);
@@ -347,7 +355,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,
                       ),
-                      child: const Text('다른 날짜 조회'),
+                      child: const Text('이전'),
                     ),
                   ),
                 ),
@@ -402,30 +410,30 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ElevatedButton(
-                        onPressed: () {
-                          print('누름');
+                      onPressed: () {
+                        print('누름');
 
-                          ref
-                              .read(specimenDetailParamsProvider.notifier)
-                              .update((state) => SpecimenDetailParams(
-                                    hspTpCd: hspTpCd!,
-                                    spcmNo: spcmNo!,
-                                    exrmExmCtgCd: exrmExmCtgCd!,
-                                  ));
+                        ref
+                            .read(specimenDetailParamsProvider.notifier)
+                            .update((state) => SpecimenDetailParams(
+                                  hspTpCd: hspTpCd!,
+                                  spcmNo: spcmNo!,
+                                  exrmExmCtgCd: exrmExmCtgCd!,
+                                ));
 
-                          context.pushNamed(
-                              SpecimenResultDetailScreen.routeName,
-                              extra: widget.params);
-                        },
-                        child: Text(
-                          '검사내역',
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: PRIMARY_COLOR,
-                          side: BorderSide(color: PRIMARY_COLOR, width: 1),
-                        )),
+                        context.pushNamed(SpecimenResultDetailScreen.routeName,
+                            extra: widget.params);
+                      },
+                      child: Text(
+                        '검사내역',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: PRIMARY_COLOR,
+                        side: BorderSide(color: PRIMARY_COLOR, width: 1),
+                      ),
+                    ),
                   ),
                 )
         ],

@@ -53,10 +53,15 @@ class SpecimenHistoryNotifier
 
       final resp = await repository.saveSpecimenHistory(body: body,sid:convertedUser.sid
       !);
-      await getSpecimenHistory();
+
+      print('resp');
+      print(resp);
 
       return resp;
     } catch (e) {
+      print('에러에러');
+
+      print(e);
       return ResponseModel(message: '에러가 발생하였습니다.', isSuccess: false);
     }
   }

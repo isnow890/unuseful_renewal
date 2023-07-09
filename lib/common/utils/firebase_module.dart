@@ -141,16 +141,16 @@ void initializeflutterLocalNotificationsPlugin(WidgetRef widgetRef) async {
   });
 
   //iOS Background (iOS 앱 백그라운드 상태 -> 앱이 완전히 닫혀진 상태는 아니지만 백그라운드에서 작동중...)
-  if (Platform.isIOS) {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      ref!.read(fcmRouterProvider.notifier).update((state) => FcmRouterModel(
-          page: message.data['page'],
-          action: message.data['action'],
-          param: message.data['param']));
-
-      // 액션 추가 ... 파라미터를 전송하는 경우는 message.data['test_parameter1'] 이런 방식...
-    });
-  }
+  // if (Platform.isIOS) {
+  //   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //     ref!.read(fcmRouterProvider.notifier).update((state) => FcmRouterModel(
+  //         page: message.data['page'],
+  //         action: message.data['action'],
+  //         param: message.data['param']));
+  //
+  //     // 액션 추가 ... 파라미터를 전송하는 경우는 message.data['test_parameter1'] 이런 방식...
+  //   });
+  // }
 
   // Android Background & Android Terminated & iOS Terminated (안드로이드 백그라운드, 앱 종료 상태 및 iOS 앱 종료 상태) 1
   RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();

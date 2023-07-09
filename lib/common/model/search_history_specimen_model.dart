@@ -22,15 +22,11 @@ class SearchHistorySpecimenModel {
   final DateTime lastUpdated;
   final String searchValue;
   final String mode;
-  final String startDt;
-  final String endDt;
 
   SearchHistorySpecimenModel({
     required this.lastUpdated,
     required this.searchValue,
     required this.mode,
-    required this.startDt,
-    required this.endDt,
   });
   factory SearchHistorySpecimenModel.fromJson(Map<String, dynamic> json) =>
       _$SearchHistorySpecimenModelFromJson(json);

@@ -13,6 +13,7 @@ final dioProvider = Provider<Dio>((ref) {
   dio.options.connectTimeout=10000;
   dio.options.connectTimeout=10000;
   dio.options.sendTimeout=10000;
+
   final storage = ref.watch(secureStorageProvider);
   dio.interceptors.add(CustomInterceptor(storage: storage, ref: ref));
   return dio;
@@ -42,8 +43,18 @@ class CustomInterceptor extends Interceptor {
       final token = await storage.read(key: CONST_ACCESS_KEY);
       options.headers.addAll({
         'authorization': 'Bearer $token',
+
+        // 'Accept' : 'application/json',
       });
     }
+
+
+    options.headers.addAll({
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    });
+
+
 
     // if (options.headers['refreshToken'] == 'true') {
     //   options.headers.remove('refreshToken');

@@ -25,7 +25,7 @@ class SpecimenMainScreenExpansionPanelList extends StatefulWidget {
 
 class _SpecimenMainScreenExpansionPanelListState
     extends State<SpecimenMainScreenExpansionPanelList> {
-  bool _isExpanded = false;
+  bool _isExpanded = true;
   DateTime focusedDay = DateTime.now();
 
   TextStyle ts = TextStyle(

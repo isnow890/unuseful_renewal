@@ -7,6 +7,7 @@ import 'package:unuseful/common/component/general_toast_message.dart';
 import 'package:unuseful/common/model/search_history_telephone_model.dart';
 
 import '../../common/component/custom_error_widget.dart';
+import '../../common/component/custom_search_screen_widget.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/const/colors.dart';
 import '../../common/layout/default_layout.dart';
@@ -40,56 +41,20 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
   Widget build(BuildContext context) {
     final search = ref.watch(telephoneHistoryNotfierProvider);
 
-    return DefaultLayout(
-      isDrawerVisible: false,
-      title: Text('telephone'),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: CustomTextFormField(
-                    onFieldSubmitted: (value) {
-                      searchAndPop(search);
-                    },
-                    autofocus: true,
-                    controller: searchValueController,
-                    contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
-                    hintText: '검색어를 입력하세요.',
-                    onChanged: (value) {},
-                  ),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onPressed: () async {
-                      searchAndPop(search);
-                    },
-                    icon: const Icon(
-                      Icons.search,
-                      size: 35,
-                      color: PRIMARY_COLOR,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints()),
-              ],
-            ),
-            Expanded(
-              child: SizedBox(height: 100, child: _renderBody(search)),
-            )
-          ],
-        ),
-      ),
+    return CustomSearchScreenWidget(
+      title: 'telephone',
+      onFieldSubmitted: (value) {
+        searchAndPop(search);
+      },
+      body: _renderBody(search),
+      onPressed: () async {
+        searchAndPop(search);
+      },
+    searchValueController: searchValueController,
     );
   }
 
-  _renderBody(search) {
+  Widget _renderBody(search) {
     if (search is SearchHistoryTelephoneMainModel) {
       return Column(
         children: [
@@ -99,18 +64,15 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
           Expanded(
             child: ListView.separated(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: search!.telephoneHistory!.length+1,
+              itemCount: search!.telephoneHistory!.length + 1,
               separatorBuilder: (context, index) {
                 return Divider(
                   height: 20.0,
                 );
               },
               itemBuilder: (context, index) {
-
-
-                if (index == search!.telephoneHistory!.length)
-                  return null;
-                  return ListTile(
+                if (index == search!.telephoneHistory!.length) return null;
+                return ListTile(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
                   dense: true,
@@ -132,12 +94,15 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
                       onPressed: () async {
                         final body = SearchHistoryTelephoneModel(
                             lastUpdated: DateTime.now(),
-                            searchValue: search!.telephoneHistory![index]!.searchValue,
+                            searchValue:
+                                search!.telephoneHistory![index]!.searchValue,
                             mode: '');
                         await ref
                             .read(telephoneHistoryNotfierProvider.notifier)
                             .delTelephoneHistory(body: body);
-                        ref.read(telephoneHistoryNotfierProvider.notifier).getTelephoneHistory();
+                        ref
+                            .read(telephoneHistoryNotfierProvider.notifier)
+                            .getTelephoneHistory();
                       },
                       icon: const Icon(
                         Icons.close,

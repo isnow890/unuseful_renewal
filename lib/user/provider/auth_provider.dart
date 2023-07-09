@@ -18,10 +18,13 @@ import '../../common/utils/firebase_module.dart';
 import '../../common/utils/push_redirection_logic.dart';
 import '../../specimen/view/specimen_main_screen.dart';
 import '../../specimen/view/specimen_result_detail_screen.dart';
+import '../../specimen/view/specimen_search_screen.dart';
 import '../../telephone/view/telephone_main_screen.dart';
 import '../model/user_model.dart';
+import '../view/join_screen.dart';
 import '../view/login_screen.dart';
 import '../view/splash_screen.dart';
+import 'joing_now_provider.dart';
 import 'login_variable_provider.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
@@ -54,6 +57,16 @@ class AuthProvider extends ChangeNotifier {
     //유저 정보가 없는데
     //로그인중이면 그대로 로그인 페이지에 두고
     //만약에 로그인중이 아니라면 로그인 페이지로 이동
+
+
+
+
+
+    if (ref.read(joinNowProvider)) {
+      ref.read(joinNowProvider.notifier).update((state) => false);
+      return '/join';
+    }
+
 
     if (user == null) {
       return logginIn ? null : '/login';
@@ -195,9 +208,6 @@ class AuthProvider extends ChangeNotifier {
           path: '/specimenResult',
           name: SpecimenResultScreen.routeName,
           builder: (context, state) {
-            ref
-                .read(drawerSelectProvider.notifier)
-                .update((state) => SpecimenResultScreen.routeName);
             // final values = state.extra as SpecimenParams;
             final values = state.extra as SpecimenParams;
 
@@ -226,6 +236,26 @@ class AuthProvider extends ChangeNotifier {
             state: state,
             child: TelephoneSearchScreen(),
           ),
+        ),
+        GoRoute(
+          path: '/specimenSearchScreen',
+          name: SpecimenSearchScreen.routeName,
+          builder: (context, state) => SpecimenSearchScreen(
+            searchType: state.queryParameters['searchType']!,
+          ),
+          pageBuilder: (context, state) => buildPageWithDefaultTransition<void>(
+            context: context,
+            state: state,
+            child: SpecimenSearchScreen(
+              searchType: state.queryParameters['searchType']!,
+            ),
+          ),
+        ),
+        GoRoute(
+          path: '/join',
+          name: JoinScreen.routeName,
+          builder: (context, state) => JoinScreen(),
+
         ),
       ];
 

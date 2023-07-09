@@ -10,13 +10,19 @@ import 'package:unuseful/common/const/colors.dart';
 import 'package:unuseful/common/dio/dio.dart';
 import 'package:unuseful/common/layout/default_layout.dart';
 import 'package:unuseful/specimen/model/specimen_model.dart';
+import 'package:unuseful/specimen/provider/specimenSearchValueProvider.dart';
 import 'package:unuseful/specimen/provider/specimen_variable_provider.dart';
 import 'package:unuseful/specimen/view/specimen_result_screen.dart';
+import 'package:unuseful/specimen/view/specimen_search_screen.dart';
 
 import '../../common/component/custom_error_widget.dart';
+import '../../common/component/custom_readonly_search_text_field.dart';
 import '../../common/component/custom_text_form_field.dart';
 import '../../common/component/general_toast_message.dart';
 import '../../common/const/data.dart';
+import '../../common/model/search_history_specimen_model.dart';
+import '../../common/provider/specimen_history_provider.dart';
+import '../../telephone/component/custom_readonly_search_text_field.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
 import '../model/specimen_params.dart';
 import '../provider/specimen_provider.dart';
@@ -47,29 +53,30 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOn;
 
-  final textFormFieldController = TextEditingController();
+  // final textFormFieldController = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    textFormFieldController.addListener(_getTextFormFieldText);
+    // textFormFieldController.addListener(_getTextFormFieldText);
   }
 
   void _getTextFormFieldText() {
-    textFormFieldText = textFormFieldController.text;
+    // textFormFieldText = textFormFieldController.text;
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    textFormFieldController.dispose();
+    // textFormFieldController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(specimenStateProvider);
+    final search = ref.watch(specimenSearchValueProvider);
 
     final TextStyle segmentTextStyle = const TextStyle(
       fontSize: 12.0,
@@ -88,8 +95,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           message: state.message,
           onPressed: () {
             print('실행');
-
-
           },
         ),
         title: Text('specimen'),
@@ -141,42 +146,37 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     ),
                     _renderTitleTextHelper('병원구분'),
                     _renderHosiptalSegmentHelper(segmentTextStyle),
-                    const Divider(
-                      height: 30,
+                    const SizedBox(
+                      height: 15,
                     ),
                     _renderTitleTextHelper('등록번호/검체번호'),
-                    _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
+                    // _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
+
+                    CustomReadOnlySearchTextField(
+                        hintText: '등록번호 또는 검체번호를 입력하세요',
+                        searchType: searchType.toString(),
+                        push: SpecimenSearchScreen.routeName,
+                        provider: specimenSearchValueProvider),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
-                    Row(
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                       children: [
-                        Expanded(
-                          child: Container(
-                            height: 40,
-                            child: CustomTextFormField(
-                              hintText: searchType == 0
-                                  ? '8자리의 등록번호를 입력하세요.'
-                                  : '11자리의 검체번호를 입력하세요.',
-                              isSuffixDeleteButtonEnabled: true,
-                              controller: textFormFieldController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                                LengthLimitingTextInputFormatter(
-                                    textFormFieldMaxLength),
-                              ],
-                              contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
-                              onChanged: (value) {},
+                        _renderTitleTextHelper('조회 기간'),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom:10),
+                          child: Text(
+                            '검체번호는 조회기간의 영향을 받지 않습니다.',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const Divider(
-                      height: 30,
-                    ),
-                    _renderTitleTextHelper('조회 기간'),
+
                     SpecimenMainScreenExpansionPanelList(
                       searchType: searchType,
                       rangeStart: rangeStart,
@@ -185,6 +185,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                     const SizedBox(
                       height: 10,
                     ),
+
                     Row(
                       children: [
                         Expanded(
@@ -192,8 +193,19 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                             onPressed: state is SpecimenModelLoading
                                 ? null
                                 : () async {
-                                    if (!_validateBeforeSearch()) return;
-                                    final data = await _getData();
+                                    if (!_validateBeforeSearch(search.length))
+                                      return;
+                                    final data = await _getData(search);
+
+                                    final body = SearchHistorySpecimenModel(
+                                        lastUpdated: DateTime.now(),
+                                        searchValue: search,
+                                        mode: '');
+                                    await ref
+                                        .read(specimenHistoryNotfierProvider.notifier)
+                                        .saveSpecimenHistory(body: body);
+
+
                                     if (data!.isEmpty) {
                                       showToast(msg: '데이터가 없습니다.');
                                     } else {
@@ -201,8 +213,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                                           SpecimenResultScreen.routeName,
                                           extra: SpecimenParams(
                                               hspTpCd: _getHspTpCd(),
-                                              searchValue:
-                                                  textFormFieldController.text,
+                                              searchValue: search,
                                               strDt: DateFormat('yyyyMMdd')
                                                   .format(rangeStart!),
                                               endDt: DateFormat('yyyyMMdd')
@@ -245,14 +256,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
   }
 
-  _renderDefaultLayOut({required Widget widget}) {
-    return DefaultLayout(
-      title: Text('specimen'),
-      child: widget,
-    );
-  }
-
-  Future<List<SpecimenPrimaryModel>?> _getData() async {
+  Future<List<SpecimenPrimaryModel>?> _getData(searcn) async {
     ref
         .read(specimenStateProvider.notifier)
         .update((state) => SpecimenModelLoading());
@@ -262,7 +266,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
       final result = await repository.getSpcmInformation(
           specimenParams: SpecimenParams(
               hspTpCd: _getHspTpCd(),
-              searchValue: textFormFieldController.text,
+              searchValue: searcn,
               strDt: DateFormat('yyyyMMdd').format(rangeStart!),
               endDt: DateFormat('yyyyMMdd').format(rangeEnd!),
               orderBy: 'desc'));
@@ -289,15 +293,18 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     }
   }
 
-  bool _validateBeforeSearch() {
+  bool _validateBeforeSearch(search) {
+    print('searcn');
+    print(search);
+
     if (searchType == 1) {
-      if (textFormFieldController.text.length != 11) {
+      if (search != 11) {
         showToast(msg: '11자리의 검체번호를 입력하세요.');
         return false;
       }
     }
     if (searchType == 0) {
-      if (textFormFieldController.text.length != 8) {
+      if (search != 8) {
         showToast(msg: '8자리의 등록번호를 입력하세요.');
         return false;
       }
@@ -323,41 +330,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     //     hspTpCd: _getHspTpCd())));
   }
 
-  _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle) {
-    return Row(
-      children: [
-        Expanded(
-          child: MaterialSegmentedControl(
-            children: {
-              0: Text('등록번호', style: segmentTextStyle),
-              1: Text(
-                '검체번호',
-                style: segmentTextStyle,
-              )
-            },
-            horizontalPadding: const EdgeInsets.all(0),
-            selectionIndex: searchType,
-            borderColor: Colors.grey,
-            selectedColor: PRIMARY_COLOR,
-            unselectedColor: Colors.white,
-            selectedTextStyle: TextStyle(color: Colors.white),
-            unselectedTextStyle: TextStyle(color: PRIMARY_COLOR),
-            borderWidth: 0.7,
-            borderRadius: 6.0,
-            verticalOffset: 8.0,
-            onSegmentTapped: (index) {
-              setState(() {
-                textFormFieldController.text = '';
-                print('실행됨');
-                textFormFieldMaxLength = index == 0 ? 8 : 11;
-                searchType = index;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
+
 
   _renderHosiptalSegmentHelper(segmentTextStyle) {
     return Row(
