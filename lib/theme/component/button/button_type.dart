@@ -1,0 +1,66 @@
+part of 'button.dart';
+
+/// 버튼 타입
+enum ButtonType {
+  fill,
+  flat,
+  outline;
+
+  /// 텍스트 & 아이콘 색상
+  Color getColor(
+    BuildContext context,
+    WidgetRef ref,
+    bool isInactive, [
+    Color? color,
+  ]) {
+    final theme = ref.watch(themeServiceProvider);
+
+    switch (this) {
+      case ButtonType.fill:
+        return isInactive
+            ? theme.color.onInactiveContainer
+            : color ?? theme.color.onPrimary;
+      case ButtonType.flat:
+      case ButtonType.outline:
+        return isInactive ? theme.color.inactive : color ?? theme.color.primary;
+    }
+  }
+
+  /// 배경 색상
+  Color getBackgroundColor(
+    BuildContext context,
+    WidgetRef ref,
+    bool isInactive, [
+    Color? color,
+  ]) {
+    final theme = ref.watch(themeServiceProvider);
+
+    switch (this) {
+      case ButtonType.fill:
+        return isInactive
+            ? theme.color.inactiveContainer
+            : color ?? theme.color.primary;
+      case ButtonType.flat:
+      case ButtonType.outline:
+        return color ?? Colors.transparent;
+    }
+  }
+
+  /// 테두리
+  Border? getBorder(
+    BuildContext context,
+    WidgetRef ref,
+    bool isInactive, [
+    Color? color,
+  ]) {
+    switch (this) {
+      case ButtonType.fill:
+      case ButtonType.flat:
+        return null;
+      case ButtonType.outline:
+        return Border.all(
+          color: getColor(context, ref, isInactive, color),
+        );
+    }
+  }
+}
