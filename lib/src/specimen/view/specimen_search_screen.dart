@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
@@ -74,7 +75,7 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
   }
 
   _renderBody(search) {
-    if (search is SearchHistorySpecimenMainModel) {
+    if (search is SearchHistoryMainModel) {
       return Column(
         children: [
           SizedBox(
@@ -83,14 +84,14 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
           Expanded(
             child: ListView.separated(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: search!.specimenHistory!.length + 1,
+              itemCount: search!.history!.length + 1,
               separatorBuilder: (context, index) {
                 return Divider(
                   height: 20.0,
                 );
               },
               itemBuilder: (context, index) {
-                if (index == search!.specimenHistory!.length) return null;
+                if (index == search!.history!.length) return null;
                 return ListTile(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
@@ -100,21 +101,21 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
 
                   onTap: () async {
                     searchValueController.text =
-                        search!.specimenHistory![index]!.searchValue;
+                        search!.history![index]!.searchValue;
                     searchAndPop(search);
                   },
                   title: Text(
-                    search!.specimenHistory![index]!.searchValue,
+                    search!.history![index]!.searchValue,
                     style: TextStyle(fontSize: 15),
                   ),
                   trailing: IconButton(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onPressed: () async {
-                        final body = SearchHistorySpecimenModel(
+                        final body = SearchHistoryModel(
                             lastUpdated: DateTime.now(),
                             searchValue:
-                                search!.specimenHistory![index]!.searchValue,
+                                search!.history![index]!.searchValue,
                             mode: '');
                         await ref
                             .read(specimenHistoryNotfierProvider.notifier)
@@ -135,7 +136,7 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
           ),
         ],
       );
-    } else if (search is SearchHistorySpecimenModelError) {
+    } else if (search is ModelBaseError) {
       return CustomErrorWidget(
           message: search.message,
           onPressed: () async => await ref
@@ -153,7 +154,7 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
       return;
     }
 
-    if (search is SearchHistorySpecimenMainModel) {
+    if (search is SearchHistoryMainModel) {
 
       if (searchValueController.text.trim() == '') {
         showToast(msg: '검색어를 입력하세요.');

@@ -1,54 +1,56 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/firebase/repository/firestore_repository.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/common/model/response_model.dart';
+import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 
-final telephoneHistoryNotfierProvider = StateNotifierProvider<
-    TelephoneHistoryNotifier, SearchHistoryTelephoneModelBase?>((ref) {
+final telephoneHistoryNotfierProvider =
+    StateNotifierProvider<TelephoneHistoryNotifier, ModelBase?>((ref) {
   final repository = ref.watch(firestorageRepositoryProvider);
   final notifier = TelephoneHistoryNotifier(ref: ref, repository: repository);
   return notifier;
 });
 
-class TelephoneHistoryNotifier
-    extends StateNotifier<SearchHistoryTelephoneModelBase?> {
+class TelephoneHistoryNotifier extends StateNotifier<ModelBase?> {
   final Ref ref;
 
   final FirestoreRepository repository;
 
   TelephoneHistoryNotifier({required this.ref, required this.repository})
-      : super(SearchHistoryTelephoneModelLoading()) {
+      : super(ModelBaseLoading()) {
     getTelephoneHistory();
   }
 
-  Future<SearchHistoryTelephoneModelBase> getTelephoneHistory() async {
+  Future<ModelBase?> getTelephoneHistory() async {
     try {
-      state = SearchHistoryTelephoneModelLoading();
+      state = ModelBaseLoading();
 
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
 
-      List<SearchHistoryTelephoneModel> resp =
+      List<SearchHistoryModel> resp =
           await repository.getTelephoneHistory(convertedUser.sid!);
-      state = SearchHistoryTelephoneMainModel(telephoneHistory: resp);
-      return SearchHistoryTelephoneMainModel(telephoneHistory: resp);
+      state = SearchHistoryMainModel(history: resp);
+      return SearchHistoryMainModel(history: resp);
     } catch (e) {
       print(e.toString());
-      state = SearchHistoryTelephoneModelError(message: '에러가 발생하였습니다.');
+      state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }
   }
 
   Future<ResponseModel> saveTelephoneHistory(
-      {required SearchHistoryTelephoneModel body}) async {
+      {required SearchHistoryModel body}) async {
     try {
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
 
-      final resp = await repository.saveTelephoneHistory(body: body,sid:convertedUser.sid!);
+      final resp = await repository.saveTelephoneHistory(
+          body: body, sid: convertedUser.sid!);
 
       return resp;
     } catch (e) {
@@ -57,7 +59,7 @@ class TelephoneHistoryNotifier
   }
 
   Future<ResponseModel> delTelephoneHistory(
-      {required SearchHistoryTelephoneModel body}) async {
+      {required SearchHistoryModel body}) async {
     try {
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;

@@ -14,17 +14,23 @@ final userMeProvider =
     StateNotifierProvider<UserMeStateNotifier, ModelBase?>((ref) {
   final repository = ref.watch(userMeRepositoryProvider);
   final authRepository = ref.watch(authRepositoryProvider);
+  final secureStorage = ref.watch(secureStorageProvider);
 
   return UserMeStateNotifier(
-      repository: repository, authRepository: authRepository, ref: ref);
+      repository: repository,
+      authRepository: authRepository,
+      ref: ref,
+      secureStorage: secureStorage);
 });
 
 class UserMeStateNotifier extends StateNotifier<ModelBase?> {
   final UserMeRepository repository;
   final AuthRepository authRepository;
   final Ref ref;
+  final FlutterSecureStorage secureStorage;
 
   UserMeStateNotifier({
+    required this.secureStorage,
     required this.ref,
     required this.repository,
     required this.authRepository,
@@ -37,6 +43,12 @@ class UserMeStateNotifier extends StateNotifier<ModelBase?> {
       final resp = await repository.getMe();
       if (resp.message == null) {
         state = resp;
+
+        final hspTpCd = await secureStorage.read(key: CONST_HSP_TP_CD);
+
+        ref
+            .read(globalVariableStateProvider.notifier)
+            .update(user: resp.copyWIth(hspTpCd: hspTpCd));
       } else {
         showToast(msg: resp.message!, toastLength: Toast.LENGTH_LONG);
       }

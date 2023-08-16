@@ -100,14 +100,14 @@ class _FirestoreRepository implements FirestoreRepository {
   }
 
   @override
-  Future<List<SearchHistoryTelephoneModel>> getTelephoneHistory(sid) async {
+  Future<List<SearchHistoryModel>> getTelephoneHistory(sid) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'sid': sid};
     final _headers = <String, dynamic>{r'accessKey': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<SearchHistoryTelephoneModel>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<SearchHistoryModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -121,20 +121,20 @@ class _FirestoreRepository implements FirestoreRepository {
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) =>
-            SearchHistoryTelephoneModel.fromJson(i as Map<String, dynamic>))
+            SearchHistoryModel.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }
 
   @override
-  Future<List<SearchHistorySpecimenModel>> getSpecimenHistory(sid) async {
+  Future<List<SearchHistoryModel>> getSpecimenHistory(sid) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'sid': sid};
     final _headers = <String, dynamic>{r'accessKey': 'true'};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<SearchHistorySpecimenModel>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<SearchHistoryModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -148,7 +148,7 @@ class _FirestoreRepository implements FirestoreRepository {
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
         .map((dynamic i) =>
-            SearchHistorySpecimenModel.fromJson(i as Map<String, dynamic>))
+            SearchHistoryModel.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

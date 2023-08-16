@@ -29,7 +29,6 @@ class HomeNotifier extends StateNotifier<ModelBase?> {
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
 
-      print(convertedUser.sid);
       state = ModelBaseLoading();
 
       HitScheduleAtHomeModel resp =

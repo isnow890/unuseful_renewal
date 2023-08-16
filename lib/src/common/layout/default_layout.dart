@@ -33,16 +33,7 @@ class DefaultLayout extends ConsumerWidget {
     final select = ref.watch(drawerSelectProvider);
     return SafeArea(
       child: Scaffold(
-        drawer: isDrawerVisible ?? true
-            ? MainDrawer(
-                onSelectedTap: (String menu) {
-                  ref
-                      .read(drawerSelectProvider.notifier)
-                      .update((state) => menu);
-                  Navigator.of(context).pop();
-                },
-              )
-            : null,
+        drawer: isDrawerVisible ?? true ? const MainDrawer() : null,
         appBar: _renderAppbar(titleVisibility ?? true),
         body: child,
         bottomNavigationBar: bottomNavigationBar,
@@ -62,7 +53,6 @@ class DefaultLayout extends ConsumerWidget {
         title: title,
         actions: actions,
         titleSpacing: 0,
-
       );
     }
   }

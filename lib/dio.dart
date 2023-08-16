@@ -44,8 +44,12 @@ class CustomInterceptor extends Interceptor {
     }
 
     options.headers
-        .addAll({'Content-Type': 'application/json', 'Accept': '*/*'});
-    options.headers['Access-Control-Allow-Origin'] = '*';
+        .addAll({'Content-Type': 'application/json', 'Accept': 'application/json',
+    'Access-Control-Allow-Origin':'*','ngrok-skip-browser-warning':'3333'
+    });
+
+
+
 
 
     // if (options.headers['refreshToken'] == 'true') {

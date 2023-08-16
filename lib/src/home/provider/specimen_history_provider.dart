@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/firebase/repository/firestore_repository.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/common/model/response_model.dart';
 import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
 
@@ -7,43 +8,43 @@ import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 
 final specimenHistoryNotfierProvider = StateNotifierProvider<
-    SpecimenHistoryNotifier, SearchHistorySpecimenModelBase?>((ref) {
+    SpecimenHistoryNotifier, ModelBase?>((ref) {
   final repository = ref.watch(firestorageRepositoryProvider);
   final notifier = SpecimenHistoryNotifier(ref: ref, repository: repository);
   return notifier;
 });
 
 class SpecimenHistoryNotifier
-    extends StateNotifier<SearchHistorySpecimenModelBase?> {
+    extends StateNotifier<ModelBase?> {
   final Ref ref;
 
   final FirestoreRepository repository;
 
   SpecimenHistoryNotifier({required this.ref, required this.repository})
-      : super(SearchHistorySpecimenModelLoading()) {
+      : super(ModelBaseLoading()) {
     getSpecimenHistory();
   }
 
-  Future<SearchHistorySpecimenModelBase> getSpecimenHistory() async {
+  Future<ModelBase> getSpecimenHistory() async {
     try {
-      state = SearchHistorySpecimenModelLoading();
+      state = ModelBaseLoading();
 
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
 
-      List<SearchHistorySpecimenModel> resp =
+      List<SearchHistoryModel> resp =
           await repository.getSpecimenHistory(convertedUser.sid!);
-      state = SearchHistorySpecimenMainModel(specimenHistory: resp);
-      return SearchHistorySpecimenMainModel(specimenHistory: resp);
+      state = SearchHistoryMainModel(history: resp);
+      return SearchHistoryMainModel(history: resp);
     } catch (e) {
       print(e.toString());
-      state = SearchHistorySpecimenModelError(message: '에러가 발생하였습니다.');
+      state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }
   }
 
   Future<ResponseModel> saveSpecimenHistory(
-      {required SearchHistorySpecimenModel body}) async {
+      {required SearchHistoryModel body}) async {
     try {
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
@@ -62,7 +63,7 @@ class SpecimenHistoryNotifier
   }
 
   Future<ResponseModel> delSpecimenHistory(
-      {required SearchHistorySpecimenModel body}) async {
+      {required SearchHistoryModel body}) async {
     try {
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;

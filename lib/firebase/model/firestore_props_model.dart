@@ -9,8 +9,8 @@ abstract class FirestorePropsModelBase {}
 @JsonSerializable()
 class FirestorePropsModel extends FirestorePropsModelBase {
   final String id;
-  List<SearchHistoryTelephoneModel> telephoneHistory;
-  List<SearchHistorySpecimenModel> specimenHistory;
+  List<SearchHistoryModel> telephoneHistory;
+  List<SearchHistoryModel> specimenHistory;
 
   FirestorePropsModel(
       {required this.id,

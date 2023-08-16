@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
@@ -25,5 +27,6 @@ abstract class HomeRepository {
   @GET('/home/getHitScheduleAtHome')
   @Headers({'accessKey': 'true'})
   Future<HitScheduleAtHomeModel> getHitScheduleAtHome(
-      {@Query("stfNm") required String stfNm});
+      {@Query("stfNm") required String stfNm}
+      );
 }

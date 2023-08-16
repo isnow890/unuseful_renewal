@@ -9,6 +9,7 @@ import 'package:unuseful/src/user/model/user_model.dart';
 import 'package:unuseful/src/user/provider/user_me_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 class HitScheduleSection extends ConsumerStatefulWidget {
   const HitScheduleSection({super.key});
@@ -22,6 +23,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
   @override
   Widget build(BuildContext context) {
     final schedule = ref.watch(homeNotifierProvider);
+    final theme = ref.watch(themeServiceProvider);
 
     final user = ref.read(userMeProvider.notifier).state;
     final convertedUser = user as UserModel;
@@ -39,30 +41,35 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
       cp = schedule;
     }
 
-    return CarouselSlider(
-      items: [
+    return Column(
+      children: [
         HomeScreenCard(
           contentWidget: schedule is ModelBaseLoading
-              ? Center(child: CustomCircularProgressIndicator())
+              ? const Center(child: CustomCircularProgressIndicator())
               : SingleChildScrollView(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           '오늘의 전산정보팀 일정',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                          style: theme.typo.subtitle1.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         Divider(
-                          height: 15,
+                          height: 30,
                         ),
-                        (cp.scheduleList!.length == 0
-                            ? Text('일정이 없습니다.')
+                        (cp.scheduleList!.isEmpty
+                            ? Text(
+                                '일정이 없습니다.',
+                                style: theme.typo.body1,
+                              )
                             : Column(
                                 children: cp.scheduleList!
-                                    .map((e) => Text(e.scheduleName!))
+                                    .map((e) => Text(
+                                          e.scheduleName!,
+                                          style: theme.typo.body1,
+                                        ))
                                     .toList(),
                               )),
                       ]),
@@ -74,9 +81,8 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
             children: [
               Text(
                 '${user.stfNm}님의 당직 일정',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                style: theme.typo.subtitle1.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Divider(
@@ -98,35 +104,38 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
           contentWidget: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 '3일간의 당직 일정',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                style: theme.typo.subtitle1.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Divider(
                 height: 15,
               ),
               schedule is ModelBaseLoading
-                  ? CustomCircularProgressIndicator()
+                  ? const CustomCircularProgressIndicator()
                   : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: cp.threeDaysList!
-                          .map((e) => Text('${e.afternoonNm!}'))
-                          .toList(),
-                    ),
+                          .map((e) => Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                        text:
+                                            '${e.workDate} ${e.hdyYn == 'Y' ? '휴일' : '평일'}'),
+                                    TextSpan(
+                                        text:
+                                            '${e.hdyYn == 'Y' ? ' 오전 ' : ''}${e.hdyYn == 'Y' ? e.morningNm : ''}'),
+                                    TextSpan(text: ' 오후 ${e.afternoonNm!}'),
+                                  ],
+                                ),
+                              ))
+                          .toList()),
             ],
           ),
         ),
       ],
-      options: CarouselOptions(
-        enableInfiniteScroll: false,
-        onPageChanged: (index2, reason) {},
-        // aspectRatio: 3.0,
-        enlargeCenterPage: true,
-        viewportFraction: 1,
-        height: 180,
-      ),
     );
   }
 }

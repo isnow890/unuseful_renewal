@@ -32,33 +32,33 @@ abstract class FirestoreRepository {
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveTelephoneHistory(
       {@Query("sid") required String sid,
-      @Body() required SearchHistoryTelephoneModel body});
+      @Body() required SearchHistoryModel body});
 
   @POST('/firestore/saveSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> saveSpecimenHistory(
       {@Query("sid") required String sid,
-      @Body() required SearchHistorySpecimenModel body});
+      @Body() required SearchHistoryModel body});
 
   @GET('/firestore/getTelephoneHistory')
   @Headers({'accessKey': 'true'})
-  Future<List<SearchHistoryTelephoneModel>> getTelephoneHistory(
+  Future<List<SearchHistoryModel>> getTelephoneHistory(
       @Query("sid") String sid);
 
   @GET('/firestore/getSpecimenHistory')
   @Headers({'accessKey': 'true'})
-  Future<List<SearchHistorySpecimenModel>> getSpecimenHistory(
+  Future<List<SearchHistoryModel>> getSpecimenHistory(
       @Query("sid") String sid);
 
   @DELETE('/firestore/delTelephoneHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delTelephoneHistory(
       {@Query("sid") required String sid,
-      @Body() required SearchHistoryTelephoneModel body});
+      @Body() required SearchHistoryModel body});
 
   @DELETE('/firestore/delSpecimenHistory')
   @Headers({'accessKey': 'true'})
   Future<ResponseModel> delSpecimenHistory(
       {@Query("sid") required String sid,
-      @Body() required SearchHistorySpecimenModel body});
+      @Body() required SearchHistoryModel body});
 }

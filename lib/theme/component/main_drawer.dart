@@ -2,101 +2,122 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/colors.dart';
-import 'package:unuseful/src/common/provider/drawer_selector_provider.dart';
+import 'package:unuseful/data.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
+import 'package:unuseful/src/hit_schedule/view/hit_schedule_main_screen.dart';
+import 'package:unuseful/src/home/view/home_screen.dart';
+
+import 'package:unuseful/src/meal/view/meal_screen.dart';
+import 'package:unuseful/src/patient/view/patient_screen.dart';
+import 'package:unuseful/src/specimen/view/specimen_main_screen.dart';
 import 'package:unuseful/src/telephone/provider/telephone_search_value_provider.dart';
-import 'package:unuseful/src/user/model/user_model.dart';
+import 'package:unuseful/src/telephone/view/telephone_main_screen.dart';
+
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
-import 'package:unuseful/src/user/provider/user_me_provider.dart';
+import 'package:unuseful/theme/model/menu_model.dart';
+
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 typedef OnSelectedTap = void Function(String menu);
 
 class MainDrawer extends ConsumerWidget {
-  MainDrawer({Key? key, required this.onSelectedTap}) : super(key: key);
-  final OnSelectedTap onSelectedTap;
-
-  final ts = TextStyle(
-    color: Colors.white,
-    fontSize: 15.0,
-  );
+  const MainDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final select = ref.watch(drawerSelectProvider);
-    final user = ref.watch(userMeProvider.notifier).state;
-    final hspTpCd = ref.watch(globalVariableStateProvider).hspTpCd;
-    final convertedUser = user as UserModel;
+    final global = ref.watch(globalVariableStateProvider);
 
-    List<String> tmpList = [
-      'home',
-      'telephone',
-      'specimenMain',
-      'meal',
-      'patient',
-      'hitSchedule'
-    ];
+    final theme = ref.watch(themeServiceProvider);
 
-    return Container(
-      width: 150,
-      child: Drawer(
-        backgroundColor: PRIMARY_COLOR,
-        child: ListView(
-          children: [
-            SizedBox(
-              height: 120,
-              child: DrawerHeader(
-                margin: EdgeInsets.all(0.0),
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 15),
-                child: Column(
-                  children: [
-                    Row(
+    _renderMenuItem({required String routeName}) {
+      final selectedMenu =
+          menus.firstWhere((element) => element.routeName == routeName);
+
+      return ListTile(
+          leading: Icon(selectedMenu.icon),
+          title: Text(selectedMenu.menuName),
+          onTap: () {
+            ref.refresh(telephoneSearchValueProvider);
+            ref.refresh(hitScheduleSelectedDayProvider);
+            // context.goNamed(value);
+
+            while (context.canPop()) {
+              context.pop();
+            }
+            context.pushReplacementNamed(selectedMenu.routeName);
+
+            // context.pushNamed(menuMap.values.toList()[index]);
+
+            // if (menuMap.values.toList()[index] == 'home')
+            //   context.goNamed(menuMap.values.toList()[index]);
+            // else
+            //   context.pushNamed(menuMap.values.toList()[index]);
+          });
+    }
+
+    return Drawer(
+      width: 250,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          Container(
+            height: 130,
+            color: theme.color.primary,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  Text.rich(
+                    TextSpan(
                       children: [
-                        const SizedBox(
-                          width: 10,
+                        TextSpan(
+                          text: '${global.stfNm}',
+                          style: theme.typo.headline2
+                              .copyWith(color: theme.color.onPrimary),
                         ),
-                        Text(
-                          hspTpCd == "01" ? 'se' : 'md',
-                          style: ts,
+                        TextSpan(
+                          text: '  (${global.stfNo})',
+                          style: theme.typo.subtitle2
+                              .copyWith(color: theme.color.onPrimary),
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          convertedUser.stfNm!,
-                          style: ts,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          convertedUser.deptNm!,
-                          style: ts,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    (global.hspTpCd == '01' ? '서울' : '목동') + ' 병원',
+                    style: theme.typo.subtitle2
+                        .copyWith(color: theme.color.onPrimary),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                    global.deptNm!,
+                    style: theme.typo.subtitle2
+                        .copyWith(color: theme.color.onPrimary),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
               ),
             ),
-            ...tmpList
-                .map((e) => renderListTile(select, e, context, ref))
-                .toList(),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          _renderMenuItem(routeName: HomeScreen.routeName),
+          _renderMenuItem(routeName: TelePhoneMainScreen.routeName),
+          _renderMenuItem(routeName: MealScreen.routeName),
+          _renderMenuItem(routeName: SpecimenMainScreen.routeName),
+          _renderMenuItem(routeName: PatientScreen.routeName),
+          _renderMenuItem(routeName: HitScheduleMainScreen.routeName),
+        ],
       ),
     );
   }
@@ -115,7 +136,6 @@ class MainDrawer extends ConsumerWidget {
       onTap: () {
         ref.refresh(telephoneSearchValueProvider);
         ref.refresh(hitScheduleSelectedDayProvider);
-        onSelectedTap(value);
         // context.goNamed(value);
         context.goNamed(value);
 

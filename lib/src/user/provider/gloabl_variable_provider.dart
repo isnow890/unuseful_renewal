@@ -34,6 +34,7 @@ class GlobalVariableStateNofifier extends StateNotifier<UserModel> {
   }
 
   void update({required UserModel user}) async {
+    print('업데이트 시작');
     await secureStorage.write(key: CONST_ACCESS_KEY, value: user.accessKey);
     await secureStorage.write(key: CONST_STF_NO, value: user.stfNo);
     await secureStorage.write(key: CONST_HSP_TP_CD, value: user.hspTpCd);

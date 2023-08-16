@@ -1,34 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 part 'search_history_specimen_model.g.dart';
 
-abstract class SearchHistorySpecimenModelBase {}
 
-class SearchHistorySpecimenModelLoading
-    extends SearchHistorySpecimenModelBase {}
-
-class SearchHistorySpecimenModelError extends SearchHistorySpecimenModelBase {
-  final String message;
-  SearchHistorySpecimenModelError({required this.message});
-}
-
-class SearchHistorySpecimenMainModel extends SearchHistorySpecimenModelBase {
-  final List<SearchHistorySpecimenModel> specimenHistory;
-  SearchHistorySpecimenMainModel({required this.specimenHistory});
+class SearchHistoryMainModel extends ModelBase {
+  final List<SearchHistoryModel> history;
+  SearchHistoryMainModel({required this.history});
 }
 
 @JsonSerializable()
-class SearchHistorySpecimenModel {
+class SearchHistoryModel {
   final DateTime lastUpdated;
   final String searchValue;
   final String mode;
 
-  SearchHistorySpecimenModel({
+  SearchHistoryModel({
     required this.lastUpdated,
     required this.searchValue,
     required this.mode,
   });
-  factory SearchHistorySpecimenModel.fromJson(Map<String, dynamic> json) =>
+  factory SearchHistoryModel.fromJson(Map<String, dynamic> json) =>
       _$SearchHistorySpecimenModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$SearchHistorySpecimenModelToJson(this);

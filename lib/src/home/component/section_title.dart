@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
-class SectionTitle extends StatelessWidget {
+class SectionTitle extends ConsumerWidget {
   const SectionTitle({Key? key, required this.section}) : super(key: key);
   final String section;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -13,10 +16,7 @@ class SectionTitle extends StatelessWidget {
         children: [
           Text(
             section,
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.w500,
-            ),
+            style: theme.typo.headline3.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             height: 5,

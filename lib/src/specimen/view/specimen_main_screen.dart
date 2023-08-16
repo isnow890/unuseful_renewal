@@ -194,7 +194,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
                                       return;
                                     final data = await _getData(search);
 
-                                    final body = SearchHistorySpecimenModel(
+                                    final body = SearchHistoryModel(
                                         lastUpdated: DateTime.now(),
                                         searchValue: search,
                                         mode: '');

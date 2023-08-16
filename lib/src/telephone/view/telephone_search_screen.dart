@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
+import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
@@ -53,7 +55,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
   }
 
   Widget _renderBody(search) {
-    if (search is SearchHistoryTelephoneMainModel) {
+    if (search is SearchHistoryMainModel) {
       return Column(
         children: [
           SizedBox(
@@ -62,14 +64,14 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
           Expanded(
             child: ListView.separated(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: search!.telephoneHistory!.length + 1,
+              itemCount: search.history.length + 1,
               separatorBuilder: (context, index) {
                 return Divider(
                   height: 20.0,
                 );
               },
               itemBuilder: (context, index) {
-                if (index == search!.telephoneHistory!.length) return null;
+                if (index == search.history.length) return null;
                 return ListTile(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
@@ -79,21 +81,21 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
 
                   onTap: () async {
                     searchValueController.text =
-                        search!.telephoneHistory![index]!.searchValue;
+                        search!.history![index]!.searchValue;
                     searchAndPop(search);
                   },
                   title: Text(
-                    search!.telephoneHistory![index]!.searchValue,
+                    search!.history![index]!.searchValue,
                     style: TextStyle(fontSize: 15),
                   ),
                   trailing: IconButton(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
                       onPressed: () async {
-                        final body = SearchHistoryTelephoneModel(
+                        final body = SearchHistoryModel(
                             lastUpdated: DateTime.now(),
                             searchValue:
-                                search!.telephoneHistory![index]!.searchValue,
+                                search!.history![index]!.searchValue,
                             mode: '');
                         await ref
                             .read(telephoneHistoryNotfierProvider.notifier)
@@ -114,7 +116,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
           ),
         ],
       );
-    } else if (search is SearchHistoryTelephoneModelError) {
+    } else if (search is ModelBaseError) {
       return CustomErrorWidget(
           message: search.message,
           onPressed: () async => await ref
@@ -126,12 +128,12 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
   }
 
   searchAndPop(search) async {
-    final body = SearchHistoryTelephoneModel(
+    final body = SearchHistoryModel(
         lastUpdated: DateTime.now(),
         searchValue: searchValueController.text,
         mode: '');
 
-    if (search is SearchHistoryTelephoneMainModel) {
+    if (search is SearchHistoryMainModel) {
       if (searchValueController.text.trim() == '') {
         showToast(msg: '검색어를 입력하세요.');
         return;

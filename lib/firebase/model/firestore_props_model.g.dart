@@ -10,12 +10,10 @@ FirestorePropsModel _$FirestorePropsModelFromJson(Map<String, dynamic> json) =>
     FirestorePropsModel(
       id: json['id'] as String,
       telephoneHistory: (json['telephoneHistory'] as List<dynamic>)
-          .map((e) =>
-              SearchHistoryTelephoneModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => SearchHistoryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       specimenHistory: (json['specimenHistory'] as List<dynamic>)
-          .map((e) =>
-              SearchHistorySpecimenModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => SearchHistoryModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
