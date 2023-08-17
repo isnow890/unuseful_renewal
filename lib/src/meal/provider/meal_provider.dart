@@ -33,11 +33,9 @@ class MealNotifier extends StateNotifier<ModelBase?> {
       final List<MealModelList> resp = await repository.getMeal(hspTpCd);
       state = MealModel(data: resp);
 
-      print(resp[0].title);
 
       return MealModel(data: resp);
     } catch (e) {
-      print(e.toString());
       state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }

@@ -6,7 +6,6 @@ final mealCurrentIndexFamilyProvider =
   final currentIndex =
       ref.watch(mealCurrentIndexProvider.notifier).getCurrentIndex(mealSeq);
   print('currentIndex');
-  print(currentIndex);
 
   return currentIndex;
 });
@@ -44,8 +43,6 @@ class MealCurrentIndexNotifier extends StateNotifier<List<CurrentIndex>> {
       cp.add(CurrentIndex(mealSeq: mealSeq, currentIndex: currentIndex));
     }
 
-    print(
-        cp.firstWhere((element) => element.mealSeq == mealSeq).currentIndex);
 
     state = cp;
     return cp

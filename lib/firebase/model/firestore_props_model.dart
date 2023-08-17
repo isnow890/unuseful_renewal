@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
+import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 
 part 'firestore_props_model.g.dart';

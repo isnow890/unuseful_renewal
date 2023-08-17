@@ -13,7 +13,6 @@ import 'package:unuseful/theme/component/segment_button.dart';
 import 'package:unuseful/theme/component/toast/toast.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';
-import '../../common/layout/default_layout.dart';
 import '../model/user_model.dart';
 import '../provider/joing_now_provider.dart';
 import '../provider/gloabl_variable_provider.dart';

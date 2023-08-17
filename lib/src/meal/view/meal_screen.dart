@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/colors.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
 import 'package:unuseful/src/meal/model/meal_model.dart';
 import 'package:unuseful/src/meal/provider/meal_current_index_provider.dart';
 import 'package:unuseful/src/meal/provider/meal_provider.dart';
 import 'package:unuseful/src/meal/view/meal_main_screen.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
-import 'package:unuseful/theme/component/full_photo.dart';
+import 'package:unuseful/theme/component/photo_view/full_photo.dart';
+
+import '../../../theme/layout/default_layout.dart';
 
 class MealScreen extends ConsumerStatefulWidget {
   const MealScreen({Key? key}) : super(key: key);
@@ -58,7 +59,7 @@ class _MealScreenState extends ConsumerState<MealScreen>
     final global = ref.watch(globalVariableStateProvider);
 
     return DefaultLayout(
-      title: Text('meal'),
+      title: 'meal',
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,
         unselectedItemColor: BODY_TEXT_COLOR,

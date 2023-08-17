@@ -4,7 +4,7 @@ import 'package:unuseful/src/patient/model/patient_model.dart';
 import 'package:unuseful/src/patient/provider/patient_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import '../../../colors.dart';
-import '../../common/layout/default_layout.dart';
+import '../../../theme/layout/default_layout.dart';
 import '../../common/provider/drawer_selector_provider.dart';
 import '../provider/patient_total_count_provider.dart';
 
@@ -169,25 +169,7 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
     required Widget widget,
   }) {
     return DefaultLayout(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Patient List'),
-            SizedBox(
-              width: 10,
-            ),
-            Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: totalCount != null
-                    ? Text(
-                        'Total : $totalCount',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      )
-                    : null)
-          ],
-        ),
+        title: 'Patient List',
         child: widget);
   }
 }

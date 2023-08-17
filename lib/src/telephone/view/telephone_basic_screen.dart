@@ -8,6 +8,8 @@ import 'package:unuseful/src/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/src/telephone/provider/telephone_search_value_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 import 'package:unuseful/util/helper/pagination_utils.dart';
 import 'package:unuseful/util/helper/url_launcher_utils.dart';
 import '../component/custom_readonly_search_text_field.dart';
@@ -40,10 +42,13 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
   @override
   Widget build(BuildContext context) {
     //값이 바뀔때마다 재 빌드 하기 위하여.
+
+    final theme = ref.watch(themeServiceProvider);
+
     final state = ref.watch(telephoneBasicNotifierProvider);
 
     if (state is CursorPaginationLoading) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -79,139 +84,150 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     final cp = state as CursorPagination<TelephoneBasicModel>;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: RefreshIndicator(
-        color: PRIMARY_COLOR,
-        onRefresh: () async {
-          ref
-              .read(telephoneBasicNotifierProvider.notifier)
-              .paginate(forceRefetch: true);
-        },
-        child: Column(
-          children: [
-            CustomReadOnlySearchTextField(
-                push: TelephoneSearchScreen.routeName,
-                provider: telephoneSearchValueProvider),
-            Expanded(
-              child: Scrollbar(
-                thumbVisibility: true,
-                controller: controller,
-                child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: DefaultLayout(
+          canRefresh: true,
+          onRefreshAndError: () async {
+            await ref
+                .read(telephoneBasicNotifierProvider.notifier)
+                .paginate(forceRefetch: true);
+          },
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              CustomReadOnlySearchTextField(
+                  push: TelephoneSearchScreen.routeName,
+                  provider: telephoneSearchValueProvider),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: Scrollbar(
+                  thumbVisibility: true,
                   controller: controller,
-                  separatorBuilder: (context, index) {
-                    return Divider(
-                      height: 20.0,
-                    );
-                  },
-                  itemCount: state.data.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index == cp.data.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        child: Center(
-                            child: cp is CursorPaginationFetchingMore
-                                ? CustomCircularProgressIndicator()
-                                : Text('마지막 데이터입니다.')),
+                  child: ListView.separated(
+                    controller: controller,
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        height: 20.0,
                       );
-                    }
-
-                    return ListTile(
-                      horizontalTitleGap: 10,
-                      contentPadding: EdgeInsets.only(left: 0.0),
-                      leading: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            state.data[index].hspTpCd ?? '',
-                            style: TextStyle(
-                                fontSize: 22,
-                                color: PRIMARY_COLOR,
-                                fontWeight: FontWeight.w600),
+                    },
+                    itemCount: state.data.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index == cp.data.length) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 8.0,
                           ),
-                        ],
-                      ),
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Share.share(shareInfo(
-                                        hspTpCd: state.data[index].hspTpCd,
-                                        deptNm: state.data[index].deptNm,
-                                        telNoNm: state.data[index].telNoNm,
-                                        etntTelNo: state.data[index].etntTelNo,
-                                        telNoAbbrNm:
-                                            state.data[index].telNoAbbrNm,
-                                        purifiedTelNo:
-                                            state.data[index].purifiedTelNo));
-                                  },
-                                  icon: Icon(
-                                    Icons.share_outlined,
-                                    size: 20,
-                                  ),
-                                  color: Colors.red,
-                                ),
-                                if (state.data[index].purifiedTelNo != null)
+                          child: Center(
+                              child: cp is CursorPaginationFetchingMore
+                                  ? CustomCircularProgressIndicator()
+                                  : Text('마지막 데이터입니다.',style: theme.typo.subtitle2,)),
+                        );
+                      }
+
+                      return ListTile(
+                        horizontalTitleGap: 10,
+                        contentPadding: EdgeInsets.only(left: 0.0),
+                        leading: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              state.data[index].hspTpCd ?? '',
+                              style: theme.typo.headline5,
+                            ),
+                          ],
+                        ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   IconButton(
                                     onPressed: () {
-                                      UrlLauncherHelper.makePhoneCall(
-                                          state.data[index].purifiedTelNo!);
+                                      Share.share(shareInfo(
+                                          hspTpCd: state.data[index].hspTpCd,
+                                          deptNm: state.data[index].deptNm,
+                                          telNoNm: state.data[index].telNoNm,
+                                          etntTelNo:
+                                              state.data[index].etntTelNo,
+                                          telNoAbbrNm:
+                                              state.data[index].telNoAbbrNm,
+                                          purifiedTelNo:
+                                              state.data[index].purifiedTelNo));
                                     },
                                     icon: Icon(
-                                      Icons.phone_rounded,
+                                      Icons.share_outlined,
                                       size: 20,
                                     ),
-                                    color: Colors.red,
+                                    color: theme.color.secondary,
                                   ),
-                              ],
+                                  if (state.data[index].purifiedTelNo != null)
+                                    IconButton(
+                                      onPressed: () {
+                                        UrlLauncherHelper.makePhoneCall(
+                                            state.data[index].purifiedTelNo!);
+                                      },
+                                      icon: Icon(
+                                        Icons.phone_rounded,
+                                        size: 20,
+                                      ),
+                                      color: theme.color.secondary,
+                                    ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      title: Text(state.data[index].deptNm ?? ''),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(state.data[index].telNoNm ?? ''),
-                          Row(
-                            children: [
-                              Text(
-                                state.data[index].etntTelNo ?? '',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: PRIMARY_COLOR),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                state.data[index].telNoAbbrNm ?? '',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      // isThreeLine: true,
-                    );
-                  },
+                          ],
+                        ),
+                        title: Text(
+                          state.data[index].deptNm ?? '',
+                          style: theme.typo.subtitle1,
+                        ),
+
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 5),
+                            Text(
+                              state.data[index].telNoNm ?? '',
+                              style: theme.typo.subtitle2,
+                            ),
+                            const SizedBox(height: 5),
+
+                            Row(
+                              children: [
+                                Text(
+                                  state.data[index].etntTelNo ?? '',
+                                  style: theme.typo.subtitle2,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  state.data[index].telNoAbbrNm ?? '',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        // isThreeLine: true,
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+        ));
   }
 
   shareInfo(

@@ -5,12 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/data.dart';
 import 'package:unuseful/dio.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
 import 'package:unuseful/src/specimen/model/specimen_model.dart';
 import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_detail_params_provider.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 import '../../../colors.dart';
 import '../model/specimen_detail_params.dart';
 import '../provider/specimen_state_provider.dart';
@@ -55,7 +55,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
     if (state is SpecimenModelLoading)
       return DefaultLayout(
         isDrawerVisible: false,
-        title: Text('text'),
+        title: 'text',
         child: CustomLoadingIndicatorWidget(),
       );
 
@@ -64,7 +64,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
     return DefaultLayout(
         isDrawerVisible: false,
 
-        title: Text('text'),
+        title: 'text',
         child: RefreshIndicator(
           color: PRIMARY_COLOR,
           onRefresh: () async {
@@ -316,8 +316,6 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                                                   .data![index - 1]
                                                   .exmType![index2]
                                                   .isExpanded = !isExpanded;
-                                              print(expansionExpandedindexList[
-                                                  index - 1]);
                                             },
                                           );
                                         },
@@ -452,7 +450,6 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
           .update((state) => SpecimenModel(data: result));
       return result;
     } catch (e) {
-      print(e.toString());
       ref
           .read(specimenStateProvider.notifier)
           .update((state) => SpecimenModelError(message: '에러가 발생하였습니다.'));

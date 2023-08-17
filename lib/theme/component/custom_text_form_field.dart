@@ -75,6 +75,8 @@ class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
       //커서 컬러
       // cursorColor: PRIMARY_COLOR,
       //커서 시작 부분 밀기.
+      style: theme.typo.subtitle1,
+
       decoration: InputDecoration(
           contentPadding: widget.contentPadding ??
               const EdgeInsets.symmetric(
@@ -97,8 +99,6 @@ class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
           filled: true,
           //모든 Input 상태의 기본 스타일 세팅
 
-
-
           border: OutlineInputBorder(
             /// 테두리 삭제
             borderSide: const BorderSide(
@@ -109,7 +109,6 @@ class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
             /// 테두리 둥글게
             borderRadius: BorderRadius.circular(12),
           ),
-
           suffixIcon: widget.isSuffixDeleteButtonEnabled ?? false
               ? IconButton(
                   splashColor: Colors.transparent,

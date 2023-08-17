@@ -18,7 +18,7 @@ class AssetIcon extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SvgPicture.asset(
-      'assets/icons/$icon.svg',
+      'asset/icons/$icon.svg',
       width: size,
       height: size,
       colorFilter: ColorFilter.mode(

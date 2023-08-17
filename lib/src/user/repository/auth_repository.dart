@@ -25,7 +25,6 @@ class AuthRepository {
       {required String hspTpCd, required String stfNo, required String password}) async {
     final String serialized = DataHelper.plainToBase64('$stfNo:$password:$hspTpCd');
 
-    print(serialized);
     final resp = await dio.post(
       '$baseUrl/login',
       options: Options(
@@ -35,7 +34,6 @@ class AuthRepository {
       ),
     );
 
-    print(resp);
 
     return UserModel.fromJson(resp.data);
   }

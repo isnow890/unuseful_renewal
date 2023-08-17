@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/theme/component/asset_icon.dart';
+import 'package:unuseful/theme/component/button/icon_data.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
 part 'button_size.dart';
+
 part 'button_type.dart';
 
 class Button extends ConsumerStatefulWidget {
   const Button({
+    this.iconData,
     super.key,
     required this.onPressed,
     this.text,
@@ -44,6 +47,8 @@ class Button extends ConsumerStatefulWidget {
   final Color? color;
   final Color? backgroundColor;
   final Color? borderColor;
+
+  final IconData? iconData;
 
   @override
   ConsumerState<Button> createState() => _ButtonState();
@@ -124,6 +129,12 @@ class _ButtonState extends ConsumerState<Button> {
                 color: color,
               ),
 
+            if (widget.iconData != null)
+              IconDataGet(
+                widget.iconData!,
+                color: color,
+              ),
+
             /// Gap
             if (widget.icon != null && widget.text != null)
               const SizedBox(width: 8),
@@ -132,7 +143,7 @@ class _ButtonState extends ConsumerState<Button> {
             if (widget.text != null)
               Text(
                 widget.text!,
-                style: widget.size.getTextStyle(context,ref).copyWith(
+                style: widget.size.getTextStyle(context, ref).copyWith(
                       color: color,
                       fontWeight: theme.typo.semiBold,
                     ),

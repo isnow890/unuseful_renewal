@@ -221,7 +221,6 @@ class _SpecimenMainScreenExpansionPanelListState
         // selectedDay: selectedDay,
         focusedDay: focusedDay,
         onDaySelected: (_selectedDay, _focusedDay) {
-          print('clicked');
 
           // if (!isSameDay(_selectedDay, selectedDay)) {
           //   setState(() {

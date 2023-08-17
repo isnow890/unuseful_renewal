@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
 import 'package:unuseful/src/hit_schedule/view/hit_duty_log_screen.dart';
 import 'package:unuseful/src/hit_schedule/view/hit_duty_statistics_screen.dart';
 import 'package:unuseful/src/hit_schedule/view/hit_schedule_screen.dart';
 import 'package:unuseful/src/hit_schedule/view/hit_schedule_setting_screen.dart';
 
 import '../../../colors.dart';
+import '../../../theme/layout/default_layout.dart';
 
 class HitScheduleMainScreen extends ConsumerStatefulWidget {
   const HitScheduleMainScreen({required this.baseIndex, Key? key})
@@ -49,7 +49,7 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen>
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      title: Text('schedule'),
+      title: 'schedule',
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: PRIMARY_COLOR,
         unselectedItemColor: BODY_TEXT_COLOR,

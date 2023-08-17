@@ -94,6 +94,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: cp.scheduleOfMineList!
                           .map((e) => Text(
+                              style: theme.typo.body1,
                               '${e.workDate!} ${e.dutyName} ${e.prediction! ? '예상' : ''}'))
                           .toList(),
                     ),
@@ -122,12 +123,16 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
                                 TextSpan(
                                   children: [
                                     TextSpan(
+                                        style: theme.typo.body1,
                                         text:
                                             '${e.workDate} ${e.hdyYn == 'Y' ? '휴일' : '평일'}'),
                                     TextSpan(
+                                        style: theme.typo.body1,
                                         text:
                                             '${e.hdyYn == 'Y' ? ' 오전 ' : ''}${e.hdyYn == 'Y' ? e.morningNm : ''}'),
-                                    TextSpan(text: ' 오후 ${e.afternoonNm!}'),
+                                    TextSpan(
+                                        text: ' 오후 ${e.afternoonNm!}',
+                                        style: theme.typo.body1),
                                   ],
                                 ),
                               ))

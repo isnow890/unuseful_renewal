@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 
 import '../../colors.dart';
-import '../../src/common/layout/default_layout.dart';
 
 class SplashScreen extends ConsumerWidget {
   static String get routeName => 'splash';
@@ -26,7 +26,7 @@ class SplashScreen extends ConsumerWidget {
             SizedBox(
               height: 16,
             ),
-            CustomCircularProgressIndicator(),
+            const CustomCircularProgressIndicator(),
           ],
         ),
       ),

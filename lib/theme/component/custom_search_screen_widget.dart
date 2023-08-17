@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/colors.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
 
+import '../layout/default_layout.dart';
 import 'custom_text_form_field.dart';
 
 class CustomSearchScreenWidget extends ConsumerWidget {
@@ -31,7 +31,7 @@ class CustomSearchScreenWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       isDrawerVisible: false,
-      title: Text(title),
+      title: title,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(

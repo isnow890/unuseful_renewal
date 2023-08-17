@@ -14,7 +14,6 @@ class HitScheduleAtHomeNotifier
 
   HitScheduleAtHomeNotifier({required this.ref, required this.repository})
       : super(ModelBaseLoading()) {
-    print('atHome1');
 
     getHitScheduleAtHome();
   }
@@ -25,11 +24,9 @@ class HitScheduleAtHomeNotifier
       final convertedUser = user as UserModel;
       state = ModelBaseLoading();
 
-      print('atHome');
       HitScheduleAtHomeModel resp =
           await repository.getHitScheduleAtHome(stfNm: convertedUser.sid!);
       state = resp;
-      print('resp');
 
       print(resp);
       return resp;

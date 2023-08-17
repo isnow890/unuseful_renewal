@@ -8,7 +8,7 @@ import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 
 import '../model/fcm_registration_model.dart';
 import '../../src/common/model/response_model.dart';
-import '../../src/home/model/search_history_specimen_model.dart';
+import '../../src/home/model/search_history_main_model.dart';
 
 part 'firestore_repository.g.dart';
 

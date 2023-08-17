@@ -9,14 +9,14 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/data.dart';
 import 'package:unuseful/dio.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
 import 'package:unuseful/src/specimen/model/specimen_model.dart';
 import 'package:unuseful/src/specimen/provider/specimenSearchValueProvider.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 
-import '../../home/model/search_history_specimen_model.dart';
+import '../../home/model/search_history_main_model.dart';
 import '../../home/provider/specimen_history_provider.dart';
 import '../../telephone/component/custom_readonly_search_text_field.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
@@ -94,7 +94,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           onPressed: () {
           },
         ),
-        title: Text('specimen'),
+        title: 'specimen',
       );
     }
 
@@ -114,7 +114,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
           size: 30,
         ),
       ),
-      title: Text('specimen'),
+      title: 'specimen',
       child: GestureDetector(
         onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
@@ -291,8 +291,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
   }
 
   bool _validateBeforeSearch(search) {
-    print('searcn');
-    print(search);
 
     if (searchType == 1) {
       if (search != 11) {

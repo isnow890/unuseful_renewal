@@ -54,7 +54,6 @@ class UserMeStateNotifier extends StateNotifier<ModelBase?> {
       }
       return resp;
     } catch (e) {
-      print(e.toString());
       state = ModelBaseError(message: '로그인에 실패했습니다.');
       // showToast(msg: '로그인에 실패했습니다.');
       return Future.value(state);
@@ -89,7 +88,6 @@ class UserMeStateNotifier extends StateNotifier<ModelBase?> {
       }
       return resp;
     } catch (e) {
-      print(e.toString());
       state = ModelBaseError(message: '로그인에 실패했습니다.');
       await logout();
 

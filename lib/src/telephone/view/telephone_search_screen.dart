@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
+import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import '../../../colors.dart';
-import '../../common/layout/default_layout.dart';
 import '../../home/provider/telehphone_history_provider.dart';
 import '../provider/telephone_search_value_provider.dart';
 
@@ -134,10 +133,10 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
         mode: '');
 
     if (search is SearchHistoryMainModel) {
-      if (searchValueController.text.trim() == '') {
-        showToast(msg: '검색어를 입력하세요.');
-        return;
-      }
+      // if (searchValueController.text.trim() == '') {
+      //   showToast(msg: '검색어를 입력하세요.');
+      //   return;
+      // }
       await ref
           .read(telephoneHistoryNotfierProvider.notifier)
           .saveTelephoneHistory(body: body);

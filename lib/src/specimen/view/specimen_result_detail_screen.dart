@@ -7,8 +7,8 @@ import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_provider.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 
-import '../../common/layout/default_layout.dart';
 import 'specimen_main_screen.dart';
 
 class SpecimenResultDetailScreen extends ConsumerStatefulWidget {
@@ -36,7 +36,7 @@ class _SpecimenResultDetailScreenState
       return DefaultLayout(
         isDrawerVisible: false,
 
-        title: Text('detailed'),
+        title: 'detailed',
         child: CustomLoadingIndicatorWidget(),
       );
 
@@ -44,7 +44,7 @@ class _SpecimenResultDetailScreenState
       return DefaultLayout(
           isDrawerVisible: false,
 
-          title: Text('detailed'),
+          title: 'detailed',
           child: CustomErrorWidget(
               message: state.message,
               onPressed: () async => ref
@@ -54,12 +54,11 @@ class _SpecimenResultDetailScreenState
 
     final cp = state as SpecimenDetailModel;
 
-    print(cp.data!.length);
 
     return DefaultLayout(
         isDrawerVisible: false,
 
-        title: Text('${cp.data![0].exmCtgCd} ${cp.data![0].exmCtgAbbrNm} '),
+        title: '${cp.data![0].exmCtgCd} ${cp.data![0].exmCtgAbbrNm} ',
         child: Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 1),
           child: Column(

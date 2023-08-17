@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';
 import '../model/hit_schedule_log_model.dart';
 import '../provider/hit_duty_log_provider.dart';
@@ -29,6 +30,7 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
     //
     // final state2 = ref.watch(specimenFamilyProvider(fi2));
 
+    final theme = ref.watch(themeServiceProvider);
      final state = ref.watch(hitDutyLogNotifierProvider);
 
     if (state is HitDutyLogModelLoading) {
@@ -47,7 +49,7 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: RefreshIndicator(
-        color: PRIMARY_COLOR,
+        color: theme.color.primary,
         onRefresh: () async {
           ref.read(hitDutyLogNotifierProvider.notifier).getDutyLog();
         },

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/colors.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 
 
-import '../../common/layout/default_layout.dart';
 import '../../common/provider/drawer_selector_provider.dart';
 import '../provider/telephone_order_radio_tile_provider.dart';
 import '../provider/telephone_search_value_provider.dart';
@@ -54,7 +54,7 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
     final orderRadioTile = ref.watch(telephoneOrderRadioTileProvider);
     final searchValue = ref.watch(telephoneSearchValueProvider);
     return DefaultLayout(
-      title: Text('telephone'),
+      title: 'telephone',
       // TextTitle(title:  'telephone',
       // ),
       bottomNavigationBar: BottomNavigationBar(

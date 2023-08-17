@@ -182,7 +182,6 @@ class PaginationProvider<T extends IModelWithDataSeq,
         state = resp;
       }
     } catch (e, stack) {
-      print('에러발생');
       print(e);
       // print(stack);
       state = CursorPaginationError(message: '데이터 못가져옴');

@@ -12,7 +12,7 @@ import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/view/specimen_result_screen.dart';
 import 'package:unuseful/src/telephone/view/telephone_search_screen.dart';
 import 'package:unuseful/src/user/provider/user_me_provider.dart';
-import 'package:unuseful/theme/component/full_photo.dart';
+import 'package:unuseful/theme/component/photo_view/full_photo.dart';
 
 import '../../src/common/provider/drawer_selector_provider.dart';
 import '../../firebase/firebase_module.dart';
@@ -52,11 +52,9 @@ class AuthProvider extends ChangeNotifier {
   //로그인 스크린으로 보내줄지
   //홈 스크린으로 보내줄지 확인하는 과정이 필요하다.
   String? redirectLogic(_, GoRouterState state) {
-    print('redirect');
     final ModelBase? user = ref.read(userMeProvider);
     final logginIn = state.location == '/login';
 
-    print(state);
     //유저 정보가 없는데
     //로그인중이면 그대로 로그인 페이지에 두고
     //만약에 로그인중이 아니라면 로그인 페이지로 이동
@@ -75,12 +73,9 @@ class AuthProvider extends ChangeNotifier {
     //로그인 중이거나 현재 위치가 SplashScreen이면
     //홈으로 이동
 
-    print('here');
-    print(user);
 
     if (user is UserModel) {
 
-      print('logginIn' + logginIn.toString());
       if (logginIn || state.location == '/splash') {
         //fcm messaging 토큰 발급 및 저장
         // firebaseMessagingGetMyDeviceTokenAndSave(ref: ref);
@@ -88,12 +83,10 @@ class AuthProvider extends ChangeNotifier {
         // routerLogicForegroundHitDutyAlarmRef1(ref);
 
         //null은 원래의 위치를 의미함.
-        print('splash');
         return '/';
       }
 
 
-      print('여기?');
 
       return null;
     }

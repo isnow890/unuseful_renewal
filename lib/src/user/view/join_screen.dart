@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unuseful/src/common/layout/default_layout.dart';
+
 import 'package:unuseful/theme/component/custom_text_form_field.dart';
 import 'package:unuseful/util/helper/data_utils.dart';
 
 import '../../../colors.dart';
+import '../../../theme/layout/default_layout.dart';
 
 class JoinScreen extends ConsumerStatefulWidget {
   const JoinScreen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
 
     return DefaultLayout(
       isDrawerVisible: false,
-      title: Text('Join'),
+      title: 'Join',
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 16.0,

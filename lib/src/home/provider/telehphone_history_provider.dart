@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/firebase/repository/firestore_repository.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/common/model/response_model.dart';
-import 'package:unuseful/src/home/model/search_history_specimen_model.dart';
+import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 
 import '../../user/model/user_model.dart';

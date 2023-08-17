@@ -9,7 +9,7 @@ import 'package:unuseful/src/meal/provider/meal_provider.dart';
 import 'package:unuseful/src/meal/view/meal_current_index_indicator.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
-import 'package:unuseful/theme/component/full_photo.dart';
+import 'package:unuseful/theme/component/photo_view/full_photo.dart';
 
 class MealScreenMain extends ConsumerStatefulWidget {
   final String hspTpCd;
