@@ -9,6 +9,7 @@ import 'package:unuseful/src/home/provider/telehphone_history_provider.dart';
 import 'package:unuseful/src/telephone/view/telephone_main_screen.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../telephone/provider/telephone_search_value_provider.dart';
@@ -19,91 +20,88 @@ class TelephoneSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final telephone = ref.watch(telephoneHistoryNotfierProvider);
-
-    return HomeScreenCard(
-      contentWidget: Column(
-        children: [
-          _renderBody(telephone, ref, context),
-        ],
-      ),
-    );
-  }
-
-  _renderBody(telephone, WidgetRef ref, BuildContext context) {
     final theme = ref.watch(themeServiceProvider);
 
-    if (telephone is ModelBaseLoading) {
-      return const CustomCircularProgressIndicator();
-    } else if (telephone is ModelBaseError) {
-      return CustomErrorWidget(
-          message: telephone.message,
-          onPressed: () {
-            ref
-                .read(telephoneHistoryNotfierProvider.notifier)
-                .getTelephoneHistory();
-          });
-    } else if (telephone is SearchHistoryMainModel) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                '최근 조회 내역',
-                style: theme.typo.subtitle1.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Spacer(),
-              Text(
-                '최대 20건 조회됩니다.',
-                style: theme.typo.body2,
-              ),
-            ],
-          ),
-          Divider(
-            height: 30,
-          ),
-          telephone.history.isEmpty
-              ? Row(
-                  children: [
-                    Text(
-                      '최근 조회 내역이 없습니다.',
-                      style: theme.typo.body1,
-                    ),
-                  ],
-                )
-              : Wrap(
-                  alignment: WrapAlignment.center,
-                  children: telephone.history!
-                      .take(20)
-                      .map((e) => HistoryChip(
-                            onDeleted: () async {
-                              await ref
-                                  .read(
-                                      telephoneHistoryNotfierProvider.notifier)
-                                  .delTelephoneHistory(body: e);
+    var cp = telephone as SearchHistoryMainModel;
 
-                              await ref
-                                  .read(
-                                      telephoneHistoryNotfierProvider.notifier)
-                                  .getTelephoneHistory();
-                            },
-                            onTap: () {
-                              ref
-                                  .read(telephoneSearchValueProvider.notifier)
-                                  .update((state) => e.searchValue);
 
-                              context.pushNamed(
-                                TelePhoneMainScreen.routeName,
-                              );
-                            },
-                            title: e.searchValue,
-                          ))
-                      .toList(),
-                )
-        ],
-      );
-    }
+
+    return DefaultLayout(
+        canRefresh: true,
+        onRefreshAndError: () async => ref
+            .read(telephoneHistoryNotfierProvider.notifier)
+            .getTelephoneHistory(),
+        // state: [telephone],
+        child: ListView(
+          children: [
+            HomeScreenCard(
+              contentWidget: Column(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '최근 조회 내역',
+                            style: theme.typo.subtitle1.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        height: 30,
+                      ),
+                      cp.history!.isEmpty
+                          ? Row(
+                              children: [
+                                Text(
+                                  '최근 조회 내역이 없습니다.',
+                                  style: theme.typo.body1,
+                                ),
+                              ],
+                            )
+                          : Wrap(
+                              alignment: WrapAlignment.center,
+                              children: cp.history!
+                                  .take(20)
+                                  .map((e) => HistoryChip(
+                                        onDeleted: () async {
+                                          await ref
+                                              .read(
+                                                  telephoneHistoryNotfierProvider
+                                                      .notifier)
+                                              .delTelephoneHistory(body: e);
+
+                                          await ref
+                                              .read(
+                                                  telephoneHistoryNotfierProvider
+                                                      .notifier)
+                                              .getTelephoneHistory();
+                                        },
+                                        onTap: () {
+                                          ref
+                                              .read(telephoneSearchValueProvider
+                                                  .notifier)
+                                              .update((state) => e.searchValue);
+
+                                          context.pushNamed(
+                                            TelePhoneMainScreen.routeName,
+                                          );
+                                        },
+                                        title: e.searchValue,
+                                      ))
+                                  .toList(),
+                            )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
   }
+
+  _renderBody(telephone, WidgetRef ref, BuildContext context) {}
 }

@@ -4,9 +4,9 @@ import 'package:unuseful/src/common/model/model_base.dart';
 part 'search_history_main_model.g.dart';
 
 class SearchHistoryMainModel extends ModelBase {
-  final List<SearchHistoryModel> history;
+  final List<SearchHistoryModel>? history;
 
-  SearchHistoryMainModel({required this.history});
+  SearchHistoryMainModel({this.history});
 }
 
 @JsonSerializable()

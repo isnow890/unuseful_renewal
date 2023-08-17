@@ -52,17 +52,12 @@ class SpecimenSection extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Spacer(),
-              Text(
-                '최대 20건 조회됩니다.',
-                style: theme.typo.body2,
-              ),
             ],
           ),
           Divider(
             height: 30,
           ),
-          specimen.history.isEmpty
+          specimen.history!.isEmpty
               ? Row(
                   children: [
                     Text(

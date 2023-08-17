@@ -27,10 +27,10 @@ class TelephoneHistoryNotifier extends StateNotifier<ModelBase?> {
 
   Future<ModelBase?> getTelephoneHistory() async {
     try {
-      state = ModelBaseLoading();
 
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
+      state = ModelBaseLoading();
 
       List<SearchHistoryModel> resp =
           await repository.getTelephoneHistory(convertedUser.sid!);

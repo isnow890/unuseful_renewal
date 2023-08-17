@@ -13,6 +13,7 @@ import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../theme/layout/default_layout.dart';
 import '../../../theme/model/menu_model.dart';
 import '../../../router/provider/auth_provider.dart';
+import '../component/meal_section_collection.dart';
 import '../component/specimen_section.dart';
 import '../component/telephone_section.dart';
 import '../provider/home_provider.dart';
@@ -49,13 +50,12 @@ class _RootTabState extends ConsumerState<HomeScreen> {
           appBarBottomList: tabBarList,
           canRefresh: true,
           onRefreshAndError: whenRefreshAndError,
-          state: home,
+          state: [home],
           actions: [
             Button(
               icon: 'option',
               type: ButtonType.flat,
-              color : theme.color
-              .onPrimary,
+              color: theme.color.onPrimary,
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
@@ -66,7 +66,7 @@ class _RootTabState extends ConsumerState<HomeScreen> {
               },
             ),
           ],
-          title:  menus[0].menuName,
+          title: menus[0].menuName,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 10,
@@ -74,22 +74,11 @@ class _RootTabState extends ConsumerState<HomeScreen> {
             ),
             child: TabBarView(
               children: [
-                ListView(
-                  children: [
-                    const HitScheduleSection(),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    const MealSection(hspTpCd: '01'),
-                    const MealSection(hspTpCd: '02'),
-                  ],
-                ),
-                ListView(
-                  children: [
-                    const TelephoneSection(),
-                  ],
-                ),
+                const HitScheduleSection(),
+                const MealSectionCollection(),
+                const TelephoneSection(),
+
+
                 ListView(
                   children: <Widget>[
                     const SpecimenSection(),

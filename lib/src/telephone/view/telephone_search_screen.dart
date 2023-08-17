@@ -49,7 +49,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
       onPressed: () async {
         searchAndPop(search);
       },
-    searchValueController: searchValueController,
+      searchValueController: searchValueController,
     );
   }
 
@@ -63,14 +63,14 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
           Expanded(
             child: ListView.separated(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemCount: search.history.length + 1,
+              itemCount: search.history!.length + 1,
               separatorBuilder: (context, index) {
                 return Divider(
                   height: 20.0,
                 );
               },
               itemBuilder: (context, index) {
-                if (index == search.history.length) return null;
+                if (index == search.history!.length) return null;
                 return ListTile(
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
@@ -80,7 +80,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
 
                   onTap: () async {
                     searchValueController.text =
-                        search!.history![index]!.searchValue;
+                        search!.history![index].searchValue;
                     searchAndPop(search);
                   },
                   title: Text(
@@ -93,8 +93,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
                       onPressed: () async {
                         final body = SearchHistoryModel(
                             lastUpdated: DateTime.now(),
-                            searchValue:
-                                search!.history![index]!.searchValue,
+                            searchValue: search!.history![index]!.searchValue,
                             mode: '');
                         await ref
                             .read(telephoneHistoryNotfierProvider.notifier)
@@ -137,9 +136,13 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
       //   showToast(msg: '검색어를 입력하세요.');
       //   return;
       // }
-      await ref
-          .read(telephoneHistoryNotfierProvider.notifier)
-          .saveTelephoneHistory(body: body);
+
+      if (searchValueController.text.trim() != '') {
+        await ref
+            .read(telephoneHistoryNotfierProvider.notifier)
+            .saveTelephoneHistory(body: body);
+      }
+
       ref
           .read(telephoneSearchValueProvider.notifier)
           .update((state) => searchValueController.text);

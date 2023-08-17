@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/main_drawer.dart';
 import 'package:unuseful/theme/foundation/app_theme.dart';
@@ -20,7 +21,7 @@ class DefaultLayout extends ConsumerStatefulWidget {
   final List<Widget>? actions;
   final bool? canRefresh;
   final Future<void> Function()? onRefreshAndError;
-  final ModelBase? state;
+  final List<ModelBase?>? state;
   final List<String>? appBarBottomList;
 
   const DefaultLayout({
@@ -62,8 +63,6 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
   }
 
   _renderScaffold(AppTheme theme) {
-
-
     //
 
     // AppBar appBar = _renderAppbar(theme);
@@ -72,19 +71,14 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
     return Scaffold(
       drawer: widget.isDrawerVisible ?? true ? const MainDrawer() : null,
       appBar: hideAppbar ? null : _renderAppbar(theme),
-      body: widget.state is ModelBaseError
+      body: widget.state?.any((element) => element is ModelBaseError) ?? false
           ? CustomErrorWidget(onPressed: widget.onRefreshAndError!)
-          : GestureDetector(
-              // behavior: HitTestBehavior.opaque,
-              onTap: () {
-                print('실행');
-                setState(() {
-                  if (widget.tabToHideAppbar == true) {
-                    hideAppbar = !hideAppbar;
-                  }
-                });
-              },
-              child: widget.child),
+          : widget.state?.any((element) => element is ModelBaseLoading) ?? false
+              ? CircularIndicator(
+                  isBusy: true,
+                  child: Container(),
+                )
+              : widget.child,
       bottomNavigationBar: widget.bottomNavigationBar,
       floatingActionButton: widget.floatingActionButton,
     );
@@ -112,10 +106,11 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
         bottom: widget.appBarBottomList == null
             ? null
             : PreferredSize(
-                preferredSize: Size.fromHeight(40),
+                preferredSize: const Size.fromHeight(40),
                 child: Container(
                   color: theme.color.surface,
                   child: TabBar(
+                    indicatorPadding: EdgeInsets.zero,
                     tabs: List.generate(
                       widget.appBarBottomList!.length,
                       (index) => Tab(

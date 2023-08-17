@@ -9,6 +9,7 @@ import 'package:unuseful/src/meal/provider/meal_provider.dart';
 import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/photo_view/full_photo.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
 class MealSection extends ConsumerStatefulWidget {
@@ -21,36 +22,7 @@ class MealSection extends ConsumerStatefulWidget {
 }
 
 class _MealSectionState extends ConsumerState<MealSection> {
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(mealFamilyProvider(widget.hspTpCd));
-    var model = MealModel();
-
-    if (state is ModelBaseError) {
-      return HomeScreenCard(
-        contentWidget: CustomErrorWidget(
-          onPressed: () async =>
-              ref.read(mealFamilyProvider(widget.hspTpCd).notifier).getMeal(),
-        ),
-      );
-    }
-
-    if (state is MealModel) {
-      model = state;
-    }
-
-    return HomeScreenCard(
-      contentWidget: (state is ModelBaseLoading)
-          ? const Center(child: CustomCircularProgressIndicator())
-          : Column(
-              children: [
-                renderCardInside(widget.hspTpCd, model),
-              ],
-            ),
-    );
-  }
-
-  renderCardInside(String hspTpCd, MealModel mealModel) {
+  _renderCardInside(String hspTpCd, MealModel mealModel) {
     final theme = ref.watch(themeServiceProvider);
 
     if (mealModel.data!.isEmpty) {
@@ -105,11 +77,33 @@ class _MealSectionState extends ConsumerState<MealSection> {
                     ),
                   ),
                 ),
-
               )
               .toList(),
         )
       ],
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(mealFamilyProvider(widget.hspTpCd));
+    var model = MealModel();
+
+
+
+    if (state is MealModel) {
+      model = state;
+    }
+
+    return
+         HomeScreenCard(
+          contentWidget: (state is ModelBaseLoading)
+              ? const Center(child: CustomCircularProgressIndicator())
+              : Column(
+                  children: [
+                    _renderCardInside(widget.hspTpCd, model),
+                  ],
+                ),
+        );
   }
 }
