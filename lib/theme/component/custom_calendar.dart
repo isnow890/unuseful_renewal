@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_schedule_for_event_model.dart';
-
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 typedef OnPageChanged = void Function(DateTime focusedDay);
 
@@ -22,10 +22,7 @@ class CustomCalendar extends ConsumerWidget {
   final RangeSelectionMode? rangeSelected;
   final OnRangeSelected? onRangeSelected;
 
-
-
   final LinkedHashMap<DateTime?, HitScheduleForEventListModel>? events;
-  List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
 
   final defaultTextStyle = TextStyle(
     fontSize: 11.0,
@@ -50,13 +47,15 @@ class CustomCalendar extends ConsumerWidget {
       this.selectedDay,
       required this.focusedDay,
       required this.onDaySelected,
-        this.onRangeSelected,
-       this.calendarBuilders,
+      this.onRangeSelected,
+      this.calendarBuilders,
       Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
+
     return TableCalendar(
       // holidayPredicate: (day) {
       //   return true;
@@ -78,13 +77,10 @@ class CustomCalendar extends ConsumerWidget {
         formatButtonVisible: false,
         titleCentered: true, //March 2023 가운데 정렬
         // 헤더 사이즈 변경
-        titleTextStyle: TextStyle(
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-        ),
+        titleTextStyle: theme.typo.headline6,
       ),
       onPageChanged: onPageChanged,
-      calendarStyle: calendarStyle ?? CalendarStyle(),
+      calendarStyle: calendarStyle ?? const CalendarStyle(),
 
       //selectedDay - 동그라미 쳐 놓은 날짜
       //focusedday - 보고 있는 월

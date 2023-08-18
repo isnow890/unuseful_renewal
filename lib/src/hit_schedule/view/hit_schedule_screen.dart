@@ -15,7 +15,7 @@ import 'package:unuseful/src/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_calendar.dart';
-
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../../colors.dart';
 import '../../user/model/user_model.dart';
@@ -33,6 +33,7 @@ class HitScheduleScreen extends ConsumerStatefulWidget {
 class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = ref.watch(themeServiceProvider);
     final defaultBoxDeco = BoxDecoration(
       color: Colors.grey[200],
       //테두리 깍기
@@ -70,33 +71,49 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
               outsideDaysVisible: false,
               isTodayHighlighted: true,
             ),
-            onPageChanged: (DateTime month) async{
-               ref
+            onPageChanged: (DateTime month) async {
+              ref
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => month);
-               ref
+              ref
                   .read(hitDutyCalendarChangeMonthProvider.notifier)
                   .update((state) => DateFormat('yyyyMM').format(month));
 
-                ref.read(hitSheduleForEventNotifierProvider.notifier).getHitScheduleForEvent();
+              ref
+                  .read(hitSheduleForEventNotifierProvider.notifier)
+                  .getHitScheduleForEvent();
 
-
-               ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
-
+              ref
+                  .read(hitScheduleNotifierProvider.notifier)
+                  .getHitSchedule(false);
             },
             events: eventsLinkedHashMap,
             selectedDay: selectedDay,
             focusedDay: selectedDay,
-            onDaySelected: (selectedDay, focusedDay) async{
-               ref
+            onDaySelected: (selectedDay, focusedDay) async {
+              ref
                   .read(hitScheduleSelectedDayProvider.notifier)
                   .update((state) => selectedDay);
 
-
-              await ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
-
+              await ref
+                  .read(hitScheduleNotifierProvider.notifier)
+                  .getHitSchedule(false);
             },
             calendarBuilders: CalendarBuilders(
+              dowBuilder: (context, day) {
+                List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
+
+                if (day.weekday == DateTime.sunday) {
+                  final text = DateFormat.E().format(day);
+
+                  return Center(
+                    child: Text(
+                      text,
+                      style: theme.typo.subtitle1,
+                    ),
+                  );
+                }
+              },
               todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
                 decoration: defaultBoxDeco,
                 textColor: Colors.blue[600],
@@ -267,7 +284,6 @@ class _ScheduleList extends ConsumerWidget {
 
     if (state is HitScheduleModelLoading) {
       return const CircularIndicator();
-
     }
 
     final cp = state as HitScheduleModel;

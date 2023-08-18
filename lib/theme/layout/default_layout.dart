@@ -107,7 +107,6 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
                   color: theme.color.surface,
                   child: TabBar(
 
-
                     indicatorPadding: EdgeInsets.zero,
                     tabs: List.generate(
                       widget.appBarBottomList!.length,
