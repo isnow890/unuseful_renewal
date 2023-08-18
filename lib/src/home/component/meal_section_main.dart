@@ -6,8 +6,8 @@ import 'package:unuseful/src/meal/provider/meal_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 
-class MealSectionCollection extends ConsumerWidget {
-  const MealSectionCollection({super.key});
+class MealSectionMain extends ConsumerWidget {
+  const MealSectionMain({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

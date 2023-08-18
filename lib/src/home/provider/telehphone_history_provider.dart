@@ -9,7 +9,7 @@ import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 
 final telephoneHistoryNotfierProvider =
-    StateNotifierProvider<TelephoneHistoryNotifier, ModelBase?>((ref) {
+    StateNotifierProvider.autoDispose<TelephoneHistoryNotifier, ModelBase?>((ref) {
   final repository = ref.watch(firestorageRepositoryProvider);
   final notifier = TelephoneHistoryNotifier(ref: ref, repository: repository);
   return notifier;

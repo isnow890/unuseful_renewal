@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../../colors.dart';
 
-class ScheduleCard extends StatelessWidget {
+class ScheduleCard extends ConsumerWidget {
   final String startTime;
   final String endTime;
   final String content;
@@ -26,7 +28,8 @@ class ScheduleCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
     var tmpColor = PRIMARY_COLOR;
 
     if (scheduleType == 'duty')
@@ -35,19 +38,15 @@ class ScheduleCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-          color: tmpColor,
-        ),
+        border: Border.all(color: theme.color.inactive, width: 1),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(7.0),
         child: IntrinsicHeight(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                flex: 5,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -69,11 +68,9 @@ class ScheduleCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Expanded(
-                child: _RightInfo(
-                  scheduleType: scheduleType,
-                  color: tmpColor,
-                ),
+              _RightInfo(
+                scheduleType: scheduleType,
+                color: tmpColor,
               )
             ],
           ),
@@ -83,7 +80,7 @@ class ScheduleCard extends StatelessWidget {
   }
 }
 
-class _RightInfo extends StatelessWidget {
+class _RightInfo extends ConsumerWidget {
   final Color color;
   final String scheduleType;
 
@@ -91,7 +88,8 @@ class _RightInfo extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
     var tmpType = '당직';
 
     if (scheduleType == 'schedule') {
@@ -103,20 +101,16 @@ class _RightInfo extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(
-          tmpType,
-          style: TextStyle(
-            fontSize: 11.0,
-            color: color,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(tmpType,
+            style: theme.typo.subtitle1.copyWith(
+              fontWeight: FontWeight.w500,
+            )),
       ],
     );
   }
 }
 
-class _Date extends StatelessWidget {
+class _Date extends ConsumerWidget {
   final DateTime startDate;
   final DateTime endDate;
   final String startTime;
@@ -133,114 +127,46 @@ class _Date extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      fontWeight: FontWeight.w600,
-      color: color,
-      fontSize: 12.0,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
+
     return Row(
       children: [
         Text(
           DateFormat('yyyy-MM-dd').format(startDate),
-          style: textStyle,
+          style: theme.typo.body2,
         ),
         const SizedBox(
           width: 5,
         ),
         Text(
           startTime,
-          style: textStyle,
+          style: theme.typo.body2,
         ),
         const SizedBox(
           width: 5,
         ),
         Text(
           '~',
-          style: textStyle,
+          style: theme.typo.body2,
         ),
         const SizedBox(
           width: 5,
         ),
-        Text(DateFormat('yyyy-MM-dd').format(endDate), style: textStyle),
+        Text(DateFormat('yyyy-MM-dd').format(endDate), style: theme.typo.body2),
         const SizedBox(
           width: 5,
         ),
         Text(
           endTime,
-          style: textStyle,
+          style: theme.typo.body2,
         ),
       ],
     );
   }
 }
 
-//
-// class _Date extends StatelessWidget {
-//   final DateTime startDate;
-//   final DateTime endDate;
-//
-//   const _Date({Key? key, required this.startDate, required this.endDate})
-//       : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final textStyle = TextStyle(
-//       fontWeight: FontWeight.w600,
-//       color: PRIMARY_COLOR,
-//       fontSize: 12.0,
-//     );
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Text(
-//           DateFormat('yyyy-MM-dd').format(startDate),
-//           style: textStyle,
-//         ),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               '~',
-//               style: textStyle,
-//             ),
-//           ],
-//         ),
-//         Text(DateFormat('yyyy-MM-dd').format(endDate), style: textStyle),
-//       ],
-//     );
-//   }
-// }
-
-class _Time extends StatelessWidget {
-  final String startTime;
-  final String endTime;
-
-  const _Time({required this.startTime, required this.endTime, Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final textStyle = TextStyle(
-      fontWeight: FontWeight.w600,
-      color: PRIMARY_COLOR,
-      fontSize: 16.0,
-    );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${startTime.toString().padLeft(2, '0')}:00',
-          style: textStyle,
-        ),
-        Text('${endTime.toString().padLeft(2, '0')}:00',
-            style: textStyle.copyWith(fontSize: 10.0)),
-      ],
-    );
-  }
-}
-
-class _Content extends StatelessWidget {
+class _Content extends ConsumerWidget {
   final String content;
   final String scheduleType;
   final String stfNm;
@@ -253,33 +179,36 @@ class _Content extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeServiceProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child:
-              Text((scheduleType == 'schedule' ? '' : '${stfNm} ') + content),
+          child: Text(
+            (scheduleType == 'schedule' ? '' : '$stfNm ') + content,
+            style: theme.typo.body1,
+          ),
         ),
       ],
     );
   }
 }
 
-class Category extends StatelessWidget {
-  final Color color;
-
-  const Category({required this.color, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
-      width: 16.0,
-      height: 16.0,
-    );
-  }
-}
+// class Category extends StatelessWidget {
+//   final Color color;
+//
+//   const Category({required this.color, Key? key}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: color,
+//         shape: BoxShape.circle,
+//       ),
+//       width: 16.0,
+//       height: 16.0,
+//     );
+//   }
+// }

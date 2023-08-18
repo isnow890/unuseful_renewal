@@ -7,7 +7,7 @@ import '../../user/provider/user_me_provider.dart';
 import '../../common/model/hit_schedule_at_home_model.dart';
 
 final homeNotifierProvider =
-    StateNotifierProvider<HomeNotifier, ModelBase?>((ref) {
+    StateNotifierProvider.autoDispose<HomeNotifier, ModelBase?>((ref) {
   final repository = ref.watch(homeRepositoryProvider);
   final notifier = HomeNotifier(repository: repository, ref: ref);
   return notifier;

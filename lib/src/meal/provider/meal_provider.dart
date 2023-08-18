@@ -9,7 +9,7 @@ import 'package:unuseful/src/meal/repository/meal_repository.dart';
 import '../../user/provider/gloabl_variable_provider.dart';
 
 final mealFamilyProvider =
-    StateNotifierProvider.family<MealNotifier, ModelBase?, String>(
+    StateNotifierProvider.family.autoDispose<MealNotifier, ModelBase?, String>(
   (ref, hspTpCd) {
     final repository = ref.watch(mealRepositoryProvider);
     final notifier = MealNotifier(repository: repository, hspTpCd: hspTpCd);

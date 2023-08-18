@@ -55,6 +55,7 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
       child: widget.canRefresh ?? false
           ? RefreshIndicator(
               color: theme.color.primary,
+              backgroundColor: theme.color.surface,
               onRefresh: widget.onRefreshAndError!,
               child: _renderScaffold(theme),
             )

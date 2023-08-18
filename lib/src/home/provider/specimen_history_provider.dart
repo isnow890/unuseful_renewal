@@ -7,7 +7,7 @@ import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 
-final specimenHistoryNotfierProvider = StateNotifierProvider<
+final specimenHistoryNotfierProvider = StateNotifierProvider.autoDispose<
     SpecimenHistoryNotifier, ModelBase?>((ref) {
   final repository = ref.watch(firestorageRepositoryProvider);
   final notifier = SpecimenHistoryNotifier(ref: ref, repository: repository);

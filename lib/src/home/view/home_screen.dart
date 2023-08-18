@@ -13,7 +13,7 @@ import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../theme/layout/default_layout.dart';
 import '../../../theme/model/menu_model.dart';
 import '../../../router/provider/auth_provider.dart';
-import '../component/meal_section_collection.dart';
+import '../component/meal_section_main.dart';
 import '../component/specimen_section.dart';
 import '../component/telephone_section.dart';
 import '../provider/home_provider.dart';
@@ -64,7 +64,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: TabBarView(
               children: [
                 HitScheduleSection(),
-                MealSectionCollection(),
+                MealSectionMain(),
                 TelephoneSection(),
                 SpecimenSection(),
               ],

@@ -5,7 +5,7 @@ import 'package:unuseful/src/hit_schedule/repository/hit_schedule_repository.dar
 
 import 'hit_duty_calendar_change_month_provider.dart';
 
-final hitSheduleForEventNotifierProvider = StateNotifierProvider<
+final hitSheduleForEventNotifierProvider = StateNotifierProvider.autoDispose<
     HitSheduleForEventNotifier, HitScheduleForEventModelBase?>(
   (ref) {
     final repository = ref.watch(hitScheduleRepositoryProvider);

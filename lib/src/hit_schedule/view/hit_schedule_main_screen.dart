@@ -37,7 +37,7 @@ class _HitScheduleMainScreenState extends ConsumerState<HitScheduleMainScreen> {
       child: DefaultLayout(
         appBarBottomList: tabBarList,
         title: MenuModel.getMenuInfo(HitScheduleMainScreen.routeName).menuName,
-        child: TabBarView(
+        child: const TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             HitScheduleScreen(),

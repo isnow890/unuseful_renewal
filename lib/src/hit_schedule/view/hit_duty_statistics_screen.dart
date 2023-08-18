@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../model/hit_duty_statistics_model.dart';
@@ -21,10 +22,16 @@ class _HitDutyStatisticsScreenState
   final double height = 40;
   HDTRefreshController _hdtRefreshController = HDTRefreshController();
 
+
+
+
   @override
   Widget build(
     BuildContext context,
   ) {
+
+    final theme = ref.watch(themeServiceProvider);
+
     final user = ref.watch(userMeProvider.notifier).state as UserModel;
 
     final state = ref.watch(hitDutyStatisticsFamilyProvider(''));
@@ -233,9 +240,11 @@ class _HitDutyStatisticsScreenState
   }
 
   Widget _getTitleItemWidget(String label, double width) {
+    final theme = ref.watch(themeServiceProvider);
     return Container(
       width: width,
-      color: INPUT_BORDER_COLOR,
+      color: theme.color
+      .hint,
       height: height,
       alignment: Alignment.center,
       child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),

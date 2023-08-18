@@ -4,24 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:unuseful/src/hit_schedule/component/schedule_bottom_sheet.dart';
-import 'package:unuseful/src/hit_schedule/component/schedule_card.dart';
+import 'package:unuseful/src/hit_schedule/component/schedule_list.dart';
 import 'package:unuseful/src/hit_schedule/component/today_banner.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_schedule_for_event_model.dart';
-import 'package:unuseful/src/hit_schedule/model/hit_schedule_model.dart';
-import 'package:unuseful/src/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_for_event_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/custom_calendar.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../../colors.dart';
-import '../../user/model/user_model.dart';
-import '../../user/provider/user_me_provider.dart';
 import '../provider/hit_duty_calendar_change_month_provider.dart';
-import '../provider/hit_duty_schedule_update_provider.dart';
 
 class HitScheduleScreen extends ConsumerStatefulWidget {
   const HitScheduleScreen({Key? key}) : super(key: key);
@@ -35,13 +30,13 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
   Widget build(BuildContext context) {
     final theme = ref.watch(themeServiceProvider);
     final defaultBoxDeco = BoxDecoration(
-      color: Colors.grey[200],
+      color: theme.color.hintContainer,
       //테두리 깍기
       borderRadius: BorderRadius.circular(6.0),
     );
 
     ref.watch(hitDutyCalendarChangeMonthProvider);
-    final user = ref.watch(userMeProvider.notifier).state as UserModel;
+    final global = ref.watch(globalVariableStateProvider);
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
@@ -60,285 +55,232 @@ class _HitScheduleScreenState extends ConsumerState<HitScheduleScreen> {
       eventsLinkedHashMap.addAll(map);
     }
 
-    return Column(
+    return DefaultLayout(
+      canRefresh: true,
+      onRefreshAndError : ()async{
+        ref.refresh(hitScheduleSelectedDayProvider);
+        ref.refresh(hitSheduleForEventNotifierProvider);
+
+      },
+        child: Column(
       children: [
         Flexible(
           flex: 2,
           fit: FlexFit.tight,
-          child: CustomCalendar(
-            shouldFillViewport: true,
-            calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
-              isTodayHighlighted: true,
-            ),
-            onPageChanged: (DateTime month) async {
-              ref
-                  .read(hitScheduleSelectedDayProvider.notifier)
-                  .update((state) => month);
-              ref
-                  .read(hitDutyCalendarChangeMonthProvider.notifier)
-                  .update((state) => DateFormat('yyyyMM').format(month));
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0),
+            child: CustomCalendar(
+              shouldFillViewport: true,
+              calendarStyle: CalendarStyle(
+                outsideDaysVisible: false,
+                isTodayHighlighted: true,
+              ),
+              onPageChanged: (DateTime month) async {
+                ref
+                    .read(hitScheduleSelectedDayProvider.notifier)
+                    .update((state) => month);
+                ref
+                    .read(hitDutyCalendarChangeMonthProvider.notifier)
+                    .update((state) => DateFormat('yyyyMM').format(month));
 
-              ref
-                  .read(hitSheduleForEventNotifierProvider.notifier)
-                  .getHitScheduleForEvent();
+                ref
+                    .read(hitSheduleForEventNotifierProvider.notifier)
+                    .getHitScheduleForEvent();
 
-              ref
-                  .read(hitScheduleNotifierProvider.notifier)
-                  .getHitSchedule(false);
-            },
-            events: eventsLinkedHashMap,
-            selectedDay: selectedDay,
-            focusedDay: selectedDay,
-            onDaySelected: (selectedDay, focusedDay) async {
-              ref
-                  .read(hitScheduleSelectedDayProvider.notifier)
-                  .update((state) => selectedDay);
+                ref
+                    .read(hitScheduleNotifierProvider.notifier)
+                    .getHitSchedule(false);
+              },
+              events: eventsLinkedHashMap,
+              selectedDay: selectedDay,
+              focusedDay: selectedDay,
+              onDaySelected: (selectedDay, focusedDay) async {
+                ref
+                    .read(hitScheduleSelectedDayProvider.notifier)
+                    .update((state) => selectedDay);
 
-              await ref
-                  .read(hitScheduleNotifierProvider.notifier)
-                  .getHitSchedule(false);
-            },
-            calendarBuilders: CalendarBuilders(
-              dowBuilder: (context, day) {
-                List<String> days = ['_', '월', '화', '수', '목', '금', '토', '일'];
+                await ref
+                    .read(hitScheduleNotifierProvider.notifier)
+                    .getHitSchedule(false);
+              },
+              calendarBuilders: CalendarBuilders(
+                headerTitleBuilder: (context, day) {},
+                dowBuilder: (context, day) {
+                  late String dayToKorean;
+                  TextStyle textStyleType = theme.typo.subtitle2;
 
-                if (day.weekday == DateTime.sunday) {
-                  final text = DateFormat.E().format(day);
+                  switch (day.weekday) {
+                    case DateTime.sunday:
+                      dayToKorean = '일';
+
+                      textStyleType =
+                          theme.typo.subtitle1.copyWith(color: Colors.red);
+                      break;
+                    case DateTime.monday:
+                      dayToKorean = '월';
+
+                      break;
+                    case DateTime.tuesday:
+                      dayToKorean = '화';
+                      break;
+                    case DateTime.wednesday:
+                      dayToKorean = '수';
+                      break;
+                    case DateTime.thursday:
+                      dayToKorean = '목';
+                      break;
+                    case DateTime.friday:
+                      dayToKorean = '금';
+                      break;
+                    case DateTime.saturday:
+                      dayToKorean = '토';
+                      textStyleType =
+                          theme.typo.subtitle1.copyWith(color: Colors.blue);
+                      break;
+                  }
 
                   return Center(
                     child: Text(
-                      text,
-                      style: theme.typo.subtitle1,
+                      dayToKorean,
+                      style: textStyleType,
                     ),
                   );
-                }
-              },
-              todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
-                decoration: defaultBoxDeco,
-                textColor: Colors.blue[600],
-                day: day,
-                focusedDay: focusedDay,
-              ),
-              outsideBuilder: (context, day, focusedDay) => _CalendarBuilders(
-                decoration: defaultBoxDeco.copyWith(
-                  color: Colors.white,
+                },
+                todayBuilder: (context, day, focusedDay) => _CalendarBuilders(
+                  decoration: defaultBoxDeco,
+                  textColor: theme.color.tertiary,
+                  day: day,
+                  focusedDay: focusedDay,
                 ),
-                textColor: Colors.grey[400],
-                day: day,
-                focusedDay: focusedDay,
-              ),
-              selectedBuilder: (context, day, focusedDay) => _CalendarBuilders(
-                decoration: defaultBoxDeco.copyWith(
-                    color: Colors.white,
-                    border: Border.all(color: PRIMARY_COLOR, width: 1)),
-                textColor: PRIMARY_COLOR,
-                day: day,
-                focusedDay: focusedDay,
-              ),
-              defaultBuilder: (context, day, focusedDay) => _CalendarBuilders(
-                  decoration: defaultBoxDeco,
+                selectedBuilder: (context, day, focusedDay) =>
+                    _CalendarBuilders(
+                  decoration: defaultBoxDeco.copyWith(
+                      border: Border.all(color: theme.color.primary, width: 2)),
+                  textColor: theme.color.primary,
                   day: day,
                   focusedDay: focusedDay,
-                  textColor: day.weekday == DateTime.sunday ||
-                          day.weekday == DateTime.saturday
-                      ? Colors.red
-                      : Colors.black),
-              holidayBuilder: (context, day, focusedDay) {
-                return _CalendarBuilders(
-                  decoration: defaultBoxDeco,
-                  day: day,
-                  focusedDay: focusedDay,
-                );
-              },
-              markerBuilder: (context, date, eventss) {
-                DateTime _date = DateTime(date.year, date.month, date.day);
+                ),
+                defaultBuilder: (context, day, focusedDay) {
+                  var defaultTextStyle = theme.typo.body1;
 
-                if (eventsLinkedHashMap[_date] != null) {
-                  if (isSameDay(
-                      _date,
-                      eventsLinkedHashMap[_date]!.scheduleDate ??
-                          DateTime(2023))) {
-                    return Stack(children: [
-                      Positioned(
-                          right: -1,
-                          bottom: -1,
-                          child: _buildEventsMarker(
-                              eventsLinkedHashMap[_date]!.count)),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const SizedBox(height: 10.0),
-                            Text(
-                              eventsLinkedHashMap[_date]!.morningNm ?? '',
-                              style: TextStyle(
-                                  fontSize: 10.0,
-                                  color:
-                                      eventsLinkedHashMap[_date]!.morningNm ==
-                                              user.stfNm
-                                          ? Colors.orange
-                                          : Colors.black),
-                            ),
-                            Text(eventsLinkedHashMap[_date]!.afternoonNm ?? '',
+                  var textColor = theme.color.text;
+
+                  if (day.weekday == DateTime.saturday) {
+                    textColor = Colors.blue;
+                  } else if (day.weekday == DateTime.sunday) {
+                    textColor = Colors.red;
+                  }
+
+                  return _CalendarBuilders(
+                    decoration: defaultBoxDeco.copyWith(
+                        border:
+                            Border.all(color: Colors.transparent, width: 2)),
+                    day: day,
+                    focusedDay: focusedDay,
+                    textColor: textColor,
+                  );
+                },
+                holidayBuilder: (context, day, focusedDay) {
+                  return _CalendarBuilders(
+                    decoration: defaultBoxDeco,
+                    day: day,
+                    focusedDay: focusedDay,
+                  );
+                },
+                markerBuilder: (context, date, eventss) {
+                  DateTime _date = DateTime(date.year, date.month, date.day);
+
+                  if (eventsLinkedHashMap[_date] != null) {
+                    if (isSameDay(
+                        _date,
+                        eventsLinkedHashMap[_date]!.scheduleDate ??
+                            DateTime(2023))) {
+                      return Stack(children: [
+                        Positioned(
+                            right: 0,
+                            bottom: 1,
+                            child: _buildEventsMarker(
+                              theme.color.primary,
+                                eventsLinkedHashMap[_date]!.count)),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(height: 10.0),
+                              Text(
+                                eventsLinkedHashMap[_date]!.morningNm ?? '',
                                 style: TextStyle(
                                     fontSize: 10.0,
-                                    color: eventsLinkedHashMap[_date]!
-                                                .afternoonNm ==
-                                            user.stfNm
-                                        ? Colors.orange
-                                        : Colors.black)),
-                            // Text(
-                            //     events[_date]!.count == 0
-                            //         ? ''
-                            //         : ('일정:${events[_date]!.count}'),
-                            //     style: TextStyle(fontSize: 9.0)),
-                          ],
+                                    fontWeight:
+                                        eventsLinkedHashMap[_date]!.morningNm ==
+                                                global.stfNm
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                    color:
+                                        eventsLinkedHashMap[_date]!.morningNm ==
+                                            global.stfNm
+                                            ? theme.color.tertiary
+                                            : theme.color.text),
+                              ),
+                              Text(
+                                  eventsLinkedHashMap[_date]!.afternoonNm ?? '',
+                                  style: TextStyle(
+                                      fontSize: 10.0,
+                                      fontWeight: eventsLinkedHashMap[_date]!
+                                                  .afternoonNm ==
+                                          global.stfNm
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: eventsLinkedHashMap[_date]!
+                                                  .afternoonNm ==
+                                          global.stfNm
+                                          ? theme.color.tertiary
+                                          : theme.color.text)),
+                            ],
+                          ),
                         ),
-                      ),
-                    ]
-                        // Stack(children: [
-                        //   Container(
-                        //     width: 10,
-                        //     padding: const EdgeInsets.only(bottom: 4),
-                        //     decoration: const BoxDecoration(
-                        //       color: PRIMARY_COLOR,
-                        //       shape: BoxShape.circle,
-                        //     ),
-                        //   ),
-                        //   // Text(events[_date]!.count.toString()),
-                        // ]),
-
-                        );
+                      ]);
+                    }
                   }
-                }
-              },
+                },
+              ),
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
-        TodayBanner(),
-        SizedBox(
+        const TodayBanner(),
+        const SizedBox(
           height: 5,
         ),
-        SizedBox(height: 200, child: _ScheduleList()),
+        const SizedBox(height: 200, child: ScheduleList()),
       ],
-    );
+    ));
   }
 
-  Widget _buildEventsMarker(int count) {
+  Widget _buildEventsMarker(Color color , int count) {
     return count == 0
         ? Text('')
         : AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             decoration:
-                BoxDecoration(shape: BoxShape.rectangle, color: PRIMARY_COLOR),
-            width: 13.0,
-            height: 13.0,
+                BoxDecoration(shape: BoxShape.circle, color: color),
+            width: 15.0,
+            height: 15.0,
             child: Center(
               child: Text(
                 '${count}',
                 style: TextStyle().copyWith(
                   color: Colors.white,
-                  fontSize: 9.0,
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           );
-  }
-}
-
-class _ScheduleList extends ConsumerWidget {
-  const _ScheduleList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
-    final state = ref.watch(hitScheduleNotifierProvider);
-    final user = ref.watch(userMeProvider.notifier).state;
-    // final event = ref.watch(hitSheduleForEventNotifierProvider);
-    var stfNum = (user as UserModel).hitDutyYn;
-    if (state is HitScheduleModelError) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            state.message,
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                ref
-                    .read(hitScheduleNotifierProvider.notifier)
-                    .getHitSchedule(false);
-              },
-              child: Text('다시 시도')),
-        ],
-      );
-    }
-
-    if (state is HitScheduleModelLoading) {
-      return const CircularIndicator();
-    }
-
-    final cp = state as HitScheduleModel;
-    return ListView.separated(
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          if (index == cp.data.length)
-            return const SizedBox(
-              height: 5,
-            );
-
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: GestureDetector(
-              onTap: () async {
-                if (state.data[index].scheduleType == 'duty') {
-                  await ref
-                      .read(hitMyDutyFamilyProvider(stfNum!).notifier)
-                      .getDutyOfMine();
-
-                  ref.refresh(hitDutyScheduleUpdateNotifierProvider);
-
-                  showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) {
-                        return ScheduleBottomSheet(
-                          dutyTypeCode: state.data[index].dutyTypeCode!,
-                          dutyDate: state.data[index].startDate,
-                          dutyName: state.data[index].scheduleName!,
-                          stfNm: state.data[index].stfNm!,
-                          stfNum: stfNum!,
-                          wkSeq: state.data[index].wkSeq!,
-                        );
-                      });
-                }
-              },
-              child: ScheduleCard(
-                startDate: state.data[index].startDate,
-                endDate: state.data[index].endDate,
-                startTime: state.data[index].startTime ?? '',
-                endTime: state.data[index].endTime ?? '',
-                content: state.data[index].scheduleName ?? '',
-                stfNm: state.data[index].stfNm ?? '',
-                scheduleType: state.data[index].scheduleType ?? '',
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            height: 8,
-          );
-        },
-        itemCount: cp.data.length + 1);
   }
 }
 
@@ -347,13 +289,15 @@ class _CalendarBuilders extends StatelessWidget {
   final DateTime focusedDay;
   final Decoration decoration;
   final Color? textColor;
+  final FontWeight? fontWeight;
 
   const _CalendarBuilders(
       {Key? key,
       required this.day,
       required this.focusedDay,
       required this.decoration,
-      this.textColor})
+      this.textColor,
+      this.fontWeight})
       : super(key: key);
 
   @override
@@ -370,7 +314,8 @@ class _CalendarBuilders extends StatelessWidget {
           children: [
             Text(
               day.day.toString(),
-              style: TextStyle(fontSize: 13, color: textColor ?? Colors.black),
+              style: TextStyle(
+                  fontSize: 13, color: textColor, fontWeight: fontWeight),
             ),
             Expanded(child: Text("")),
             // Text(moneyString,
