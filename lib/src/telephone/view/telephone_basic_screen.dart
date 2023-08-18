@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share/share.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/src/common/model/cursor_pagination_model.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/telephone/model/telephone_basic_model.dart';
 import 'package:unuseful/src/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/src/telephone/provider/telephone_search_value_provider.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/theme/component/button/button.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
@@ -44,42 +46,10 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
     //값이 바뀔때마다 재 빌드 하기 위하여.
 
     final theme = ref.watch(themeServiceProvider);
-
     final state = ref.watch(telephoneBasicNotifierProvider);
-
-    if (state is CursorPaginationLoading) {
-      return const Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CustomCircularProgressIndicator(),
-        ],
-      );
+    if (state is ModelBaseLoading) {
+      return const CircularIndicator();
     }
-
-    if (state is CursorPaginationError) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            state.message,
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                ref
-                    .read(telephoneBasicNotifierProvider.notifier)
-                    .paginate(forceRefetch: true);
-              },
-              child: Text('다시 시도')),
-        ],
-      );
-    }
-
-    //CursorPagination
-    //CursorPaginationFetchingMore
-    //CursorPaginationRefetching
 
     final cp = state as CursorPagination<TelephoneBasicModel>;
 
@@ -124,14 +94,17 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                           ),
                           child: Center(
                               child: cp is CursorPaginationFetchingMore
-                                  ? CustomCircularProgressIndicator()
-                                  : Text('마지막 데이터입니다.',style: theme.typo.subtitle2,)),
+                                  ? const CircularIndicator()
+                                  : Text(
+                                      '마지막 데이터입니다.',
+                                      style: theme.typo.subtitle2,
+                                    )),
                         );
                       }
 
                       return ListTile(
                         horizontalTitleGap: 10,
-                        contentPadding: EdgeInsets.only(left: 0.0),
+                        contentPadding: EdgeInsets.only(left: 10.0),
                         leading: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -149,9 +122,12 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
+                                  Button(
+                                    iconData: Icons.share_outlined,
+                                    type: ButtonType.flat,
+                                    color: theme.color.secondary,
                                     onPressed: () {
-                                      Share.share(shareInfo(
+                                      Share.share(_shareInfo(
                                           hspTpCd: state.data[index].hspTpCd,
                                           deptNm: state.data[index].deptNm,
                                           telNoNm: state.data[index].telNoNm,
@@ -162,62 +138,58 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
                                           purifiedTelNo:
                                               state.data[index].purifiedTelNo));
                                     },
-                                    icon: Icon(
-                                      Icons.share_outlined,
-                                      size: 20,
-                                    ),
-                                    color: theme.color.secondary,
                                   ),
                                   if (state.data[index].purifiedTelNo != null)
-                                    IconButton(
+                                    Button(
+                                      iconData: Icons.phone,
+                                      type: ButtonType.flat,
+                                      color: theme.color.secondary,
                                       onPressed: () {
                                         UrlLauncherHelper.makePhoneCall(
                                             state.data[index].purifiedTelNo!);
                                       },
-                                      icon: Icon(
-                                        Icons.phone_rounded,
-                                        size: 20,
-                                      ),
-                                      color: theme.color.secondary,
                                     ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        title: Text(
-                          state.data[index].deptNm ?? '',
-                          style: theme.typo.subtitle1,
+                        title: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(
+                            state.data[index].deptNm ?? '',
+                            style: theme.typo.subtitle1,
+                          ),
                         ),
 
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 5),
-                            Text(
-                              state.data[index].telNoNm ?? '',
-                              style: theme.typo.subtitle2,
-                            ),
-                            const SizedBox(height: 5),
-
-                            Row(
-                              children: [
-                                Text(
-                                  state.data[index].etntTelNo ?? '',
-                                  style: theme.typo.subtitle2,
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  state.data[index].telNoAbbrNm ?? '',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            )
-                          ],
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 5),
+                              Text(
+                                state.data[index].telNoNm ?? '',
+                                style: theme.typo.subtitle2,
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text(
+                                    state.data[index].etntTelNo ?? '',
+                                    style: theme.typo.subtitle2,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    state.data[index].telNoAbbrNm ?? '',
+                                    style: theme.typo.subtitle2,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                         // isThreeLine: true,
                       );
@@ -230,7 +202,7 @@ class _TelephoneBasicScreenState extends ConsumerState<TelephoneBasicScreen> {
         ));
   }
 
-  shareInfo(
+  _shareInfo(
       {required String? hspTpCd,
       required String? deptNm,
       required String? telNoNm,

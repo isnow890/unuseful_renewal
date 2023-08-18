@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/home/component/history_chip.dart';
-import 'package:unuseful/src/home/component/home_screen_card.dart';
+import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/provider/telehphone_history_provider.dart';
 import 'package:unuseful/src/telephone/view/telephone_main_screen.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
@@ -22,19 +22,18 @@ class TelephoneSection extends ConsumerWidget {
     final telephone = ref.watch(telephoneHistoryNotfierProvider);
     final theme = ref.watch(themeServiceProvider);
 
-    var cp = telephone as SearchHistoryMainModel;
-
-
+    if (telephone is ModelBaseLoading) {
+      return const CircularIndicator();
+    }
 
     return DefaultLayout(
         canRefresh: true,
-        onRefreshAndError: () async => ref
-            .read(telephoneHistoryNotfierProvider.notifier)
-            .getTelephoneHistory(),
-        // state: [telephone],
+        onRefreshAndError: () async =>
+            ref.refresh(telephoneHistoryNotfierProvider),
+        state: [telephone],
         child: ListView(
           children: [
-            HomeScreenCard(
+            SectionCard(
               contentWidget: Column(
                 children: [
                   Column(
@@ -53,7 +52,7 @@ class TelephoneSection extends ConsumerWidget {
                       Divider(
                         height: 30,
                       ),
-                      cp.history!.isEmpty
+                      (telephone as SearchHistoryMainModel).history!.isEmpty
                           ? Row(
                               children: [
                                 Text(
@@ -64,7 +63,8 @@ class TelephoneSection extends ConsumerWidget {
                             )
                           : Wrap(
                               alignment: WrapAlignment.center,
-                              children: cp.history!
+                              children: (telephone)
+                                  .history!
                                   .take(20)
                                   .map((e) => HistoryChip(
                                         onDeleted: () async {

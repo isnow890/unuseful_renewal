@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/telephone/model/telephone_advance_model.dart';
 import 'package:unuseful/src/telephone/repository/telephone_advance_repository.dart';
 
@@ -8,7 +9,7 @@ import 'telephone_search_value_provider.dart';
 
 
 final telephoneAdvanceNotifierProvider=
-    StateNotifierProvider<TelephoneAdvanceNotifier, CursorPaginationBase>((ref){
+    StateNotifierProvider<TelephoneAdvanceNotifier, ModelBase>((ref){
 
       final repository = ref.watch(telephoneAdvanceRepositoryProvider);
       final searchValue = ref.watch(telephoneSearchValueProvider);

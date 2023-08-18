@@ -68,17 +68,13 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
     // AppBar appBar = _renderAppbar(theme);
     // var appBarHeight = appBar.preferredSize.height;
 
+    print(widget.state?.any((element) => element is ModelBaseLoading));
     return Scaffold(
       drawer: widget.isDrawerVisible ?? true ? const MainDrawer() : null,
       appBar: hideAppbar ? null : _renderAppbar(theme),
       body: widget.state?.any((element) => element is ModelBaseError) ?? false
           ? CustomErrorWidget(onPressed: widget.onRefreshAndError!)
-          : widget.state?.any((element) => element is ModelBaseLoading) ?? false
-              ? CircularIndicator(
-                  isBusy: true,
-                  child: Container(),
-                )
-              : widget.child,
+          : widget.child,
       bottomNavigationBar: widget.bottomNavigationBar,
       floatingActionButton: widget.floatingActionButton,
     );
@@ -110,6 +106,8 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
                 child: Container(
                   color: theme.color.surface,
                   child: TabBar(
+
+
                     indicatorPadding: EdgeInsets.zero,
                     tabs: List.generate(
                       widget.appBarBottomList!.length,

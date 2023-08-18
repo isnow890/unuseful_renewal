@@ -5,34 +5,34 @@ import 'package:unuseful/theme/provider/theme_provider.dart';
 class CircularIndicator extends ConsumerWidget {
   const CircularIndicator({
     super.key,
-    required this.child,
-    required this.isBusy,
+    // required this.child,
+    // required this.isBusy,
   });
 
-  final Widget child;
-  final bool isBusy;
+  // final Widget child;
+  // final bool isBusy;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeServiceProvider);
     return Stack(
       children: [
-        child,
+        // child,
 
         /// CircularIndicator
         IgnorePointer(
-          ignoring: !isBusy,
+          ignoring: true,
+          // ignoring: !isBusy,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 222),
-            opacity: isBusy ? 1 : 0,
+            opacity: 1,
             child: Container(
               // color: theme.color.background,
               alignment: Alignment.center,
               child: CircularProgressIndicator(
                 color: theme.color.primary,
-                value: isBusy ? null : 0,
+                value: null,
               ),
-
             ),
           ),
         ),

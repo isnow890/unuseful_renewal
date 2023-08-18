@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
-
+import 'package:unuseful/theme/model/menu_model.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../common/provider/drawer_selector_provider.dart';
 import '../provider/telephone_order_radio_tile_provider.dart';
@@ -27,15 +28,12 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   late TabController controller;
   int index = 0;
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     controller = TabController(length: 2, vsync: this);
     controller.addListener(tabListener);
-
-
   }
 
   void tabListener() {
@@ -53,26 +51,29 @@ class _TelePhoneScreenState extends ConsumerState<TelePhoneMainScreen>
   Widget build(BuildContext context) {
     final orderRadioTile = ref.watch(telephoneOrderRadioTileProvider);
     final searchValue = ref.watch(telephoneSearchValueProvider);
+
+    final theme = ref.watch(themeServiceProvider);
+
     return DefaultLayout(
-      title: 'telephone',
+      title: MenuModel.getMenuInfo(TelePhoneMainScreen.routeName).menuName,
       // TextTitle(title:  'telephone',
       // ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: PRIMARY_COLOR,
-        unselectedItemColor: BODY_TEXT_COLOR,
-        selectedFontSize: 10,
-        unselectedFontSize: 10,
+        backgroundColor: theme.color.surface,
+        selectedItemColor: theme.color.primary,
+         unselectedItemColor: theme.color.subtext,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
         type: BottomNavigationBarType.fixed,
         onTap: (int value) {
           index = value;
           controller.animateTo(value);
         },
         currentIndex: index,
-        items: [
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.contact_phone), label: '내선검색'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone), label: 'basic'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.contact_phone_outlined), label: 'advance'),
+              icon: Icon(Icons.contact_phone_outlined), label: '직원검색'),
         ],
       ),
       child: TabBarView(

@@ -10,7 +10,8 @@ class SearchHistoryMainModel extends ModelBase {
 }
 
 @JsonSerializable()
-class SearchHistoryModel {
+class SearchHistoryModel extends ModelBase
+{
   final DateTime lastUpdated;
   final String searchValue;
   final String mode;

@@ -25,18 +25,10 @@ class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<HomeScreen> createState() => _RootTabState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _RootTabState extends ConsumerState<HomeScreen> {
-  Future<void> whenRefreshAndError() async {
-    ref.read(homeNotifierProvider.notifier).getHitScheduleAtHome();
-    ref.read(mealFamilyProvider('01').notifier).getMeal();
-    ref.read(mealFamilyProvider('02').notifier).getMeal();
-    ref.read(telephoneHistoryNotfierProvider.notifier).getTelephoneHistory();
-    ref.read(specimenHistoryNotfierProvider.notifier).getSpecimenHistory();
-  }
-
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   List<String> tabBarList = ['일정', '식단', '전화번호', '진검검사'];
 
   @override
@@ -48,9 +40,6 @@ class _RootTabState extends ConsumerState<HomeScreen> {
       length: tabBarList.length,
       child: DefaultLayout(
           appBarBottomList: tabBarList,
-          canRefresh: true,
-          onRefreshAndError: whenRefreshAndError,
-          state: [home],
           actions: [
             Button(
               icon: 'option',
@@ -67,23 +56,17 @@ class _RootTabState extends ConsumerState<HomeScreen> {
             ),
           ],
           title: menus[0].menuName,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
+          child: const Padding(
+            padding: EdgeInsets.symmetric(
               vertical: 10,
               horizontal: 8,
             ),
             child: TabBarView(
               children: [
-                const HitScheduleSection(),
-                const MealSectionCollection(),
-                const TelephoneSection(),
-
-
-                ListView(
-                  children: <Widget>[
-                    const SpecimenSection(),
-                  ],
-                ),
+                HitScheduleSection(),
+                MealSectionCollection(),
+                TelephoneSection(),
+                SpecimenSection(),
               ],
             ),
           )),

@@ -8,7 +8,7 @@ import 'package:unuseful/dio.dart';
 import 'package:unuseful/src/specimen/model/specimen_model.dart';
 import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_detail_params_provider.dart';
-import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import '../../../colors.dart';
@@ -46,24 +46,19 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map<int, bool> expansionExpandedindexList = {};
 
     final state = ref.watch(
       specimenStateProvider,
     );
 
-    if (state is SpecimenModelLoading)
-      return DefaultLayout(
-        isDrawerVisible: false,
-        title: 'text',
-        child: CustomLoadingIndicatorWidget(),
-      );
+    if (state is SpecimenModelLoading) {
+      return const CircularIndicator();
+    }
 
     final cp = state as SpecimenModel;
 
     return DefaultLayout(
         isDrawerVisible: false,
-
         title: 'text',
         child: RefreshIndicator(
           color: PRIMARY_COLOR,
@@ -406,7 +401,6 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ElevatedButton(
                       onPressed: () {
-
                         ref
                             .read(specimenDetailParamsProvider.notifier)
                             .update((state) => SpecimenDetailParams(

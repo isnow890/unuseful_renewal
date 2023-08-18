@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
-class HomeScreenCard extends ConsumerWidget {
-  const HomeScreenCard({Key? key, required this.contentWidget})
+class SectionCard extends ConsumerWidget {
+  const SectionCard({Key? key, required this.contentWidget})
       : super(key: key);
   final Widget contentWidget;
 

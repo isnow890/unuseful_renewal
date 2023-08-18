@@ -18,6 +18,11 @@ class MenuModel {
     required this.menuName,
     required this.routeName,
   });
+
+  static MenuModel getMenuInfo (String routeName){
+    return menus.firstWhere((element) => element.routeName == routeName);
+  }
+
 }
 
 List<MenuModel> menus = [
@@ -44,3 +49,7 @@ List<MenuModel> menus = [
       menuName: '전산정보팀 일정',
       routeName: HitScheduleMainScreen.routeName),
 ];
+
+
+
+

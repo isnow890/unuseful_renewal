@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
-import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';
 import '../model/hit_schedule_log_model.dart';
@@ -17,6 +17,7 @@ class HitDutyLogScreen extends ConsumerStatefulWidget {
 
 class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
   final ScrollController controller = ScrollController();
+
   // Map<String,dynamic> fi2 = {'hspTpCd' : '01', 'searchValue': '10884537','strDt': '20220522',
   //   'endDt': '20230619' ,'orderBy': 'desc'};
 
@@ -24,17 +25,16 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
   Widget build(BuildContext context) {
     // final state3 = ref.watch(specimenNotifierProvider);
 
-
     //
     //
     //
     // final state2 = ref.watch(specimenFamilyProvider(fi2));
 
     final theme = ref.watch(themeServiceProvider);
-     final state = ref.watch(hitDutyLogNotifierProvider);
+    final state = ref.watch(hitDutyLogNotifierProvider);
 
     if (state is HitDutyLogModelLoading) {
-      return const CustomLoadingIndicatorWidget();
+      return const CircularIndicator();
     }
 
     if (state is HitDutyLogModelError) {
@@ -58,7 +58,6 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
           controller: controller,
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
-
             controller: controller,
             separatorBuilder: (context, index) {
               return const Divider(

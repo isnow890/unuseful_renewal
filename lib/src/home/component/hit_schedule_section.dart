@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/hit_schedule_at_home_model.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/src/home/component/home_screen_card.dart';
+import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/provider/home_provider.dart';
 import 'package:unuseful/src/user/model/user_model.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/src/user/provider/user_me_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
@@ -29,6 +28,8 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
     final theme = ref.watch(themeServiceProvider);
     final global = ref.watch(globalVariableStateProvider);
 
+    if (schedule is ModelBaseLoading) return const CircularIndicator();
+
     var cp = schedule as HitScheduleAtHomeModel;
 
     return DefaultLayout(
@@ -40,7 +41,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
         child: ListView(children: [
           Column(
             children: [
-              HomeScreenCard(
+              SectionCard(
                 contentWidget: SingleChildScrollView(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +71,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
                       ]),
                 ),
               ),
-              HomeScreenCard(
+              SectionCard(
                 contentWidget: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -94,7 +95,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
                   ],
                 ),
               ),
-              HomeScreenCard(
+              SectionCard(
                 contentWidget: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

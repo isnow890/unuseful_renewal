@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:unuseful/colors.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../model/hit_duty_statistics_model.dart';
@@ -29,13 +29,7 @@ class _HitDutyStatisticsScreenState
 
     final state = ref.watch(hitDutyStatisticsFamilyProvider(''));
     if (state is HitDutyStatisticsModelLoading) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(child: CustomCircularProgressIndicator()),
-        ],
-      );
+      return const CircularIndicator();
     }
 
     if (state is HitDutyStatisticsModelError) {

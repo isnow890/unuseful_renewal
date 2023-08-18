@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
-import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import '../../../colors.dart';
@@ -141,7 +141,7 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
               .read(specimenHistoryNotfierProvider.notifier)
               .getSpecimenHistory());
     } else {
-      return const CustomLoadingIndicatorWidget();
+      return const CircularIndicator();
     }
   }
 

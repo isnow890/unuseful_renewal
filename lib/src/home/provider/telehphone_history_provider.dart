@@ -17,7 +17,6 @@ final telephoneHistoryNotfierProvider =
 
 class TelephoneHistoryNotifier extends StateNotifier<ModelBase?> {
   final Ref ref;
-
   final FirestoreRepository repository;
 
   TelephoneHistoryNotifier({required this.ref, required this.repository})
@@ -25,9 +24,8 @@ class TelephoneHistoryNotifier extends StateNotifier<ModelBase?> {
     getTelephoneHistory();
   }
 
-  Future<ModelBase?> getTelephoneHistory() async {
+  Future<ModelBase> getTelephoneHistory() async {
     try {
-
       final user = ref.read(userMeProvider.notifier).state;
       final convertedUser = user as UserModel;
       state = ModelBaseLoading();

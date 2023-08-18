@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/patient/model/patient_model.dart';
 import 'package:unuseful/src/patient/provider/patient_provider.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import '../../../colors.dart';
 import '../../../theme/layout/default_layout.dart';
 import '../../common/provider/drawer_selector_provider.dart';
@@ -25,16 +25,8 @@ class _PatientScreenState extends ConsumerState<PatientScreen> {
     final state = ref.watch(patientNotifierProvider);
 
     if (state is PatientModelLoading) {
-      return renderDefaultLayOut(
-        totalCount: null,
-        widget: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(child: CustomCircularProgressIndicator()),
-          ],
-        ),
-      );
+      return const CircularIndicator();
+
     }
 
     if (state is PatientModelError) {

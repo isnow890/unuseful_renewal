@@ -9,8 +9,8 @@ import 'package:unuseful/src/home/provider/response_model_state_provider.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_duty_schedule_update_model.dart';
 import 'package:unuseful/src/hit_schedule/repository/hit_schedule_repository.dart';
 import 'package:unuseful/src/user/model/user_model.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_alert.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import '../../common/model/response_model.dart';
 import '../../user/provider/user_me_provider.dart';
@@ -96,13 +96,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     }
 
     if (state is HitMyDutyModelLoading) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(child: CustomCircularProgressIndicator()),
-        ],
-      );
+      return CircularIndicator();
     }
     var cp = state as HitMyDutyModel;
 

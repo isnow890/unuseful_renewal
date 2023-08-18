@@ -1,5 +1,6 @@
 import 'package:debounce_throttle/debounce_throttle.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/common/model/model_with_order_seq.dart';
 
 import '../model/cursor_pagination_model.dart';
@@ -33,7 +34,7 @@ class _PaginationInfo {
 //IModelWithId(U)는 T의 지나친 일반화를 줄여주는 역할을 함. 모델을 다 IModelWithID를 상속받게끔 해서.
 class PaginationProvider<T extends IModelWithDataSeq,
         U extends IBasePaginationRepository<T>>
-    extends StateNotifier<CursorPaginationBase> {
+    extends StateNotifier<ModelBase> {
   final String searchValue;
   final U repository;
   final paginationThrottle = Throttle(
@@ -43,7 +44,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
   );
 
   PaginationProvider({required this.searchValue, required this.repository})
-      : super(CursorPaginationLoading()) {
+      : super(ModelBaseLoading()) {
     paginate();
 
     //리스너 생성
@@ -114,7 +115,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
       }
 
       //현재 로딩중인지 확인하기 위하여
-      final isLoading = state is CursorPaginationLoading;
+      final isLoading = state is ModelBaseLoading;
 
       //처음부터 데이터 조회 - 새로고침
       final isRefetching = state is CursorPaginationRefetching;
@@ -163,7 +164,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
           state = CursorPaginationRefetching<T>(
               meta: pState.meta, data: pState.data);
         } else {
-          state = CursorPaginationLoading();
+          state = ModelBaseLoading();
         }
       }
 
@@ -184,7 +185,7 @@ class PaginationProvider<T extends IModelWithDataSeq,
     } catch (e, stack) {
       print(e);
       // print(stack);
-      state = CursorPaginationError(message: '데이터 못가져옴');
+      state = ModelBaseError(message: '데이터 못가져옴');
     }
   }
 }

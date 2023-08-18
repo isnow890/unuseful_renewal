@@ -5,8 +5,8 @@ import 'package:unuseful/colors.dart';
 import 'package:unuseful/src/specimen/model/specimen_detail_model.dart';
 import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_provider.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
-import 'package:unuseful/theme/component/custom_loading_indicator_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 
 import 'specimen_main_screen.dart';
@@ -32,18 +32,11 @@ class _SpecimenResultDetailScreenState
   Widget build(BuildContext context) {
     final state = ref.watch(specimenNotifierProvider);
 
-    if (state is SpecimenDetailModelLoading)
-      return DefaultLayout(
-        isDrawerVisible: false,
-
-        title: 'detailed',
-        child: CustomLoadingIndicatorWidget(),
-      );
+    if (state is SpecimenDetailModelLoading) return const CircularIndicator();
 
     if (state is SpecimenDetailModelError) {
       return DefaultLayout(
           isDrawerVisible: false,
-
           title: 'detailed',
           child: CustomErrorWidget(
               message: state.message,
@@ -54,10 +47,8 @@ class _SpecimenResultDetailScreenState
 
     final cp = state as SpecimenDetailModel;
 
-
     return DefaultLayout(
         isDrawerVisible: false,
-
         title: '${cp.data![0].exmCtgCd} ${cp.data![0].exmCtgAbbrNm} ',
         child: Padding(
           padding: const EdgeInsets.fromLTRB(8, 8, 8, 1),
@@ -137,7 +128,6 @@ class _SpecimenResultDetailScreenState
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: PRIMARY_COLOR,
@@ -145,7 +135,9 @@ class _SpecimenResultDetailScreenState
                       child: const Text('이전'),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {

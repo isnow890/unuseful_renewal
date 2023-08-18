@@ -13,8 +13,8 @@ import 'package:unuseful/src/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_for_event_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_schedule_selected_day_provider.dart';
+import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_calendar.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 
 
 import '../../../colors.dart';
@@ -266,13 +266,8 @@ class _ScheduleList extends ConsumerWidget {
     }
 
     if (state is HitScheduleModelLoading) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(child: CustomCircularProgressIndicator()),
-        ],
-      );
+      return const CircularIndicator();
+
     }
 
     final cp = state as HitScheduleModel;

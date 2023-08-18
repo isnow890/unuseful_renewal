@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/src/home/component/home_screen_card.dart';
+import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/meal/model/meal_model.dart';
 import 'package:unuseful/src/meal/provider/meal_provider.dart';
-import 'package:unuseful/theme/component/custom_circular_progress_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/photo_view/full_photo.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
@@ -22,6 +21,7 @@ class MealSection extends ConsumerStatefulWidget {
 }
 
 class _MealSectionState extends ConsumerState<MealSection> {
+
   _renderCardInside(String hspTpCd, MealModel mealModel) {
     final theme = ref.watch(themeServiceProvider);
 
@@ -89,21 +89,16 @@ class _MealSectionState extends ConsumerState<MealSection> {
     final state = ref.watch(mealFamilyProvider(widget.hspTpCd));
     var model = MealModel();
 
-
-
     if (state is MealModel) {
       model = state;
     }
 
-    return
-         HomeScreenCard(
-          contentWidget: (state is ModelBaseLoading)
-              ? const Center(child: CustomCircularProgressIndicator())
-              : Column(
-                  children: [
-                    _renderCardInside(widget.hspTpCd, model),
-                  ],
-                ),
-        );
+    return SectionCard(
+      contentWidget: Column(
+        children: [
+          _renderCardInside(widget.hspTpCd, model),
+        ],
+      ),
+    );
   }
 }
