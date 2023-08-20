@@ -14,7 +14,6 @@ import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 import 'package:unuseful/util/helper/pagination_utils.dart';
 import 'package:unuseful/util/helper/url_launcher_utils.dart';
-import '../component/custom_readonly_search_text_field.dart';
 import 'telephone_search_screen.dart';
 
 class TelephoneBasicScreen extends ConsumerStatefulWidget {

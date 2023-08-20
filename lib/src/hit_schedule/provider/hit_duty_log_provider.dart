@@ -25,8 +25,11 @@ class HitDutyLogNotifier extends StateNotifier<ModelBase?> {
   Future<ModelBase> getDutyLog() async {
     try {
       state = ModelBaseLoading();
-
-      List<HitDutyLogListModel> resp = await repository.getDutyLog();
+      final results = await Future.wait([
+        repository.getDutyLog(),
+        Future.delayed(const Duration(milliseconds: 555)),
+      ]);
+      List<HitDutyLogListModel> resp = results[0];
       state = HitDutyLogModel(data: resp);
       return HitDutyLogModel(data: resp);
     } catch (e) {

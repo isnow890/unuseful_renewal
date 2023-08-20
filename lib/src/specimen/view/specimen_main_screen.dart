@@ -18,7 +18,6 @@ import 'package:unuseful/theme/layout/default_layout.dart';
 
 import '../../home/model/search_history_main_model.dart';
 import '../../home/provider/specimen_history_provider.dart';
-import '../../telephone/component/custom_readonly_search_text_field.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
 import '../model/specimen_params.dart';
 import '../provider/specimen_provider.dart';

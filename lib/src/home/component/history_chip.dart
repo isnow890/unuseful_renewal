@@ -33,8 +33,10 @@ class HistoryChip extends ConsumerWidget {
             Icons.close,
             color: theme.color.primary,
             size: 15,
+            
           ),
           onDeleted: onDeleted),
     );
   }
 }
+

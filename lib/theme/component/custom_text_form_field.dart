@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/theme/component/button/button.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
 typedef Validation = String? Function(String?)?;
@@ -10,7 +11,9 @@ class CustomTextFormField extends ConsumerStatefulWidget {
   final String? errorText;
   final bool obscureText;
   final bool autofocus;
+  final void Function()? onClear;
 
+  final bool clearVisible;
   final void Function(String text)? onChanged;
   final void Function(String text)? onFieldSubmitted;
 
@@ -23,12 +26,15 @@ class CustomTextFormField extends ConsumerStatefulWidget {
   final EdgeInsets? contentPadding;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
-  final bool? isSuffixDeleteButtonEnabled;
+
+  // final bool? isSuffixDeleteButtonEnabled;
   final Validation? validator;
   final String? labelText;
 
-  const CustomTextFormField({
+  const CustomTextFormField( {
+    this.clearVisible = false,
     Key? key,
+    this.onClear,
     this.hintText,
     this.errorText,
     this.obscureText = false,
@@ -40,7 +46,7 @@ class CustomTextFormField extends ConsumerStatefulWidget {
     this.prefixIcon,
     this.inputFormatters,
     this.keyboardType,
-    this.isSuffixDeleteButtonEnabled,
+    // this.isSuffixDeleteButtonEnabled,
     this.readOnly,
     this.onFieldSubmitted,
     this.validator,
@@ -53,6 +59,9 @@ class CustomTextFormField extends ConsumerStatefulWidget {
 }
 
 class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
+  late final TextEditingController controller =
+      widget.controller ?? TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final theme = ref.watch(themeServiceProvider);
@@ -65,7 +74,7 @@ class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
       readOnly: widget.readOnly ?? false,
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
-      controller: widget.controller,
+      controller: controller,
       initialValue: widget.initValue,
       onChanged: widget.onChanged,
       //화면에 들어가자마자 포커스를 자동을 넣어줄지 여부
@@ -78,48 +87,63 @@ class _CustomTextFormFieldState extends ConsumerState<CustomTextFormField> {
       style: theme.typo.subtitle1,
 
       decoration: InputDecoration(
-          contentPadding: widget.contentPadding ??
-              const EdgeInsets.symmetric(
-                vertical: 11.5,
-                horizontal: 16,
-              ),
-          prefixIcon: widget.prefixIcon,
-          hintText: widget.hintText,
-          errorText: widget.errorText,
-          labelText: widget.labelText,
-          labelStyle: theme.typo.headline5,
-          //힌트 스타일
-          hintStyle: theme.typo.headline5.copyWith(
-            fontWeight: theme.typo.light,
-            color: theme.color.onHintContainer,
-          ),
-          fillColor: theme.color.hintContainer,
-          //false - 배경색 없음
-          //true - 배경색 있음
-          filled: true,
-          //모든 Input 상태의 기본 스타일 세팅
-
-          border: OutlineInputBorder(
-            /// 테두리 삭제
-            borderSide: const BorderSide(
-              width: 0,
-              style: BorderStyle.none,
+        contentPadding: widget.contentPadding ??
+            const EdgeInsets.symmetric(
+              vertical: 11.5,
+              horizontal: 16,
             ),
+        prefixIcon: widget.prefixIcon,
+        hintText: widget.hintText,
+        errorText: widget.errorText,
+        labelText: widget.labelText,
+        labelStyle: theme.typo.headline5,
+        //힌트 스타일
+        hintStyle: theme.typo.headline5.copyWith(
+          fontWeight: theme.typo.light,
+          color: theme.color.onHintContainer,
+        ),
+        fillColor: theme.color.hintContainer,
+        //false - 배경색 없음
+        //true - 배경색 있음
+        filled: true,
+        //모든 Input 상태의 기본 스타일 세팅
 
-            /// 테두리 둥글게
-            borderRadius: BorderRadius.circular(12),
+        border: OutlineInputBorder(
+          /// 테두리 삭제
+          borderSide: const BorderSide(
+            width: 0,
+            style: BorderStyle.none,
           ),
-          suffixIcon: widget.isSuffixDeleteButtonEnabled ?? false
-              ? IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(
-                    Icons.refresh,
-                  ),
-                  onPressed: () {
-                    if (widget.controller != null) widget.controller!.clear();
-                  },
-                )
-              : null),
+
+          /// 테두리 둥글게
+          borderRadius: BorderRadius.circular(12),
+        ),
+
+        suffixIcon: controller.text.isEmpty || !widget.clearVisible
+            ? null
+            : Button(
+                icon: 'close',
+                type: ButtonType.flat,
+                onPressed: () {
+                  setState(() {
+                    controller.clear();
+                    widget.onClear?.call();
+                  });
+                },
+              ),
+
+        // suffixIcon: widget.isSuffixDeleteButtonEnabled ?? false
+        //     ? IconButton(
+        //         splashColor: Colors.transparent,
+        //         icon: Icon(
+        //           Icons.refresh,
+        //         ),
+        //         onPressed: () {
+        //           if (widget.controller != null) widget.controller!.clear();
+        //         },
+        //       )
+        //     : null
+      ),
     );
   }
 }

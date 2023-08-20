@@ -9,7 +9,7 @@ import 'telephone_search_value_provider.dart';
 
 
 final telephoneAdvanceNotifierProvider=
-    StateNotifierProvider<TelephoneAdvanceNotifier, ModelBase>((ref){
+    StateNotifierProvider.autoDispose<TelephoneAdvanceNotifier, ModelBase>((ref){
 
       final repository = ref.watch(telephoneAdvanceRepositoryProvider);
       final searchValue = ref.watch(telephoneSearchValueProvider);

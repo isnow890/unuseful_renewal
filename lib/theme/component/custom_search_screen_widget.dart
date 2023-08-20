@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/colors.dart';
+import 'package:unuseful/theme/component/button/button.dart';
 
 import '../layout/default_layout.dart';
 import 'custom_text_form_field.dart';
@@ -36,14 +37,18 @@ class CustomSearchScreenWidget extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
           children: [
+            const SizedBox(height: 20,),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
+
                   child: CustomTextFormField(
+                    clearVisible: true,
                     inputFormatters: inputFormatters,
                     keyboardType: keyboardType,
-                    isSuffixDeleteButtonEnabled: true,
+                    // isSuffixDeleteButtonEnabled: true,
                     onFieldSubmitted: onFieldSubmitted,
                     autofocus: true,
                     controller: searchValueController,
@@ -55,17 +60,14 @@ class CustomSearchScreenWidget extends ConsumerWidget {
                 const SizedBox(
                   width: 5,
                 ),
-                IconButton(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onPressed: onPressed,
-                    icon: const Icon(
-                      Icons.search,
-                      size: 35,
-                      color: PRIMARY_COLOR,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints()),
+
+                Button(
+                  icon: 'search',
+                  onPressed: onPressed
+
+                ),
+
+
               ],
             ),
             Expanded(

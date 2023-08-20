@@ -8,7 +8,7 @@ import 'package:unuseful/src/telephone/repository/telephone_basic_repository.dar
 import 'telephone_search_value_provider.dart';
 
 final telephoneBasicNotifierProvider =
-    StateNotifierProvider<TelephoneBasicNotifier, ModelBase>((ref) {
+    StateNotifierProvider.autoDispose<TelephoneBasicNotifier, ModelBase>((ref) {
   final repository = ref.watch(telephoneBasicRepositoryProvider);
   final searchValue = ref.watch(telephoneSearchValueProvider);
   final notifier =

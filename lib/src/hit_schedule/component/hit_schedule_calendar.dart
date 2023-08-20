@@ -147,6 +147,7 @@ class HitScheduleCalendar extends ConsumerWidget {
           }
 
           return CalendarBuilder(
+
             decoration: defaultBoxDeco.copyWith(
                 border: Border.all(color: Colors.transparent, width: 2)),
             day: day,
@@ -170,7 +171,7 @@ class HitScheduleCalendar extends ConsumerWidget {
               return Stack(children: [
                 Positioned(
                     right: 0,
-                    bottom: 1,
+                    bottom: 0,
                     child: _buildEventsMarker(theme.color.primary,
                         eventsLinkedHashMap[_date]!.count)),
                 Container(

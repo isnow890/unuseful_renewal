@@ -1,19 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 part 'hit_duty_statistics_model.g.dart';
 
-abstract class HitDutyStatisticsModelBase {}
-
-class HitDutyStatisticsModelLoading extends HitDutyStatisticsModelBase {}
-
-class HitDutyStatisticsModelError extends HitDutyStatisticsModelBase {
-  final String message;
-
-  HitDutyStatisticsModelError({required this.message});
-}
-
 @JsonSerializable()
-class HitDutyStatisticsModel extends HitDutyStatisticsModelBase {
+class HitDutyStatisticsModel extends ModelBase {
   final List<HitDutyStatisticsListModel> data;
 
   HitDutyStatisticsModel({required this.data});

@@ -103,7 +103,7 @@ class _DefaultLayoutState extends ConsumerState<DefaultLayout> {
         bottom: widget.appBarBottomList == null
             ? null
             : PreferredSize(
-                preferredSize: const Size.fromHeight(40),
+                preferredSize: const Size.fromHeight(45),
                 child: Container(
                   color: theme.color.surface,
                   child: TabBar(

@@ -6,7 +6,6 @@ import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/provider/specimen_history_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
-import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 
@@ -36,7 +35,7 @@ class SpecimenSection extends ConsumerWidget {
                 Row(
                   children: [
                     Text(
-                      '최근 조회 내역',
+                      '진검 검사결과 최근 조회 내역',
                       style: theme.typo.subtitle1.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

@@ -42,7 +42,7 @@ class TelephoneSection extends ConsumerWidget {
                       Row(
                         children: [
                           Text(
-                            '최근 조회 내역',
+                            '전화번호 최근 조회 내역',
                             style: theme.typo.subtitle1.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
