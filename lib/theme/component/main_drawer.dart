@@ -115,7 +115,7 @@ class MainDrawer extends ConsumerWidget {
           ),
           onTap: () {
             ref.refresh(telephoneSearchValueProvider);
-            ref.refresh(hitScheduleSelectedDayProvider);
+            // ref.refresh(hitScheduleSelectedDayProvider);
             // context.goNamed(value);
 
             while (context.canPop()) {
@@ -166,7 +166,7 @@ class MainDrawer extends ConsumerWidget {
       selected: value == selectedMenu,
       onTap: () {
         ref.refresh(telephoneSearchValueProvider);
-        ref.refresh(hitScheduleSelectedDayProvider);
+        // ref.refresh(hitScheduleSelectedDayProvider);
         // context.goNamed(value);
         context.goNamed(value);
 

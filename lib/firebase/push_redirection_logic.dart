@@ -21,9 +21,9 @@ routerLogicForegroundHitDutyAlarmWidgetRef1(WidgetRef ref) {
               ),
             ),
           );
-      ref
-          .read(drawerSelectProvider.notifier)
-          .update((state) => HitScheduleMainScreen.routeName);
+      // ref
+      //     .read(drawerSelectProvider.notifier)
+      //     .update((state) => HitScheduleMainScreen.routeName);
       ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
 
       var context2 =
@@ -53,9 +53,9 @@ routerLogicForegroundHitDutyAlarmRef1(Ref ref) {
 
       ref.read(hitScheduleNotifierProvider.notifier).getHitSchedule(false);
 
-      ref
-          .read(drawerSelectProvider.notifier)
-          .update((state) => HitScheduleMainScreen.routeName);
+      // ref
+      //     .read(drawerSelectProvider.notifier)
+      //     .update((state) => HitScheduleMainScreen.routeName);
 
       return '/hitSchedule';
       // var context2 = ref

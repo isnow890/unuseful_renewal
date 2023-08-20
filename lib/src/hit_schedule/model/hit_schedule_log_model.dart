@@ -1,19 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 part 'hit_schedule_log_model.g.dart';
 
-abstract class HitDutyLogModelBase {}
-
-class HitDutyLogModelLoading extends HitDutyLogModelBase {}
-
-class HitDutyLogModelError extends HitDutyLogModelBase {
-  final String message;
-
-  HitDutyLogModelError({required this.message});
-}
 
 @JsonSerializable()
-class HitDutyLogModel extends HitDutyLogModelBase {
+class HitDutyLogModel extends ModelBase {
   final List<HitDutyLogListModel> data;
 
   HitDutyLogModel({required this.data});

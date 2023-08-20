@@ -1,20 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/util/helper/data_utils.dart';
 
 part 'patient_model.g.dart';
 
-abstract class PatientModelBase {}
-
-class PatientModelLoading extends PatientModelBase {}
-
-class PatientModelError extends PatientModelBase {
-  final String message;
-
-  PatientModelError({required this.message});
-}
 
 @JsonSerializable()
-class PatientModel extends PatientModelBase{
+class PatientModel extends ModelBase{
   final List<PatientModelList> data;
   PatientModel({required this.data});
 

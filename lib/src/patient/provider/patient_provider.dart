@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/patient/model/patient_model.dart';
 import 'package:unuseful/src/patient/repository/patient_repository.dart';
 
 final patientNotifierProvider =
-    StateNotifierProvider<PatientNotifier, PatientModelBase?>(
+    StateNotifierProvider.autoDispose<PatientNotifier, ModelBase?>(
   (ref) {
     final repository = ref.watch(patientRepositoryProvider);
     final notifier = PatientNotifier(repository: repository);
@@ -11,17 +12,16 @@ final patientNotifierProvider =
   },
 );
 
-class PatientNotifier extends StateNotifier<PatientModelBase?> {
+class PatientNotifier extends StateNotifier<ModelBase?> {
   final PatientRepository repository;
 
-  PatientNotifier({required this.repository}) : super(PatientModelLoading()) {
+  PatientNotifier({required this.repository}) : super(ModelBaseLoading()) {
     getPatient();
   }
 
-  Future<PatientModelBase> getPatient() async {
+  Future<ModelBase> getPatient() async {
     try {
-
-      state =PatientModelLoading();
+      state = ModelBaseLoading();
 
       final List<PatientModelList> resp = await repository.getPatient();
 
@@ -29,7 +29,7 @@ class PatientNotifier extends StateNotifier<PatientModelBase?> {
       return PatientModel(data: resp);
     } catch (e) {
       print(e.toString());
-      state = PatientModelError(message: '에러가 발생하였습니다.');
+      state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }
   }

@@ -125,11 +125,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/specimenMain',
           name: SpecimenMainScreen.routeName,
           builder: (context, state) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ref
-                  .read(drawerSelectProvider.notifier)
-                  .update((state) => SpecimenMainScreen.routeName);
-            });
+            // WidgetsBinding.instance!.addPostFrameCallback((_) {
+            //   ref
+            //       .read(drawerSelectProvider.notifier)
+            //       .update((state) => SpecimenMainScreen.routeName);
+            // });
 
             return SpecimenMainScreen();
           },
@@ -138,11 +138,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/meal',
           name: MealScreen.routeName,
           builder: (context, state) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ref
-                  .read(drawerSelectProvider.notifier)
-                  .update((state) => MealScreen.routeName);
-            });
+            // WidgetsBinding.instance!.addPostFrameCallback((_) {
+            //   ref
+            //       .read(drawerSelectProvider.notifier)
+            //       .update((state) => MealScreen.routeName);
+            // });
 
             return MealScreen();
           },
@@ -151,24 +151,24 @@ class AuthProvider extends ChangeNotifier {
           path: '/patient',
           name: PatientScreen.routeName,
           builder: (context, state) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ref
-                  .read(drawerSelectProvider.notifier)
-                  .update((state) => PatientScreen.routeName);
-            });
+            // WidgetsBinding.instance!.addPostFrameCallback((_) {
+            //   ref
+            //       .read(drawerSelectProvider.notifier)
+            //       .update((state) => PatientScreen.routeName);
+            // });
 
-            return PatientScreen();
+            return const PatientScreen();
           },
         ),
         GoRoute(
           path: '/telephone',
           name: TelePhoneMainScreen.routeName,
           builder: (context, state) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ref
-                  .read(drawerSelectProvider.notifier)
-                  .update((state) => TelePhoneMainScreen.routeName);
-            });
+            // WidgetsBinding.instance!.addPostFrameCallback((_) {
+            //   ref
+            //       .read(drawerSelectProvider.notifier)
+            //       .update((state) => TelePhoneMainScreen.routeName);
+            // });
             return const TelePhoneMainScreen();
           },
         ),
@@ -176,11 +176,11 @@ class AuthProvider extends ChangeNotifier {
           path: '/hitSchedule',
           name: HitScheduleMainScreen.routeName,
           builder: (context, state) {
-            WidgetsBinding.instance!.addPostFrameCallback((_) {
-              ref
-                  .read(drawerSelectProvider.notifier)
-                  .update((state) => HitScheduleMainScreen.routeName);
-            });
+            // WidgetsBinding.instance!.addPostFrameCallback((_) {
+            //   ref
+            //       .read(drawerSelectProvider.notifier)
+            //       .update((state) => HitScheduleMainScreen.routeName);
+            // });
 
             return HitScheduleMainScreen(
                 baseIndex:

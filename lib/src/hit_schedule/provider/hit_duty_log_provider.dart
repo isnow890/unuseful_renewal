@@ -1,12 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 import '../model/hit_schedule_log_model.dart';
 import '../repository/hit_schedule_repository.dart';
 
-
-
 final hitDutyLogNotifierProvider =
-    StateNotifierProvider.autoDispose<HitDutyLogNotifier, HitDutyLogModelBase?>(
+    StateNotifierProvider.autoDispose<HitDutyLogNotifier, ModelBase?>(
   (ref) {
     final repository = ref.watch(hitScheduleRepositoryProvider);
     final notifier = HitDutyLogNotifier(repository: repository);
@@ -14,25 +13,24 @@ final hitDutyLogNotifierProvider =
   },
 );
 
-class HitDutyLogNotifier extends StateNotifier<HitDutyLogModelBase?> {
+class HitDutyLogNotifier extends StateNotifier<ModelBase?> {
   final HitScheduleRepository repository;
 
-  HitDutyLogNotifier({required this.repository})
-      : super(HitDutyLogModelLoading()) {
+  HitDutyLogNotifier({required this.repository}) : super(ModelBaseLoading()) {
     getDutyLog();
   }
+
   // Future<List<HitDutyLogListModel>> getDutyLog();
 
-  Future<HitDutyLogModelBase> getDutyLog() async {
+  Future<ModelBase> getDutyLog() async {
     try {
-
-      state = HitDutyLogModelLoading();
+      state = ModelBaseLoading();
 
       List<HitDutyLogListModel> resp = await repository.getDutyLog();
       state = HitDutyLogModel(data: resp);
       return HitDutyLogModel(data: resp);
     } catch (e) {
-      state = HitDutyLogModelError(message: '에러가 발생하였습니다.');
+      state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }
   }

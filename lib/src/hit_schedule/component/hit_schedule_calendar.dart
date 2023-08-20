@@ -33,7 +33,7 @@ class HitScheduleCalendar extends ConsumerWidget {
     final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final global = ref.watch(globalVariableStateProvider);
 
-    ref.watch(hitDutyCalendarChangeMonthProvider);
+    // ref.watch(hitDutyCalendarChangeMonthProvider);
 
     final event = ref.watch(hitSheduleForEventNotifierProvider);
     var eventList = HitScheduleForEventModel(data: null);
