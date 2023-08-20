@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:unuseful/colors.dart';
+import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/foundation/app_theme.dart';
+import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../user/model/user_model.dart';
 import '../../user/provider/user_me_provider.dart';
@@ -19,235 +22,181 @@ class HitDutyStatisticsScreen extends ConsumerStatefulWidget {
 
 class _HitDutyStatisticsScreenState
     extends ConsumerState<HitDutyStatisticsScreen> {
-  final double height = 40;
+  final double height = 45;
   HDTRefreshController _hdtRefreshController = HDTRefreshController();
-
-
-
 
   @override
   Widget build(
     BuildContext context,
   ) {
-
     final theme = ref.watch(themeServiceProvider);
 
-    final user = ref.watch(userMeProvider.notifier).state as UserModel;
+    final global = ref.watch(globalVariableStateProvider);
 
     final state = ref.watch(hitDutyStatisticsFamilyProvider(''));
     if (state is HitDutyStatisticsModelLoading) {
       return const CircularIndicator();
     }
 
-    if (state is HitDutyStatisticsModelError) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            state.message,
-            textAlign: TextAlign.center,
-          ),
-          ElevatedButton(
-              onPressed: () {
-                ref
-                    .read(hitDutyStatisticsFamilyProvider('').notifier)
-                    .getDutyLog();
-              },
-              child: Text('다시 시도')),
-        ],
-      );
-    }
     final cp = state as HitDutyStatisticsModel;
 
-    return HorizontalDataTable(
-      refreshIndicator: ClassicHeader(),
-      loadIndicator: ClassicFooter(),
-      refreshIndicatorHeight: 60,
-      htdRefreshController: _hdtRefreshController,
-      enablePullToRefresh: true,
-      leftHandSideColumnWidth: 80,
-      rightHandSideColumnWidth: 670,
-      isFixedHeader: true,
+    return DefaultLayout(
+      canRefresh: true
+        ,
+        onRefreshAndError: ()async{
+          ref.read(hitDutyStatisticsFamilyProvider('').notifier).getDutyLog();
+        },
+        child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: HorizontalDataTable(
+        refreshIndicator: const ClassicHeader(),
+        loadIndicator: const ClassicFooter(),
+        refreshIndicatorHeight: 60,
+        htdRefreshController: _hdtRefreshController,
+        enablePullToRefresh: true,
+        leftHandSideColumnWidth: 80,
+        rightHandSideColumnWidth: 670,
+        isFixedHeader: true,
 
-      headerWidgets: _getTitleWidget(),
-      onRefresh: _onRefresh,
-      // isFixedFooter: true,
-      footerWidgets: _getTitleWidget(),
-      itemCount: cp.data.length,
-      rowSeparatorWidget: const Divider(
-        color: Colors.black38,
-        height: 1.0,
-        thickness: 0.0,
+        headerWidgets: _getTitleWidget(),
+        onRefresh: _onRefresh,
+        // isFixedFooter: true,
+        footerWidgets: _getTitleWidget(),
+        itemCount: cp.data.length,
+        rowSeparatorWidget: const Divider(
+          height: 1.0,
+          thickness: 0.0,
+        ),
+        leftHandSideColBackgroundColor: Colors.transparent,
+        rightHandSideColBackgroundColor: Colors.transparent,
+        itemExtent: 45,
+        elevation: 0,
+        elevationColor: Colors.black,
+
+        leftSideItemBuilder: (BuildContext context, int index) {
+          return
+
+              // _getColumnWidget(width: ,content:,stfNm: ,userNm: );
+
+              _getColumnWidget(
+                  content: cp.data[index].stfNm,
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme);
+        },
+        rightSideItemBuilder: (BuildContext context, int index) {
+          return Row(
+            children: <Widget>[
+              _getColumnWidget(
+                  width: 30,
+                  content: cp.data[index].rank.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].totalCount.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].totalHour.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].afternoonCount.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].afternoonHour.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].morningHolidayCount.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].morningHolidayHour.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].afternoonHolidayCount.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+              _getColumnWidget(
+                  width: 80,
+                  content: cp.data[index].afternoonHolidayHour.toString(),
+                  same: cp.data[index].stfNm == global.stfNm,
+                  theme: theme),
+            ],
+          );
+        },
       ),
-      leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-      rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-      itemExtent: 45,
+    ));
+  }
 
-      leftSideItemBuilder: (BuildContext context, int index) {
-        return Container(
-          width: 80,
-          height: height,
-          alignment: Alignment.center,
-          child: Text(
-            cp.data[index].stfNm,
-            style: TextStyle(
-              color: cp.data[index].stfNm == user.stfNm
-                  ? Colors.orange
-                  : Colors.black,
-            ),
+  _getColumnWidget(
+      {double? width = 80,
+      required String content,
+      required bool same,
+      required AppTheme theme}) {
+    return Container(
+      width: width,
+      color: theme.color.surface,
+      height: 40,
+      alignment: Alignment.center,
+      child: Text(content,
+          style: theme.typo.body1
+              .copyWith(color: same ? Colors.orange : theme.color.text)
+          // TextStyle(
+          //   color: same ? ,
+          // ),
           ),
-        );
-      },
-      rightSideItemBuilder: (BuildContext context, int index) {
-        return Row(
-          children: <Widget>[
-            Container(
-                width: 30,
-                height: height,
-                alignment: Alignment.center,
-                child: Text(
-                  cp.data[index].rank.toString(),
-                  style: TextStyle(
-                    color: cp.data[index].stfNm == user.stfNm
-                        ? Colors.orange
-                        : Colors.black,
-                  ),
-                )),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].totalCount.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].totalHour.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].afternoonCount.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].afternoonHour.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].morningHolidayCount.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].morningHolidayHour.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].afternoonHolidayCount.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-            Container(
-              width: 80,
-              height: height,
-              alignment: Alignment.center,
-              child: Text(
-                cp.data[index].afternoonHolidayHour.toString(),
-                style: TextStyle(
-                  color: cp.data[index].stfNm == user.stfNm
-                      ? Colors.orange
-                      : Colors.black,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 
   List<Widget> _getTitleWidget() {
     return [
-      _getTitleItemWidget('직원명', 80),
-      _getTitleItemWidget('순위', 30),
-      _getTitleItemWidget('총 횟수', 80),
-      _getTitleItemWidget('총 근무 시간', 80),
-      _getTitleItemWidget('주중오후\n근무횟수', 80),
-      _getTitleItemWidget('주중오후\n근무시간', 80),
-      _getTitleItemWidget('휴일오전\n근무횟수', 80),
-      _getTitleItemWidget('휴일오전\n근무시간', 80),
-      _getTitleItemWidget('휴일오후\n근무횟수', 80),
-      _getTitleItemWidget('휴일오후\n근무시간', 80),
+      _getTitleItemWidget(
+          label: '직원명',
+          width: 80,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15.0),
+          )),
+      _getTitleItemWidget(label: '순위', width: 30),
+      _getTitleItemWidget(label: '총 횟수', width: 80),
+      _getTitleItemWidget(label: '총 근무 시간', width: 80),
+      _getTitleItemWidget(label: '주중오후\n근무횟수', width: 80),
+      _getTitleItemWidget(label: '주중오후\n근무시간', width: 80),
+      _getTitleItemWidget(label: '휴일오전\n근무횟수', width: 80),
+      _getTitleItemWidget(label: '휴일오전\n근무시간', width: 80),
+      _getTitleItemWidget(label: '휴일오후\n근무횟수', width: 80),
+      _getTitleItemWidget(
+          label: '휴일오후\n근무시간',
+          width: 80,
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(15.0),
+          )),
     ];
   }
 
-  Widget _getTitleItemWidget(String label, double width) {
+  // BorderRadius.only(topLeft: Radius.circular(40.0),)
+
+  Widget _getTitleItemWidget(
+      {required String label,
+      required double width,
+      BorderRadius? borderRadius = null}) {
     final theme = ref.watch(themeServiceProvider);
     return Container(
+      decoration:
+          BoxDecoration(borderRadius: borderRadius, color: theme.color.hintContainer),
       width: width,
-      color: theme.color
-      .hint,
       height: height,
       alignment: Alignment.center,
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+      child: Text(label, style: theme.typo.body1),
     );
   }
 

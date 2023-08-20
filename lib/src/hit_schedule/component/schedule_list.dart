@@ -7,19 +7,14 @@ import 'package:unuseful/src/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
-
-import '../../user/model/user_model.dart';
-import '../../user/provider/user_me_provider.dart';
 import '../model/hit_schedule_model.dart';
 import '../provider/hit_schedule_provider.dart';
-import '../provider/hit_schedule_selected_day_provider.dart';
 
 class ScheduleList extends ConsumerWidget {
   const ScheduleList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final state = ref.watch(hitScheduleNotifierProvider);
     final global = ref.watch(globalVariableStateProvider);
     var stfNum = global.hitDutyYn;

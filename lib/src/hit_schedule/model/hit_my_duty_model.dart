@@ -23,28 +23,28 @@ factory HitMyDutyModel.fromJson(Map<String,dynamic> json)
 }
 @JsonSerializable()
 class HitMyDutyListModel {
-  final String wkMonth;
-  final String wkDate;
-  final String day;
-  final String stfNo;
-  final String stfNm;
-  final String wkSeq;
-  final String hdyYn;
-  final String dutyTypeNm;
-  final String dutyTypeCode;
+  final String? wkMonth;
+  final String? wkDate;
+  final String? day;
+  final String? stfNo;
+  final String? stfNm;
+  final String? wkSeq;
+  final String? hdyYn;
+  final String? dutyTypeNm;
+  final String? dutyTypeCode;
   @JsonKey(includeFromJson: false, includeToJson: false)
    bool isNew = false;
 
   HitMyDutyListModel({
-    required this.wkMonth,
-    required this.wkDate,
-    required this.day,
-    required this.stfNo,
-    required this.stfNm,
-    required this.wkSeq,
-    required this.hdyYn,
-    required this.dutyTypeNm,
-    required this.dutyTypeCode,
+     this.wkMonth,
+     this.wkDate,
+     this.day,
+     this.stfNo,
+     this.stfNm,
+     this.wkSeq,
+     this.hdyYn,
+     this.dutyTypeNm,
+     this.dutyTypeCode,
   });
 
   factory HitMyDutyListModel.fromJson(Map<String,dynamic> json)

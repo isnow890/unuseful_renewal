@@ -30,7 +30,7 @@ class ScheduleCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeServiceProvider);
-    var tmpColor = PRIMARY_COLOR;
+    var tmpColor = theme.color.primary;
 
     if (scheduleType == 'duty')
       tmpColor = Colors.orange;
@@ -38,6 +38,7 @@ class ScheduleCard extends ConsumerWidget {
 
     return Container(
       decoration: BoxDecoration(
+        color: theme.color.hintContainer,
         border: Border.all(color: theme.color.inactive, width: 1),
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -46,6 +47,14 @@ class ScheduleCard extends ConsumerWidget {
         child: IntrinsicHeight(
           child: Row(
             children: [
+              Container(
+                color: tmpColor,
+                width: 5,
+                height: double.infinity,
+              ),
+              SizedBox(
+                width: 10,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

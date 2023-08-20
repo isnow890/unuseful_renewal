@@ -6,7 +6,7 @@ import '../repository/hit_schedule_repository.dart';
 
 
 final hitDutyLogNotifierProvider =
-    StateNotifierProvider<HitDutyLogNotifier, HitDutyLogModelBase?>(
+    StateNotifierProvider.autoDispose<HitDutyLogNotifier, HitDutyLogModelBase?>(
   (ref) {
     final repository = ref.watch(hitScheduleRepositoryProvider);
     final notifier = HitDutyLogNotifier(repository: repository);

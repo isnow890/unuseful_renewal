@@ -4,7 +4,7 @@ import 'package:unuseful/src/hit_schedule/model/hit_duty_statistics_model.dart';
 import '../model/hit_schedule_log_model.dart';
 import '../repository/hit_schedule_repository.dart';
 
-final hitDutyStatisticsFamilyProvider = StateNotifierProvider.family<
+final hitDutyStatisticsFamilyProvider = StateNotifierProvider.family.autoDispose<
     HitDutyStatisticsNotifier, HitDutyStatisticsModelBase?, String>(
   (ref, stfNum) {
     final repository = ref.watch(hitScheduleRepositoryProvider);

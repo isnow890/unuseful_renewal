@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/common/model/response_model.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_duty_schedule_update_model.dart';
 import 'package:unuseful/src/hit_schedule/repository/hit_schedule_repository.dart';
@@ -15,33 +16,33 @@ import 'package:unuseful/src/hit_schedule/repository/hit_schedule_repository.dar
 // );
 
 final hitDutyScheduleUpdateNotifierProvider =
-    StateNotifierProvider<HitDutyScheduleUpdateNotifier, ResponseModelBase?>(
+    StateNotifierProvider<HitDutyScheduleUpdateNotifier, ModelBase?>(
         (ref) {
   final repository = ref.watch(hitScheduleRepositoryProvider);
   final notifier = HitDutyScheduleUpdateNotifier(repository: repository);
   return notifier;
 });
 
-class HitDutyScheduleUpdateNotifier extends StateNotifier<ResponseModelBase?> {
+class HitDutyScheduleUpdateNotifier extends StateNotifier<ModelBase?> {
   final HitScheduleRepository repository;
 
   HitDutyScheduleUpdateNotifier({required this.repository})
-      : super(ResponseModelInit());
+      : super(ModelBaseInit());
 
   void initialize() {
-    state = ResponseModelInit();
+    state = ModelBaseInit();
   }
 
-  Future<ResponseModelBase?> updateDuty(
+  Future<ModelBase?> updateDuty(
       HitDutyScheduleUpdateModel param) async {
     try {
-      state = ResponseModelLoading();
+      state = ModelBaseLoading();
       final resp = await repository.updateDuty(body: param);
       state = resp;
       return resp;
     } catch (e) {
       print(e.toString());
-      state = ResponseModelError(message: '에러가 발생하였습니다.');
+      state = ModelBaseError(message: '에러가 발생하였습니다.');
       return Future.value(state);
     }
   }

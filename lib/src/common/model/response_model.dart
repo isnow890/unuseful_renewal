@@ -1,25 +1,12 @@
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 part 'response_model.g.dart';
 
-abstract class ResponseModelBase {}
-
-
-class ResponseModelInit extends ResponseModelBase {}
-
-class ResponseModelLoading extends ResponseModelBase {}
-
-class ResponseModelError extends ResponseModelBase {
-  final String message;
-
-  ResponseModelError({
-    required this.message,
-  });
-}
 
 @JsonSerializable()
-class ResponseModel extends ResponseModelBase {
+class ResponseModel extends ModelBase {
   final String? message;
   final bool isSuccess;
 

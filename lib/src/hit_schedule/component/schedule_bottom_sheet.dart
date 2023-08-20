@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/data.dart';
 import 'package:unuseful/dio.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
+import 'package:unuseful/src/hit_schedule/component/update_schedule_dialog.dart';
 import 'package:unuseful/src/home/provider/response_model_state_provider.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_duty_schedule_update_model.dart';
 import 'package:unuseful/src/hit_schedule/repository/hit_schedule_repository.dart';
 import 'package:unuseful/src/user/model/user_model.dart';
+import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
+import 'package:unuseful/theme/component/bottom_sheet/base_bottom_sheet.dart';
+import 'package:unuseful/theme/component/button/button.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
-import 'package:unuseful/theme/component/custom_alert.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
+import '../../../theme/component/custom_choice_chip.dart';
+import '../../../theme/component/toast/toast.dart';
+import '../../../theme/foundation/app_theme.dart';
 import '../../common/model/response_model.dart';
 import '../../user/provider/user_me_provider.dart';
 import '../model/hit_my_duty_model.dart';
@@ -63,334 +70,262 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
     fontWeight: FontWeight.w500,
   );
 
-  final defaultBoxDeco = BoxDecoration(
-    color: Colors.grey[200],
-    //테두리 깍기
-    borderRadius: BorderRadius.circular(6.0),
-  );
-
-  HitMyDutyListModel selectedDuty = HitMyDutyListModel(
-    wkMonth: '',
-    wkDate: '',
-    day: '',
-    stfNo: '',
-    stfNm: '',
-    wkSeq: '',
-    hdyYn: '',
-    dutyTypeNm: '',
-    dutyTypeCode: '',
-  );
+  HitMyDutyListModel selectedDuty = HitMyDutyListModel();
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(hitMyDutyFamilyProvider(widget.stfNum));
-    final userMe = ref.watch(userMeProvider.notifier).state;
+    final global = ref.watch(globalVariableStateProvider);
     final updateResult = ref.watch(responseModelStateProvider);
 
-    final user = userMe as UserModel;
+    final theme = ref.watch(themeServiceProvider);
 
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-
-    if (state is ResponseModelError) {
+    if (state is ModelBaseError) {
       Navigator.of(context).pop();
     }
 
     if (state is HitMyDutyModelLoading) {
-      return CircularIndicator();
+      return const CircularIndicator();
     }
     var cp = state as HitMyDutyModel;
 
     // Text('test' + widget.stfNum)
-    return SafeArea(
-      child: Container(
-        height: MediaQuery.of(context).size.height / 3.5 + bottomInset,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${DateFormat('yyyy년 MM월 dd일').format(widget.dutyDate)} ${DateFormat.EEEE('ko_KR').format(widget.dutyDate)}',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w500,
+    return BaseBottomSheet(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          /// Theme Tile
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${DateFormat('yyyy년 MM월 dd일').format(widget.dutyDate)} ${DateFormat.EEEE('ko_KR').format(widget.dutyDate)}',
+                  style: theme.typo.headline3,
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  Text(
-                    widget.stfNm,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    widget.dutyName,
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '일정이 선택되었습니다.',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Text(
-                '변경하려는 나의 일정을 선택해주세요.',
-                style: TextStyle(
-                  fontSize: 15.0,
-                  color: BODY_TEXT_COLOR,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(
+                  height: 7,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                height: 35,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ChoiceChip(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          shadowColor: Colors.teal,
-                          pressElevation: 5,
-                          // avatar: Text(cp.data[index] == selectedDuty ?'v':''),
-                          label: Container(
-                            child: index == 0
-                                ? Text('신규 일정 추가',
-                                    style: selectedDuty.isNew
-                                        ? defaultTextStyle.copyWith(
-                                            color: Colors.white)
-                                        : defaultTextStyle)
-                                : Row(
-                                    children: [
-                                      // Text('✔',style: TextStyle(color: cp.data[index] == selectedDuty ? Colors.black:Colors.transparent),),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        cp.data[index - 1].wkDate,
-                                        style:
-                                            cp.data[index - 1] == selectedDuty
-                                                ? defaultTextStyle.copyWith(
-                                                    color: Colors.white)
-                                                : defaultTextStyle,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        '(${cp.data[index - 1].day})',
-                                        style:
-                                            cp.data[index - 1] == selectedDuty
-                                                ? defaultTextStyle.copyWith(
-                                                    color: Colors.white)
-                                                : defaultTextStyle,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(cp.data[index - 1].dutyTypeNm,
-                                          style:
-                                              cp.data[index - 1] == selectedDuty
-                                                  ? defaultTextStyle.copyWith(
-                                                      color: Colors.white)
-                                                  : defaultTextStyle),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                    ],
-                                  ),
-                          ),
-                          selected: index == 0
-                              ? selectedDuty.isNew
-                              : (cp.data[index - 1] == selectedDuty),
-                          selectedColor: PRIMARY_COLOR,
-                          backgroundColor: Colors.grey[200],
-                          onSelected: (bool selected) {
-                            setState(() {
-                              if (index == 0) {
-                                selectedDuty = HitMyDutyListModel(
-                                  wkMonth: '',
-                                  wkDate: '',
-                                  day: '',
-                                  stfNo: '',
-                                  stfNm: '',
-                                  wkSeq: '',
-                                  hdyYn: '',
-                                  dutyTypeNm: '',
-                                  dutyTypeCode: '',
-                                );
-                                selectedDuty.isNew = true;
-                              } else {
-                                cp.data[index - 1].isNew = false;
-                                selectedDuty = cp.data[index - 1];
-                                selectedDuty.isNew = false;
-                              }
-                            });
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 10);
-                  },
-                  itemCount: cp.data.length + 1,
-                  scrollDirection: Axis.horizontal,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton(
-                    onPressed: updateResult is ResponseModelLoading
-                        ? null
-                        : () {
-
-                            if (selectedDuty.day.isEmpty) {
-                              if (!selectedDuty.isNew) {
-                                showToast(
-                                    msg: '스케쥴을 선택해주세요.',
-                                    toastLength: Toast.LENGTH_SHORT);
-                                return;
-                              }
-                            }
-                            CustomAlert(
-                              context: context,
-                              contents: _returnConfirmMessage(
-                                widget.dutyTypeCode,
-                                widget.stfNm,
-                                widget.dutyDate,
-                                selectedDuty.dutyTypeCode,
-                                user.stfNm.toString(),
-                                DateFormat('yyyy-MM-dd').parse(
-                                  selectedDuty.wkDate == ''
-                                      ? '2023-06-20'
-                                      : selectedDuty.wkDate,
-                                ),
-                              ),
-                              yesTitle: '확인',
-                              yesAction: () async {
-                                //2022-09-02
-                                //DateFormat('yyyy년 MM월 dd일').format(widget.dutyDate)
-                                final param = HitDutyScheduleUpdateModel(
-                                  dutyTypeCodeOriginal: widget.dutyTypeCode,
-                                  workMonthOriginal: DateFormat('yyyyMM')
-                                      .format(widget.dutyDate),
-                                  workDateOriginal: DateFormat('yyyy-MM-dd')
-                                      .format(widget.dutyDate),
-                                  workMonthUpdate: selectedDuty.wkMonth,
-                                  workDateUpdate: selectedDuty.wkDate,
-                                  originalName: widget.stfNm,
-                                  updateName: user.stfNm,
-                                  wkSeqOriginal: widget.wkSeq,
-                                  wkSeqUpdate: selectedDuty.wkSeq,
-                                  workType: selectedDuty.isNew ? 'new' : '',
-                                  dutyTypeCodeUpdate: selectedDuty.dutyTypeCode,
-                                  stfNo: user.stfNo,
-                                );
-
-                                Navigator.of(context).pop();
-                                final result =
-                                    await _updateHitDuty(param: param);
-
-
-                                if (result == null) {
-                                  showToast(msg: '에러가 발생하였습니다.');
-                                } else if (result!.isSuccess) {
-                                  Navigator.of(context).pop();
-
-                                  showToast(msg: '일정이 변경되었습니다.');
-
-                                } else if (result!.message != null) {
-                                  CustomAlert(
-                                      context: context,
-                                      contents: result.message!,
-                                      yesTitle: '확인',
-                                      yesAction: () {Navigator.of(context).pop();});
-                                }
-
-                                ref
-                                    .read(hitScheduleNotifierProvider.notifier)
-                                    .getHitSchedule(false);
-                                await ref
-                                    .read(hitSheduleForEventNotifierProvider
-                                        .notifier)
-                                    .getHitScheduleForEvent();
-
-                                // Navigator.of(context).pop();
-                                // Navigator.of(context).pop();
-                              },
-                              noTitle: '취소',
-                              noAction: () => Navigator.of(context).pop(),
-                            );
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: PRIMARY_COLOR,
+                Row(
+                  children: [
+                    Text(
+                      widget.stfNm,
+                      style: theme.typo.headline6,
                     ),
-                    child: updateResult is! ResponseModelLoading
-                        ? Text('일정 변경')
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                                SizedBox(
-                                  width: 12,
-                                  height: 12,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text('일정 변경')
-                              ]),
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      widget.dutyName,
+                      style: theme.typo.headline6,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '일정이 선택되었습니다.',
+                      style: theme.typo.headline6,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 7,
+                ),
+                Text(
+                  '변경하려는 나의 일정을 선택해주세요.',
+                  style:
+                      theme.typo.subtitle1.copyWith(color: theme.color.subtext),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 50,
+                  child: _myScheduleList(theme, cp),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _changeDutyButton(updateResult, global),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
+  }
+
+  _myScheduleList(AppTheme theme, cp) {
+    return ListView.separated(
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomChoiceChip(
+              selected: index == 0
+                  ? selectedDuty.isNew
+                  : (cp.data[index - 1] == selectedDuty),
+              onSelected: (bool selected) {
+                setState(() {
+                  if (index == 0) {
+                    selectedDuty = HitMyDutyListModel(
+                      wkMonth: '',
+                      wkDate: '',
+                      day: '',
+                      stfNo: '',
+                      stfNm: '',
+                      wkSeq: '',
+                      hdyYn: '',
+                      dutyTypeNm: '',
+                      dutyTypeCode: '',
+                    );
+                    selectedDuty.isNew = true;
+                  } else {
+                    cp.data[index - 1].isNew = false;
+                    selectedDuty = cp.data[index - 1];
+                    selectedDuty.isNew = false;
+                  }
+                });
+              },
+              label: Container(
+                padding: const EdgeInsets.all(8),
+                child: index == 0
+                    ? Text(
+                        '신규 일정 추가',
+                        style: theme.typo.subtitle1.copyWith(
+                          color: theme.color.text,
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          // Text('✔',style: TextStyle(color: cp.data[index] == selectedDuty ? Colors.black:Colors.transparent),),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(cp.data[index - 1].wkDate!,
+                              style: theme.typo.subtitle1.copyWith(
+                                color: theme.color.text,
+                              )),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text('(${cp.data[index - 1].day})',
+                              style: theme.typo.subtitle1.copyWith(
+                                color: theme.color.text,
+                              )),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            cp.data[index - 1].dutyTypeNm!,
+                            style: theme.typo.subtitle1.copyWith(
+                              color: theme.color.text,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(width: 10);
+      },
+      itemCount: cp.data.length + 1,
+      scrollDirection: Axis.horizontal,
+    );
+  }
+
+  _changeDutyButton(ModelBase updateResult, global) {
+    return Button(
+        type: ButtonType.fill,
+        onPressed: updateResult is ModelBaseLoading
+            ? null
+            : () {
+                if (selectedDuty.day == null) {
+                  if (!selectedDuty.isNew) {
+                    Toast.show('스케쥴을 선택해주세요.');
+
+                    return;
+                  }
+                }
+
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return UpdateScheduleDialog(
+                          content: _returnConfirmMessage(
+                            widget.dutyTypeCode,
+                            widget.stfNm,
+                            widget.dutyDate,
+                            selectedDuty.dutyTypeCode!,
+                            global.stfNm.toString(),
+                            DateFormat('yyyy-MM-dd').parse(
+                              selectedDuty.wkDate! == ''
+                                  ? '2023-06-20'
+                                  : selectedDuty.wkDate!,
+                            ),
+                          ),
+                          onUpdateSchedulePressed: () async {
+                            //flutter - Waiting asynchronously for Navigator.push() - linter warning appears: use_build_context_synchronously - Stack Overflow
+                            final navigator =
+                                Navigator.of(context); // store the Navigator
+
+                            final param = HitDutyScheduleUpdateModel(
+                              dutyTypeCodeOriginal: widget.dutyTypeCode,
+                              workMonthOriginal:
+                                  DateFormat('yyyyMM').format(widget.dutyDate),
+                              workDateOriginal: DateFormat('yyyy-MM-dd')
+                                  .format(widget.dutyDate),
+                              workMonthUpdate: selectedDuty.wkMonth,
+                              workDateUpdate: selectedDuty.wkDate,
+                              originalName: widget.stfNm,
+                              updateName: global.stfNm,
+                              wkSeqOriginal: widget.wkSeq,
+                              wkSeqUpdate: selectedDuty.wkSeq,
+                              workType: selectedDuty.isNew ? 'new' : '',
+                              dutyTypeCodeUpdate: selectedDuty.dutyTypeCode,
+                              stfNo: global.stfNo,
+                            );
+
+                            final result = await _updateHitDuty(param: param);
+
+                            if (result == null) {
+                              Toast.show('에러가 발생하였습니다.');
+                            } else if (result!.isSuccess) {
+                              Toast.show('일정이 변경되었습니다.');
+                            } else if (result!.message != null) {
+                              Toast.show(result.message!);
+                            }
+                            ref.refresh(hitScheduleNotifierProvider);
+                            ref.refresh(hitSheduleForEventNotifierProvider);
+
+                            navigator
+                                .pop(); // use the Navigator, not the BuildContext
+                          });
+                    });
+              },
+        text: '일정 변경');
   }
 
   Future<ResponseModel?> _updateHitDuty(
       {required HitDutyScheduleUpdateModel param}) async {
     ref
         .read(responseModelStateProvider.notifier)
-        .update((state) => ResponseModelInit());
+        .update((state) => ModelBaseInit());
 
     try {
       final repository =
@@ -403,7 +338,7 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
       print(e.toString());
       ref
           .read(responseModelStateProvider.notifier)
-          .update((state) => ResponseModelError(message: '에러가 발생하였습니다.'));
+          .update((state) => ModelBaseError(message: '에러가 발생하였습니다.'));
     }
   }
 
@@ -418,10 +353,10 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
         '${DateFormat('yyyy-MM-dd').format(dutyDateOriginal)} (${DateFormat.E('ko_KR').format(dutyDateOriginal)}) ${_returnDutyTypeName(dutyTypeCodeOriginal)} $stfNmOriginal님의 일정을\n';
 
     if (selectedDuty.isNew) {
-      return returnString + ' ${stfNmUpdate}님의 신규 일정으로 변경하시겠습니까?';
+      return returnString + '${stfNmUpdate}님의 신규 일정으로 추가하시겠습니까?';
     } else {
       return returnString +
-          ' ${DateFormat('yyyy-MM-dd').format(dutyDateUpdate!)} (${DateFormat.E('ko_KR').format(dutyDateUpdate!)}) ${_returnDutyTypeName(dutyTypeCodeUpdate)} ${stfNmUpdate}님으로 일정 변경 하시겠습니까?';
+          '${DateFormat('yyyy-MM-dd').format(dutyDateUpdate!)} (${DateFormat.E('ko_KR').format(dutyDateUpdate!)}) ${_returnDutyTypeName(dutyTypeCodeUpdate)} ${stfNmUpdate}님으로 변경 하시겠습니까?';
     }
   }
 

@@ -8,7 +8,7 @@ import 'hit_schedule_selected_day_provider.dart';
 
 
 final hitScheduleNotifierProvider =
-    StateNotifierProvider<HitScheduleNotifier, HitScheduleModelBase?>(
+    StateNotifierProvider.autoDispose<HitScheduleNotifier, HitScheduleModelBase?>(
   (ref) {
     // final selectedDay = ref.watch(hitScheduleSelectedDayProvider);
     final repository = ref.watch(hitScheduleRepositoryProvider);
