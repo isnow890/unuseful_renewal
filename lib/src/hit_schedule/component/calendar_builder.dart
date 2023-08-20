@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:unuseful/theme/res/layout.dart';
 
 class CalendarBuilder extends StatelessWidget {
   final DateTime day;
@@ -32,7 +33,10 @@ class CalendarBuilder extends StatelessWidget {
             Text(
               day.day.toString(),
               style: TextStyle(
-                  fontSize: 13, color: textColor, fontWeight: fontWeight),
+                  fontSize: context.layout(13.0, tablet: 18, desktop: 18) ,
+
+
+                  color: textColor, fontWeight: fontWeight),
             ),
             Expanded(child: Text("")),
             // Text(moneyString,

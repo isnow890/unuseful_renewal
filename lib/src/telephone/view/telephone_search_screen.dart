@@ -11,6 +11,7 @@ import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';
 import '../../../theme/model/menu_model.dart';
 import '../../home/provider/telehphone_history_provider.dart';
@@ -57,6 +58,9 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
   }
 
   Widget _renderBody(search) {
+
+    final theme = ref.watch(themeServiceProvider);
+
     if (search is ModelBaseLoading) {
       return const CircularIndicator();
     } else {
@@ -90,7 +94,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
                   },
                   title: Text(
                     search!.history![index]!.searchValue,
-                    style: TextStyle(fontSize: 15),
+                    style: theme.typo.body1,
                   ),
                   trailing: Button(
                     icon: 'close',

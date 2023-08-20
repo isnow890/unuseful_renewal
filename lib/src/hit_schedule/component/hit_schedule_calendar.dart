@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/src/hit_schedule/component/calendar_builder.dart';
 import 'package:unuseful/src/hit_schedule/model/hit_schedule_for_event_model.dart';
+import 'package:unuseful/theme/res/layout.dart';
 
 import '../../../theme/component/custom_calendar.dart';
 import '../../../theme/provider/theme_provider.dart';
@@ -111,14 +112,20 @@ class HitScheduleCalendar extends ConsumerWidget {
               break;
             case DateTime.saturday:
               dayToKorean = '토';
-              textStyleType = theme.typo.subtitle1.copyWith(color: Colors.blue);
+              textStyleType = theme.typo.subtitle1.copyWith(
+                color: Colors.blue,
+              );
               break;
           }
 
           return Center(
             child: Text(
               dayToKorean,
-              style: textStyleType,
+              style: textStyleType.copyWith(
+                fontSize: context.layout(14.0, tablet: 18, desktop: 18),
+
+
+              ),
             ),
           );
         },
@@ -136,8 +143,6 @@ class HitScheduleCalendar extends ConsumerWidget {
           focusedDay: focusedDay,
         ),
         defaultBuilder: (context, day, focusedDay) {
-          var defaultTextStyle = theme.typo.body1;
-
           var textColor = theme.color.text;
 
           if (day.weekday == DateTime.saturday) {
@@ -147,7 +152,6 @@ class HitScheduleCalendar extends ConsumerWidget {
           }
 
           return CalendarBuilder(
-
             decoration: defaultBoxDeco.copyWith(
                 border: Border.all(color: Colors.transparent, width: 2)),
             day: day,
@@ -172,7 +176,7 @@ class HitScheduleCalendar extends ConsumerWidget {
                 Positioned(
                     right: 0,
                     bottom: 0,
-                    child: _buildEventsMarker(theme.color.primary,
+                    child: _buildEventsMarker(context, theme.color.primary,
                         eventsLinkedHashMap[_date]!.count)),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -184,7 +188,8 @@ class HitScheduleCalendar extends ConsumerWidget {
                       Text(
                         eventsLinkedHashMap[_date]!.morningNm ?? '',
                         style: TextStyle(
-                            fontSize: 10.0,
+                            fontSize:
+                                context.layout(10.0, tablet: 18, desktop: 18),
                             fontWeight: eventsLinkedHashMap[_date]!.morningNm ==
                                     global.stfNm
                                 ? FontWeight.bold
@@ -196,7 +201,8 @@ class HitScheduleCalendar extends ConsumerWidget {
                       ),
                       Text(eventsLinkedHashMap[_date]!.afternoonNm ?? '',
                           style: TextStyle(
-                              fontSize: 10.0,
+                              fontSize:
+                                  context.layout(10.0, tablet: 18, desktop: 18),
                               fontWeight:
                                   eventsLinkedHashMap[_date]!.afternoonNm ==
                                           global.stfNm
@@ -217,20 +223,20 @@ class HitScheduleCalendar extends ConsumerWidget {
     );
   }
 
-  Widget _buildEventsMarker(Color color, int count) {
+  Widget _buildEventsMarker(BuildContext context, Color color, int count) {
     return count == 0
         ? const SizedBox()
         : AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-            width: 15.0,
-            height: 15.0,
+            width: context.layout(15.0, tablet: 25, desktop: 25),
+            height: context.layout(15.0, tablet: 25, desktop: 25),
             child: Center(
               child: Text(
                 '${count}',
                 style: TextStyle().copyWith(
                   color: Colors.white,
-                  fontSize: 10.0,
+                  fontSize: context.layout(10.0, tablet: 18, desktop: 18),
                   fontWeight: FontWeight.bold,
                 ),
               ),
