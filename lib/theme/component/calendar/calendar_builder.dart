@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:unuseful/theme/res/layout.dart';
 
@@ -11,11 +10,11 @@ class CalendarBuilder extends StatelessWidget {
 
   const CalendarBuilder(
       {Key? key,
-        required this.day,
-        required this.focusedDay,
-        required this.decoration,
-        this.textColor,
-        this.fontWeight})
+      required this.day,
+      required this.focusedDay,
+      required this.decoration,
+      this.textColor,
+      this.fontWeight})
       : super(key: key);
 
   @override
@@ -33,10 +32,9 @@ class CalendarBuilder extends StatelessWidget {
             Text(
               day.day.toString(),
               style: TextStyle(
-                  fontSize: context.layout(13.0, tablet: 18, desktop: 18) ,
-
-
-                  color: textColor, fontWeight: fontWeight),
+                  fontSize: context.layout(13.0, tablet: 18, desktop: 18),
+                  color: textColor,
+                  fontWeight: fontWeight),
             ),
             Expanded(child: Text("")),
             // Text(moneyString,

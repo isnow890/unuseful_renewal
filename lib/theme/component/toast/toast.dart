@@ -11,7 +11,6 @@ abstract class Toast {
 
     BuildContext? context = navigatorKey.currentContext;
 
-    print(context);
 
     if (context == null) return;
 

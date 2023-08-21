@@ -8,7 +8,7 @@ import 'package:unuseful/src/meal/component/meal_page_view.dart';
 import 'package:unuseful/src/meal/model/meal_model.dart';
 import 'package:unuseful/src/meal/provider/meal_provider.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/photo_view/full_photo.dart';
 import 'package:unuseful/theme/component/photo_view/number_indicator.dart';
 import 'package:unuseful/theme/component/section_card.dart';
@@ -87,7 +87,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       height: 30,
                     ),
                     SizedBox(
@@ -98,7 +98,7 @@ class _MealScreenMainState extends ConsumerState<MealScreenMain> {
               );
             },
             separatorBuilder: (context, index) {
-              return Divider(
+              return const Divider(
                 height: 20.0,
               );
             },

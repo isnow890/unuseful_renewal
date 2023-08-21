@@ -1,21 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 
 part 'specimen_model.g.dart';
 
-abstract class SpecimenModelBase {}
 
-class SpecimenModelError extends SpecimenModelBase {
-  final String message;
-
-  SpecimenModelError({required this.message});
-}
-
-class SpecimenModelLoading extends SpecimenModelBase {}
-
-class SpecimenInit extends SpecimenModelBase {}
 
 @JsonSerializable()
-class SpecimenModel extends SpecimenModelBase {
+class SpecimenModel extends ModelBase {
   final List<SpecimenPrimaryModel>? data;
 
   SpecimenModel({

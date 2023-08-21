@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/specimen/view/specimen_main_screen.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/button/button.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import 'package:unuseful/theme/model/menu_model.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';
 import '../../home/provider/specimen_history_provider.dart';
 import '../provider/specimenSearchValueProvider.dart';
@@ -61,11 +63,13 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
   }
 
   _renderBody(search) {
+    final theme = ref.watch(themeServiceProvider);
+
     if (search is SearchHistoryMainModel) {
       return Column(
         children: [
-          SizedBox(
-            height: 5,
+          const SizedBox(
+            height: 20,
           ),
           Expanded(
             child: ListView.separated(
@@ -79,24 +83,25 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
               itemBuilder: (context, index) {
                 if (index == search!.history!.length) return null;
                 return ListTile(
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-                  dense: true,
-                  visualDensity: VisualDensity(vertical: -3),
-                  // to compact
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+                    dense: true,
+                    visualDensity: VisualDensity(vertical: -3),
+                    // to compact
 
-                  onTap: () async {
-                    searchValueController.text =
-                        search!.history![index]!.searchValue;
-                    searchAndPop(search);
-                  },
-                  title: Text(
-                    search!.history![index]!.searchValue,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  trailing: IconButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
+                    onTap: () async {
+                      searchValueController.text =
+                          search!.history![index]!.searchValue;
+                      searchAndPop(search);
+                    },
+                    title: Text(
+                      search!.history![index]!.searchValue,
+                      style: theme.typo.body1,
+                    ),
+                    trailing: Button(
+                      icon: 'close',
+                      type: ButtonType.flat,
+                      size: ButtonSize.small,
                       onPressed: () async {
                         final body = SearchHistoryModel(
                             lastUpdated: DateTime.now(),
@@ -109,13 +114,7 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
                             .read(specimenHistoryNotfierProvider.notifier)
                             .getSpecimenHistory();
                       },
-                      icon: const Icon(
-                        Icons.close,
-                        color: PRIMARY_COLOR,
-                      ),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints()),
-                );
+                    ));
               },
             ),
           ),

@@ -4,7 +4,7 @@ import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/patient/model/patient_model.dart';
 import 'package:unuseful/src/patient/provider/patient_provider.dart';
 import 'package:unuseful/theme/component/base_search_screen_widget.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/model/menu_model.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
 import '../../../colors.dart';

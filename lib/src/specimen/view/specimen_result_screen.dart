@@ -5,10 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:unuseful/data.dart';
 import 'package:unuseful/dio.dart';
+import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/specimen/model/specimen_model.dart';
 import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_detail_params_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import '../../../colors.dart';
@@ -51,7 +52,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
       specimenStateProvider,
     );
 
-    if (state is SpecimenModelLoading) {
+    if (state is ModelBaseLoading) {
       return const CircularIndicator();
     }
 
@@ -360,12 +361,6 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
     return true;
   }
 
-  _barcodeScan() async {
-    String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-    print(barcodeScanRes);
-    // barcodeText = barcodeScanRes;
-  }
 
   _renderSizedBox() {
     return SizedBox(
@@ -432,7 +427,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
   Future<List<SpecimenPrimaryModel>?> _getData() async {
     ref
         .read(specimenStateProvider.notifier)
-        .update((state) => SpecimenModelLoading());
+        .update((state) => ModelBaseLoading());
 
     try {
       final repository = SpecimenRepository(ref.read(dioProvider), baseUrl: ip);
@@ -446,7 +441,7 @@ class _SpecimenScreenState extends ConsumerState<SpecimenResultScreen> {
     } catch (e) {
       ref
           .read(specimenStateProvider.notifier)
-          .update((state) => SpecimenModelError(message: '에러가 발생하였습니다.'));
+          .update((state) => ModelBaseError(message: '에러가 발생하였습니다.'));
     }
   }
 }

@@ -23,28 +23,31 @@ class CustomChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeServiceProvider);
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
-      child: Chip(
-          label: GestureDetector(
-              onTap: onTap,
-              child: Text(
-                title,
-                style: theme.typo.body1,
-              )),
-          backgroundColor: theme.color.hint,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-            // side: BorderSide(color: theme.color.onHintContainer),
-          ),
-          deleteIcon: canDelete
-              ? Icon(
-                  Icons.close,
-                  color: theme.color.primary,
-                  size: 15,
-                )
-              : null,
-          onDeleted: onDeleted),
+      child: GestureDetector(
+        onTap : onTap,
+        behavior: HitTestBehavior.translucent,
+        child: Chip(
+            label: Text(
+              title,
+              style: theme.typo.body1,
+            ),
+            backgroundColor: theme.color.hint,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+              // side: BorderSide(color: theme.color.onHintContainer),
+            ),
+            deleteIcon: canDelete
+                ? Icon(
+                    Icons.close,
+                    color: theme.color.primary,
+                    size: 15,
+                  )
+                : null,
+            onDeleted: onDeleted),
+      ),
     );
   }
 }

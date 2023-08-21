@@ -8,7 +8,7 @@ import 'package:unuseful/src/telephone/model/telephone_basic_model.dart';
 import 'package:unuseful/src/telephone/provider/telephone_basic_provider.dart';
 import 'package:unuseful/src/telephone/provider/telephone_search_value_provider.dart';
 import 'package:unuseful/theme/component/button/button.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';

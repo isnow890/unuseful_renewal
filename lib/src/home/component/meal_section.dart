@@ -39,7 +39,7 @@ class _MealSectionState extends ConsumerState<MealSection> {
           ),
         ),
         Divider(
-          height: 30,
+          height: 15,
         ),
         Text(style: theme.typo.body1, mealModel.data![0].title),
         Column(
@@ -56,8 +56,6 @@ class _MealSectionState extends ConsumerState<MealSection> {
                         borderRadius: BorderRadius.circular(10),
                         child: GestureDetector(
                           onTap: () {
-                            print('tap');
-                            print(e.key);
                             context.pushNamed(FullPhoto.routeName,
                                 queryParameters: {
                                   'currentIndex': e.key.toString(),

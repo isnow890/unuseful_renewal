@@ -20,18 +20,26 @@ class CustomExpansionTile extends ConsumerWidget {
     final theme = ref.watch(themeServiceProvider);
 
     return ClipRRect(
-        borderRadius: BorderRadius.circular(13.0),
-        child: ExpansionTile(
-          collapsedIconColor: theme.color.onHintContainer,
-          iconColor: theme.color.onHintContainer,
-          tilePadding: const EdgeInsets.only(left: 0),
-          onExpansionChanged: onExpansionChanged,
-          title: title,
-          children: <Widget>[
-            Column(
-              children: [...children],
-            )
-          ],
+        borderRadius: BorderRadius.circular(15.0),
+        clipBehavior: Clip.antiAlias,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 5,
+          ),
+          color: theme.color.hintContainer,
+          child: ExpansionTile(
+            shape: Border.all(color: Colors.transparent),
+            collapsedIconColor: theme.color.onHintContainer,
+            iconColor: theme.color.onHintContainer,
+            tilePadding: const EdgeInsets.only(left: 0),
+            onExpansionChanged: onExpansionChanged,
+            title: title,
+            children: <Widget>[
+              Column(
+                children: [...children],
+              )
+            ],
+          ),
         ));
   }
 }

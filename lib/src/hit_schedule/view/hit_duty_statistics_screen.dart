@@ -4,7 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:unuseful/colors.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/foundation/app_theme.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';

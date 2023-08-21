@@ -5,7 +5,7 @@ import 'package:unuseful/src/hit_schedule/component/schedule_card.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_duty_schedule_update_provider.dart';
 import 'package:unuseful/src/hit_schedule/provider/hit_my_duty_provider.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import '../model/hit_schedule_model.dart';
 import '../provider/hit_schedule_provider.dart';

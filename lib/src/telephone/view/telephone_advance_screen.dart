@@ -6,7 +6,7 @@ import 'package:unuseful/src/common/model/cursor_pagination_model.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/telephone/model/telephone_advance_model.dart';
 import 'package:unuseful/theme/component/button/button.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';

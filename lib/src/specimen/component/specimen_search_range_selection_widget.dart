@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:unuseful/theme/component/custom_calendar.dart';
-import 'package:unuseful/theme/component/custom_choice_chip.dart';
+import 'package:unuseful/theme/component/calendar/custom_calendar.dart';
 import 'package:unuseful/theme/component/custom_expansion_tile.dart';
+import 'package:unuseful/theme/foundation/app_theme.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
+import 'package:unuseful/theme/res/layout.dart';
 
-import '../../../colors.dart';
-import '../../../theme/component/custom_chip.dart';
+import '../../../theme/component/chip/custom_chip.dart';
 
-class SpecimenMainScreenExpansionPanelList extends ConsumerStatefulWidget {
+class SpecimenSearchRangeSelectionWidget extends ConsumerStatefulWidget {
   DateTime? rangeStart;
   DateTime? rangeEnd;
 
-  SpecimenMainScreenExpansionPanelList(
+  final void Function(DateTime? start, DateTime? end, DateTime focusedDay)
+      onRangeSelected;
+
+  SpecimenSearchRangeSelectionWidget(
       {Key? key,
+      required this.onRangeSelected,
       required this.rangeEnd,
       required this.rangeStart,
       required this.searchType})
@@ -24,12 +28,12 @@ class SpecimenMainScreenExpansionPanelList extends ConsumerStatefulWidget {
   final int searchType;
 
   @override
-  ConsumerState<SpecimenMainScreenExpansionPanelList> createState() =>
+  ConsumerState<SpecimenSearchRangeSelectionWidget> createState() =>
       _SpecimenMainScreenExpansionPanelListState();
 }
 
 class _SpecimenMainScreenExpansionPanelListState
-    extends ConsumerState<SpecimenMainScreenExpansionPanelList> {
+    extends ConsumerState<SpecimenSearchRangeSelectionWidget> {
   bool _isExpanded = true;
   DateTime focusedDay = DateTime.now();
 
@@ -39,7 +43,7 @@ class _SpecimenMainScreenExpansionPanelListState
 
   _termSelectionHelper() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         CustomChip(
           onTap: () => _setDateRange(0),
@@ -113,7 +117,7 @@ class _SpecimenMainScreenExpansionPanelListState
             });
           },
           children: [
-            _rendercustomCalendarHelper(),
+            _renderCustomCalendarHelper(theme),
             const SizedBox(
               height: 5,
             ),
@@ -125,6 +129,7 @@ class _SpecimenMainScreenExpansionPanelListState
 
   _setDateRange(int minusMonth) {
     setState(() {
+      print('taped');
       widget.rangeStart = DateTime(DateTime.now().year,
           DateTime.now().month - minusMonth, DateTime.now().day);
       widget.rangeEnd = DateTime(
@@ -133,40 +138,31 @@ class _SpecimenMainScreenExpansionPanelListState
           DateTime.now().month - minusMonth, DateTime.now().day);
 
       rangeSelectionMode = RangeSelectionMode.toggledOn;
+
+      widget.onRangeSelected(widget.rangeStart, widget.rangeEnd, DateTime.now());
     });
   }
 
-  _rendercustomCalendarHelper() {
-    return Container(
+  _renderCustomCalendarHelper(AppTheme theme) {
+    return SizedBox(
       height: 280,
       child: CustomCalendar(
+        daySelect: true,
         rangeStart: widget.rangeStart,
         rangeEnd: widget.rangeEnd,
         rangeSelected: rangeSelectionMode,
         shouldFillViewport: true,
+
         calendarStyle: CalendarStyle(
+          rangeHighlightColor: theme.color.hint,
           outsideDaysVisible: true,
           isTodayHighlighted: false,
-
-          rangeHighlightColor: Colors.orange[100]!,
-          weekendTextStyle: TextStyle(color: Colors.red),
-          withinRangeTextStyle: TextStyle(color: PRIMARY_COLOR),
-          rangeStartDecoration: BoxDecoration(
-            color: PRIMARY_COLOR,
-            shape: BoxShape.circle,
+          withinRangeTextStyle: TextStyle(
+            fontSize: context.layout(15.0, tablet: 18, desktop: 18),
+            color: theme.color.text,
           ),
-          rangeEndDecoration: BoxDecoration(
-            color: PRIMARY_COLOR,
-            shape: BoxShape.circle,
-          ),
-          // final defaultBoxDeco = BoxDecoration(
-          //   color: Colors.grey[200],
-          //   //테두리 깍기
-          //   borderRadius: BorderRadius.circular(6.0),
-          // );
-
-          // defaultDecoration: defaultBoxDeco,
         ),
+
         onPageChanged: null,
         events: null,
         // selectedDay: selectedDay,
@@ -182,15 +178,18 @@ class _SpecimenMainScreenExpansionPanelListState
           //   });
           // }
         },
-        onRangeSelected: (_start, _end, _focusedDay) {
-          setState(() {
-            // selectedDay = null;
-            focusedDay = _focusedDay;
-            widget.rangeStart = _start;
-            widget.rangeEnd = _end;
-            rangeSelectionMode = RangeSelectionMode.toggledOn;
-          });
-        },
+
+        onRangeSelected: widget.onRangeSelected,
+
+        // onRangeSelected: (_start, _end, _focusedDay) {
+        //   setState(() {
+        //     // selectedDay = null;
+        //     focusedDay = _focusedDay;
+        //     widget.rangeStart = _start;
+        //     widget.rangeEnd = _end;
+        //     rangeSelectionMode = RangeSelectionMode.toggledOn;
+        //   });
+        // },
       ),
     );
   }

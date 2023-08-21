@@ -40,7 +40,6 @@ class _CustomTextFieldForTelephoneState
 
     controller.value = TextEditingValue(text:searchValue);
 
-    print(searchValue);
     return InkWell(
       onTap: () {
         if (widget.push == SpecimenSearchScreen.routeName) {

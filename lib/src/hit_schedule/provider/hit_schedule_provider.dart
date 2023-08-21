@@ -35,7 +35,6 @@ class HitScheduleNotifier extends StateNotifier<HitScheduleModelBase?> {
       state = HitScheduleModelLoading();
       List<HitScheduleListModel> resp = await repository.getHitSchedule(DateFormat('yyyyMM').format(selectedDay));
 
-      print(selectedDay);
 
       if (!isAll) {
         resp = resp

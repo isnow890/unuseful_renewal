@@ -13,10 +13,10 @@ import 'package:unuseful/src/user/model/user_model.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/theme/component/bottom_sheet/base_bottom_sheet.dart';
 import 'package:unuseful/theme/component/button/button.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
-import '../../../theme/component/custom_choice_chip.dart';
+import '../../../theme/component/chip/custom_choice_chip.dart';
 import '../../../theme/component/toast/toast.dart';
 import '../../../theme/foundation/app_theme.dart';
 import '../../common/model/response_model.dart';
@@ -35,18 +35,6 @@ class ScheduleBottomSheet extends ConsumerStatefulWidget {
   final String stfNm;
   final String stfNum;
   final String wkSeq;
-
-  // required this.dutyTypeCode,
-  // required this.workMonthOriginal,
-  // required this.workDateOriginal,
-  // required this.workMonthUpdate,
-  // required this.workDateUpdate,
-  // required this.originalName,
-  // required this.updateName,
-  // required this.wkSeqOriginal,
-  // required this.wkSeqUpdate,
-  // required this.hdyYn,
-  // required this.workType,
 
   const ScheduleBottomSheet({
     Key? key,
@@ -258,7 +246,6 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                 if (selectedDuty.day == null) {
                   if (!selectedDuty.isNew) {
                     Toast.show('스케쥴을 선택해주세요.');
-
                     return;
                   }
                 }
@@ -305,9 +292,9 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
 
                             if (result == null) {
                               Toast.show('에러가 발생하였습니다.');
-                            } else if (result!.isSuccess) {
+                            } else if (result.isSuccess) {
                               Toast.show('일정이 변경되었습니다.');
-                            } else if (result!.message != null) {
+                            } else if (result.message != null) {
                               Toast.show(result.message!);
                             }
                             ref.refresh(hitScheduleNotifierProvider);
@@ -335,7 +322,6 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
 
       return result;
     } catch (e) {
-      print(e.toString());
       ref
           .read(responseModelStateProvider.notifier)
           .update((state) => ModelBaseError(message: '에러가 발생하였습니다.'));

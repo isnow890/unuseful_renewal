@@ -174,7 +174,6 @@ class MainDrawer extends ConsumerWidget {
         //   context.goNamed(value);
         // else
         //   context.pushNamed(value);
-        print(value);
       },
       title: Text(value),
     );

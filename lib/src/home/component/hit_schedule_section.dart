@@ -8,7 +8,7 @@ import 'package:unuseful/src/home/provider/home_provider.dart';
 import 'package:unuseful/src/user/model/user_model.dart';
 import 'package:unuseful/src/user/provider/gloabl_variable_provider.dart';
 import 'package:unuseful/src/user/provider/user_me_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
@@ -53,7 +53,7 @@ class __HitScheduleStateSection extends ConsumerState<HitScheduleSection> {
                           ),
                         ),
                         Divider(
-                          height: 30,
+                          height: 15,
                         ),
                         (cp.scheduleList!.isEmpty
                             ? Text(

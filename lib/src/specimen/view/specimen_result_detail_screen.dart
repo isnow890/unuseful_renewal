@@ -5,7 +5,7 @@ import 'package:unuseful/colors.dart';
 import 'package:unuseful/src/specimen/model/specimen_detail_model.dart';
 import 'package:unuseful/src/specimen/model/specimen_params.dart';
 import 'package:unuseful/src/specimen/provider/specimen_provider.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 

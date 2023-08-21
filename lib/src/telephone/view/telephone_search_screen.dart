@@ -7,7 +7,7 @@ import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/model/search_history_telephone_model.dart';
 import 'package:unuseful/src/telephone/view/telephone_main_screen.dart';
 import 'package:unuseful/theme/component/button/button.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
@@ -66,7 +66,7 @@ class _TelephoneSearchScreenState extends ConsumerState<TelephoneSearchScreen> {
     } else {
       return Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Expanded(

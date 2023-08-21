@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/theme/component/custom_chip.dart';
+import 'package:unuseful/theme/component/chip/custom_chip.dart';
 import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/provider/telehphone_history_provider.dart';
 import 'package:unuseful/src/telephone/view/telephone_main_screen.dart';
-import 'package:unuseful/theme/component/circular_indicator.dart';
+import 'package:unuseful/theme/component/indicator/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
 import 'package:unuseful/theme/provider/theme_provider.dart';
@@ -50,7 +50,7 @@ class TelephoneSection extends ConsumerWidget {
                         ],
                       ),
                       Divider(
-                        height: 30,
+                        height: 15,
                       ),
                       (telephone as SearchHistoryMainModel).history!.isEmpty
                           ? Row(
