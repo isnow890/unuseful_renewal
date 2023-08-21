@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
+import 'package:unuseful/src/specimen/view/specimen_main_screen.dart';
 import 'package:unuseful/theme/component/circular_indicator.dart';
 import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_search_screen_widget.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
+import 'package:unuseful/theme/model/menu_model.dart';
 import '../../../colors.dart';
 import '../../home/provider/specimen_history_provider.dart';
 import '../provider/specimenSearchValueProvider.dart';
@@ -38,26 +40,11 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
   Widget build(BuildContext context) {
     final search = ref.watch(specimenHistoryNotfierProvider);
 
-    // CustomTextFormField(
-// hintText: searchType == 0
-// ? '8자리의 등록번호를 입력하세요.'
-//     : '11자리의 검체번호를 입력하세요.',
-// isSuffixDeleteButtonEnabled: true,
-// controller: textFormFieldController,
-// keyboardType: TextInputType.number,
-// inputFormatters: [
-// FilteringTextInputFormatter.digitsOnly,
-// LengthLimitingTextInputFormatter(
-// textFormFieldMaxLength),
-// ],
-// contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
-// onChanged: (value) {},
-// ),
-
     return CustomSearchScreenWidget(
-      title: 'specimen',
-      hintText: '등록번호 또는 검체번호를 입력하세요.',
+      title: MenuModel.getMenuInfo(SpecimenMainScreen.routeName).menuName,
+      hintText: '등록번호/검체번호',
       keyboardType: TextInputType.number,
+      searchScreenType: SearchScreenType.select,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         LengthLimitingTextInputFormatter(11),
@@ -153,7 +140,6 @@ class _SpecimenSearchScreenState extends ConsumerState<SpecimenSearchScreen> {
     }
 
     if (search is SearchHistoryMainModel) {
-
       ref
           .read(specimenSearchValueProvider.notifier)
           .update((state) => searchValueController.text);

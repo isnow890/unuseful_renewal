@@ -43,21 +43,19 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
           child: BaseSearchScreenWidget(
         itemCount: (state as HitDutyLogModel).data.length,
         header: Row(children: [
-          Expanded(
-              flex: 1,
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        '구분',
-                        style: theme.typo.subtitle2,
-                      )),
-                ],
-              )),
+          Row(
+            children: [
+              const SizedBox(
+                width: 12,
+              ),
+              Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '구분',
+                    style: theme.typo.subtitle2,
+                  )),
+            ],
+          ),
           Expanded(
             flex: 8,
             child: Align(
@@ -78,14 +76,16 @@ class _HitDutyLogScreenState extends ConsumerState<HitDutyLogScreen> {
                   flex: 1,
                   child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Container(
-                          color: state.data[index].changeInfo.contains('<->')
-                              ? Colors.red
-                              : theme.color.tertiary,
-                          width: 5,
-                          height: double.infinity,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Container(
+                            color: state.data[index].changeInfo.contains('<->')
+                                ? Colors.red
+                                : theme.color.tertiary,
+                            width: 5,
+                            height: double.infinity,
+                          ),
                         ),
                       ),
                       SizedBox(

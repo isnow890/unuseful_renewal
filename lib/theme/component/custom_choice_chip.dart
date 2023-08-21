@@ -11,7 +11,7 @@ class CustomChoiceChip extends ConsumerStatefulWidget {
   });
 
   final Widget label;
-  final bool selected;
+  final bool? selected;
 
   final void Function(bool selected)? onSelected;
 
@@ -28,7 +28,7 @@ class _CustomChoiceChipState extends ConsumerState<CustomChoiceChip> {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       // pressElevation: 5,
       label: widget.label,
-      selected: widget.selected,
+      selected: widget.selected??false,
       selectedColor: theme.color.tertiary,
       backgroundColor: theme.color.hint,
       onSelected: widget.onSelected,

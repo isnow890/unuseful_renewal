@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/src/home/component/history_chip.dart';
+import 'package:unuseful/theme/component/custom_chip.dart';
 import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/provider/telehphone_history_provider.dart';
@@ -66,7 +66,7 @@ class TelephoneSection extends ConsumerWidget {
                               children: (telephone)
                                   .history!
                                   .take(20)
-                                  .map((e) => HistoryChip(
+                                  .map((e) => CustomChip(
                                         onDeleted: () async {
                                           await ref
                                               .read(

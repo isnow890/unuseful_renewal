@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unuseful/src/common/model/model_base.dart';
-import 'package:unuseful/src/home/component/history_chip.dart';
+import 'package:unuseful/theme/component/custom_chip.dart';
 import 'package:unuseful/theme/component/section_card.dart';
 import 'package:unuseful/src/home/model/search_history_main_model.dart';
 import 'package:unuseful/src/home/provider/specimen_history_provider.dart';
@@ -58,7 +58,7 @@ class SpecimenSection extends ConsumerWidget {
                         alignment: WrapAlignment.start,
                         children: specimen.history!
                             .take(20)
-                            .map((e) => HistoryChip(
+                            .map((e) => CustomChip(
                                   onDeleted: () async {
                                     ref
                                         .read(specimenHistoryNotfierProvider

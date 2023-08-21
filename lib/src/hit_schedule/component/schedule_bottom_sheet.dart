@@ -113,21 +113,21 @@ class _ScheduleBottomSheetState extends ConsumerState<ScheduleBottomSheet> {
                   children: [
                     Text(
                       widget.stfNm,
-                      style: theme.typo.headline6,
+                      style: theme.typo.subtitle1,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
                     Text(
                       widget.dutyName,
-                      style: theme.typo.headline6,
+                      style: theme.typo.subtitle1,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
                     Text(
                       '일정이 선택되었습니다.',
-                      style: theme.typo.headline6,
+                      style: theme.typo.subtitle1,
                     ),
                   ],
                 ),

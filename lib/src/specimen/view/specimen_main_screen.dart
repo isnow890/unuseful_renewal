@@ -15,7 +15,12 @@ import 'package:unuseful/theme/component/custom_error_widget.dart';
 import 'package:unuseful/theme/component/custom_readonly_search_text_field.dart';
 import 'package:unuseful/theme/component/general_toast_message.dart';
 import 'package:unuseful/theme/layout/default_layout.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
+import '../../../theme/component/button/button.dart';
+import '../../../theme/component/section_card.dart';
+import '../../../theme/component/segment_button.dart';
+import '../../../theme/component/toast/toast.dart';
 import '../../home/model/search_history_main_model.dart';
 import '../../home/provider/specimen_history_provider.dart';
 import '../component/specimen_main_screen_expansion_panel_list.dart';
@@ -36,10 +41,10 @@ class SpecimenMainScreen extends ConsumerStatefulWidget {
 }
 
 class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
-  DateTime? rangeStart = new DateTime(
+  DateTime? rangeStart = DateTime(
       DateTime.now().year, DateTime.now().month - 6, DateTime.now().day);
-  DateTime? rangeEnd = new DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime? rangeEnd =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   // DateTime? selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -72,11 +77,13 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = ref.watch(themeServiceProvider);
+
     final state = ref.watch(specimenStateProvider);
     final search = ref.watch(specimenSearchValueProvider);
 
     final TextStyle segmentTextStyle = const TextStyle(
-      fontSize: 12.0,
+      fontSize: 15.0,
     );
 
     final defaultBoxDeco = BoxDecoration(
@@ -90,8 +97,7 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
       return DefaultLayout(
         child: CustomErrorWidget(
           message: state.message,
-          onPressed: () {
-          },
+          onPressed: () {},
         ),
         title: 'specimen',
       );
@@ -115,140 +121,194 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
       ),
       title: 'specimen',
       child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        child: SingleChildScrollView(
-          //드래그 하면 키보드 집어넣기.
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          child: SingleChildScrollView(
+            //드래그 하면 키보드 집어넣기.
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
 
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Card(
-              color: Colors.grey[200],
-              shape: RoundedRectangleBorder(
-                //모서리를 둥글게 하기 위해 사용
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              elevation: 6.0, //그림자 깊이
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 5,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '병원',
+                    style: theme.typo.subtitle1.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    _renderTitleTextHelper('병원구분'),
-                    _renderHosiptalSegmentHelper(segmentTextStyle),
-                    const SizedBox(
-                      height: 15,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  SegmentButton(
+                    selectionIndex: hspType,
+                    onSegmentTapped: (index) {
+                      setState(() {
+                        hspType = index;
+                      });
+                    },
+                    children: {
+                      0: Text('전체', style: segmentTextStyle),
+                      1: Text(
+                        '서울',
+                        style: segmentTextStyle,
+                      ),
+                      2: Text(
+                        '목동',
+                        style: segmentTextStyle,
+                      )
+                    },
+                  ),
+
+                  const SizedBox(
+                    height: 30,
+                  ),
+
+                  Text(
+                    '등록번호 또는 검체번호',
+                    style: theme.typo.subtitle1.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    _renderTitleTextHelper('등록번호/검체번호'),
-                    // _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                    CustomReadOnlySearchTextField(
-                        hintText: '등록번호 또는 검체번호를 입력하세요',
-                        searchType: searchType.toString(),
-                        push: SpecimenSearchScreen.routeName,
-                        provider: specimenSearchValueProvider),
-                    const SizedBox(
-                      height: 15,
+                  // _renderSpecimenNoOrPatientNoSegmentHelper(segmentTextStyle),
+
+                  CustomReadOnlySearchTextField(
+                      hintText: '등록번호/검체번호',
+                      searchType: searchType.toString(),
+                      push: SpecimenSearchScreen.routeName,
+                      provider: specimenSearchValueProvider),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    '조회 기간',
+                    style: theme.typo.subtitle1.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
 
-                      children: [
-                        _renderTitleTextHelper('조회 기간'),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom:10),
-                          child: Text(
-                            '검체번호는 조회기간의 영향을 받지 않습니다.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  SpecimenMainScreenExpansionPanelList(
+                    searchType: searchType,
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
 
-                    SpecimenMainScreenExpansionPanelList(
-                      searchType: searchType,
-                      rangeStart: rangeStart,
-                      rangeEnd: rangeEnd,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                  Button(
+                      text: '조회',
+                      width: double.infinity,
+                      color: theme.color.onPrimary,
+                      backgroundColor: theme.color.primary,
+                      onPressed: state is SpecimenModelLoading
+                          ? null
+                          : () async {
+                        if (!_validateBeforeSearch(search.length))
+                          return;
+                        final data = await _getData(search);
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: state is SpecimenModelLoading
-                                ? null
-                                : () async {
-                                    if (!_validateBeforeSearch(search.length))
-                                      return;
-                                    final data = await _getData(search);
+                        final body = SearchHistoryModel(
+                            lastUpdated: DateTime.now(),
+                            searchValue: search,
+                            mode: '');
+                        await ref
+                            .read(specimenHistoryNotfierProvider
+                            .notifier)
+                            .saveSpecimenHistory(body: body);
 
-                                    final body = SearchHistoryModel(
-                                        lastUpdated: DateTime.now(),
-                                        searchValue: search,
-                                        mode: '');
-                                    await ref
-                                        .read(specimenHistoryNotfierProvider.notifier)
-                                        .saveSpecimenHistory(body: body);
-
-
-                                    if (data!.isEmpty) {
-                                      showToast(msg: '데이터가 없습니다.');
-                                    } else {
-                                      context.pushNamed(
-                                          SpecimenResultScreen.routeName,
-                                          extra: SpecimenParams(
-                                              hspTpCd: _getHspTpCd(),
-                                              searchValue: search,
-                                              strDt: DateFormat('yyyyMMdd')
-                                                  .format(rangeStart!),
-                                              endDt: DateFormat('yyyyMMdd')
-                                                  .format(rangeEnd!),
-                                              orderBy: 'desc'));
-                                    }
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: PRIMARY_COLOR,
-                            ),
-                            child: state is! SpecimenModelLoading
-                                ? const Text('조회')
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                        SizedBox(
-                                          width: 12,
-                                          height: 12,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text('조회')
-                                      ]),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                        if (data!.isEmpty) {
+                          showToast(msg: '데이터가 없습니다.');
+                        } else {
+                          context.pushNamed(
+                              SpecimenResultScreen.routeName,
+                              extra: SpecimenParams(
+                                  hspTpCd: _getHspTpCd(),
+                                  searchValue: search,
+                                  strDt: DateFormat('yyyyMMdd')
+                                      .format(rangeStart!),
+                                  endDt: DateFormat('yyyyMMdd')
+                                      .format(rangeEnd!),
+                                  orderBy: 'desc'));
+                        }
+                      }
+                  ),
+                  // Row(
+                  //   children: [
+                  //
+                  //     Expanded(
+                  //       child: ElevatedButton(
+                  //         onPressed: state is SpecimenModelLoading
+                  //             ? null
+                  //             : () async {
+                  //                 if (!_validateBeforeSearch(search.length))
+                  //                   return;
+                  //                 final data = await _getData(search);
+                  //
+                  //                 final body = SearchHistoryModel(
+                  //                     lastUpdated: DateTime.now(),
+                  //                     searchValue: search,
+                  //                     mode: '');
+                  //                 await ref
+                  //                     .read(specimenHistoryNotfierProvider
+                  //                         .notifier)
+                  //                     .saveSpecimenHistory(body: body);
+                  //
+                  //                 if (data!.isEmpty) {
+                  //                   showToast(msg: '데이터가 없습니다.');
+                  //                 } else {
+                  //                   context.pushNamed(
+                  //                       SpecimenResultScreen.routeName,
+                  //                       extra: SpecimenParams(
+                  //                           hspTpCd: _getHspTpCd(),
+                  //                           searchValue: search,
+                  //                           strDt: DateFormat('yyyyMMdd')
+                  //                               .format(rangeStart!),
+                  //                           endDt: DateFormat('yyyyMMdd')
+                  //                               .format(rangeEnd!),
+                  //                           orderBy: 'desc'));
+                  //                 }
+                  //               },
+                  //         style: ElevatedButton.styleFrom(
+                  //           backgroundColor: PRIMARY_COLOR,
+                  //         ),
+                  //         child: state is! SpecimenModelLoading
+                  //             ? const Text('조회')
+                  //             : Row(
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: const [
+                  //                     SizedBox(
+                  //                       width: 12,
+                  //                       height: 12,
+                  //                       child: CircularProgressIndicator(
+                  //                         strokeWidth: 2,
+                  //                         color: Colors.black,
+                  //                       ),
+                  //                     ),
+                  //                     SizedBox(
+                  //                       width: 10,
+                  //                     ),
+                  //                     Text('조회')
+                  //                   ]),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                ],
               ),
             ),
-          ),
-        ),
-      ),
+          )),
     );
   }
 
@@ -290,16 +350,15 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
   }
 
   bool _validateBeforeSearch(search) {
-
     if (searchType == 1) {
       if (search != 11) {
-        showToast(msg: '11자리의 검체번호를 입력하세요.');
+        Toast.show('11자리의 검체번호를 입력하세요');
         return false;
       }
     }
     if (searchType == 0) {
       if (search != 8) {
-        showToast(msg: '8자리의 등록번호를 입력하세요.');
+        Toast.show('8자리의 등록번호를 입력하세요.');
         return false;
       }
     }
@@ -323,8 +382,6 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     //     orderBy: 'desc',
     //     hspTpCd: _getHspTpCd())));
   }
-
-
 
   _renderHosiptalSegmentHelper(segmentTextStyle) {
     return Row(
@@ -363,25 +420,4 @@ class _SpecimenMainScreenState extends ConsumerState<SpecimenMainScreen> {
     );
   }
 
-  _renderTitleTextHelper(title) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 15.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-      ],
-    );
-  }
 }

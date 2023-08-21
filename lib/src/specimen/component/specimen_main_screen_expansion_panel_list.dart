@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:unuseful/theme/component/custom_calendar.dart';
+import 'package:unuseful/theme/component/custom_choice_chip.dart';
+import 'package:unuseful/theme/component/custom_expansion_tile.dart';
+import 'package:unuseful/theme/provider/theme_provider.dart';
 
 import '../../../colors.dart';
+import '../../../theme/component/custom_chip.dart';
 
-class SpecimenMainScreenExpansionPanelList extends StatefulWidget {
+class SpecimenMainScreenExpansionPanelList extends ConsumerStatefulWidget {
   DateTime? rangeStart;
   DateTime? rangeEnd;
 
@@ -19,156 +24,102 @@ class SpecimenMainScreenExpansionPanelList extends StatefulWidget {
   final int searchType;
 
   @override
-  State<SpecimenMainScreenExpansionPanelList> createState() =>
+  ConsumerState<SpecimenMainScreenExpansionPanelList> createState() =>
       _SpecimenMainScreenExpansionPanelListState();
 }
 
 class _SpecimenMainScreenExpansionPanelListState
-    extends State<SpecimenMainScreenExpansionPanelList> {
+    extends ConsumerState<SpecimenMainScreenExpansionPanelList> {
   bool _isExpanded = true;
   DateTime focusedDay = DateTime.now();
-
-  TextStyle ts = TextStyle(
-    fontSize: 13.0,
-    fontWeight: FontWeight.w500,
-  );
 
   _SpecimenMainScreenExpansionPanelListState();
 
   RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOn;
 
+  _termSelectionHelper() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CustomChip(
+          onTap: () => _setDateRange(0),
+          title: '당일',
+          paddingHorizontal: 0,
+        ),
+        CustomChip(
+          onTap: () => _setDateRange(12),
+          title: '1년',
+          paddingHorizontal: 0,
+        ),
+        CustomChip(
+          onTap: () => _setDateRange(6),
+          title: '6개월',
+          paddingHorizontal: 0,
+        ),
+        CustomChip(
+          onTap: () => _setDateRange(3),
+          title: '3개월',
+          paddingHorizontal: 0,
+        ),
+        CustomChip(
+          onTap: () => _setDateRange(1),
+          title: '1개월',
+          paddingHorizontal: 0,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextStyle chipTextStyle = TextStyle(fontSize: 12.0);
+    final theme = ref.watch(themeServiceProvider);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: ExpansionPanelList(
-        elevation: 0,
-        expandedHeaderPadding: EdgeInsets.all(0),
-        children: [
-          ExpansionPanel(
-            backgroundColor:
-                widget.searchType == 1 ? Colors.grey[400] : Colors.white,
-            canTapOnHeader: true,
-            headerBuilder: (context, isExpanded) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      widget.rangeStart == null
-                          ? ''
-                          : DateFormat('yyyy년 MM월 dd일')
-                              .format(widget.rangeStart!),
-                      style: ts,
-                    ),
-                  ),
-                  Text(
-                    '~',
-                    style: ts,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      DateFormat('yyyy년 MM월 dd일')
-                          .format(widget.rangeEnd ?? widget.rangeStart!),
-                      style: ts,
-                    ),
-                  ),
-                ],
-              );
-            },
-            body: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(0),
-                        child: Chip(
-                          label: Text(
-                            '당일',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(12),
-                        child: Chip(
-                          label: Text(
-                            '1년',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(6),
-                        child: Chip(
-                          label: Text(
-                            '6개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(3),
-                        child: Chip(
-                          label: Text(
-                            '3개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () => _setDateRange(1),
-                        child: Chip(
-                          label: Text(
-                            '1개월',
-                            style: chipTextStyle,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+    return Column(
+      children: [
+        _termSelectionHelper(),
+        const SizedBox(
+          height: 5,
+        ),
+        CustomExpansionTile(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  widget.rangeStart == null
+                      ? ''
+                      : DateFormat('yyyy년 MM월 dd일').format(widget.rangeStart!),
+                  style: theme.typo.body1,
                 ),
-                _rendercustomCalendarHelper(),
-                const SizedBox(
-                  height: 5,
+              ),
+              Text(
+                '~',
+                style: theme.typo.body1,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  DateFormat('yyyy년 MM월 dd일')
+                      .format(widget.rangeEnd ?? widget.rangeStart!),
+                  style: theme.typo.body1,
                 ),
-              ],
-            ),
-            isExpanded: widget.searchType == 1 ? false : _isExpanded,
+              ),
+            ],
           ),
-        ],
-        expansionCallback: (int index, bool isExpanded) {
-          setState(() {
-            _isExpanded = widget.searchType == 1 ? true : !isExpanded;
-          });
-        },
-      ),
+          onExpansionChanged: (bool expanded) {
+            setState(() {
+              _isExpanded = expanded;
+            });
+          },
+          children: [
+            _rendercustomCalendarHelper(),
+            const SizedBox(
+              height: 5,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -221,7 +172,6 @@ class _SpecimenMainScreenExpansionPanelListState
         // selectedDay: selectedDay,
         focusedDay: focusedDay,
         onDaySelected: (_selectedDay, _focusedDay) {
-
           // if (!isSameDay(_selectedDay, selectedDay)) {
           //   setState(() {
           //     selectedDay = _selectedDay;

@@ -7,8 +7,16 @@ import 'package:unuseful/theme/component/button/button.dart';
 import '../layout/default_layout.dart';
 import 'custom_text_form_field.dart';
 
+enum SearchScreenType {
+  search,
+  select
+}
+
+
 class CustomSearchScreenWidget extends ConsumerWidget {
-  const CustomSearchScreenWidget({
+
+  const CustomSearchScreenWidget( {
+    this.searchScreenType = SearchScreenType.search,
     this.hintText,
     this.keyboardType,
     this.inputFormatters,
@@ -19,6 +27,8 @@ class CustomSearchScreenWidget extends ConsumerWidget {
     required this.body,
     Key? key,
   }) : super(key: key);
+
+  final SearchScreenType searchScreenType;
   final String title;
   final ValueChanged<String>? onFieldSubmitted;
   final TextEditingController searchValueController;
@@ -54,18 +64,23 @@ class CustomSearchScreenWidget extends ConsumerWidget {
                     controller: searchValueController,
                     contentPadding: EdgeInsets.fromLTRB(10, 1, 1, 0),
                     hintText: hintText ?? '검색어를 입력하세요.',
+
                     onChanged: (value) {},
                   ),
                 ),
                 const SizedBox(
                   width: 5,
                 ),
-
+                searchScreenType == SearchScreenType.search ?
                 Button(
                   icon: 'search',
                   onPressed: onPressed
 
-                ),
+                ) :Button(
+                    iconData: Icons.check,
+                    onPressed: onPressed
+
+                ) ,
 
 
               ],

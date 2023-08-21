@@ -23,18 +23,21 @@ class SegmentButton extends ConsumerWidget {
         Expanded(
           child: MaterialSegmentedControl(
               children: children,
+
+
               selectedColor: theme.color.primary,
               horizontalPadding: const EdgeInsets.all(0),
               selectionIndex: selectionIndex,
               // borderColor: Colors.grey,
-              unselectedColor: theme.color.onPrimary,
+              unselectedColor: theme.color.hintContainer,
+              unselectedTextStyle: theme.typo.headline3.copyWith(color: theme.color.primary),
               selectedTextStyle:
-              theme.typo.subtitle1.copyWith(color: Colors.white),
+              theme.typo.headline6.copyWith(color: Colors.white),
               // unselectedTextStyle: theme.typo.subtitle1.copyWith(color: ),
               // unselectedTextStyle: TextStyle(color: PRIMARY_COLOR),
-              borderWidth: 0.0,
+              borderWidth: 2.0,
               borderRadius: 6.0,
-              borderColor: Colors.transparent,
+              borderColor: theme.color.onToastContainer,
               verticalOffset: 12.0,
               onSegmentTapped: onSegmentTapped),
         ),
